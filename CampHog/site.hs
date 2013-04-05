@@ -14,11 +14,22 @@ pandocWriterOptions = defaultHakyllWriterOptions
     { writerHTMLMathMethod = MathJax ""
     }
 
+static :: Pattern -> Rules ()
+static f = match f $ do
+    route idRoute
+    compile copyFileCompiler
+
+directory :: (Pattern -> Rules a) -> String -> Rules a
+directory act f = act $ fromGlob $ f ++ "/**"
+
 main :: IO ()
 main = hakyll $ do
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
+
+    {-- SEE: http://vapaus.org/text/hakyll-configuration.html --}
+    mapM_ (directory static) ["font"]
 
     match "css/*" $ do
         route idRoute
