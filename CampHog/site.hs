@@ -35,7 +35,7 @@ main = hakyll $ do
         route idRoute
         compile compressCssCompiler
 
-    match (fromList ["about.rst", "contact.markdown"]) $ do
+    match (fromList ["about.markdown", "contact.markdown"]) $ do
         route $ setExtension "html"
         compile $ pandocCompilerWith pandocReaderOptions pandocWriterOptions
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
@@ -72,7 +72,7 @@ main = hakyll $ do
     match "templates/*" $ compile templateCompiler
 
 postCtx :: Context String
-postCtx = dateField "date" "%B %e, %Y" `mappend` defaultContext
+postCtx = dateField "date" "%Y-%m-%d" `mappend` defaultContext
 
 postList :: ([Item String] -> [Item String]) -> Compiler String
 postList sortFilter = do
