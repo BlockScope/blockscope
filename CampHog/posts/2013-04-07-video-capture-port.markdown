@@ -1,7 +1,7 @@
 ---
 title: How would this look in idiomatic F#?
 ---
-I've been watching the play for apps from the sidelines. Had I'd missed the boat by not getting in early with the first wave of farting and beer swilling apps? Was the development experience raw and retrograde, like back to the '90s before virtual machines with many build targets and #pragma hell? [Xamarin](http://xamarin.com/) helps ease that cross-platform pain. With the recent release of F# 3.0 came another open source drop of the compiler and tools and a language binding for F# 3.0 has been added to [Xamarin Studio](http://xamarin.com/studio).
+I've been watching the play for apps from the sidelines. Had I'd missed the boat by not getting in early with the first wave of farting and beer swilling apps? Was the development experience raw and retrograde, like back to the '90s before virtual machines with many build targets and ```#pragma``` hell? [Xamarin](http://xamarin.com/) helps ease that cross-platform pain. With the recent release of F# 3.0 came another open source drop of the compiler and tools and a language binding for F# 3.0 has been added to [Xamarin Studio](http://xamarin.com/studio).
 
 <blockquote class="twitter-tweet"><p>Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the error handling: <a href="https://t.co/bGuDdcyxPV" title="https://gist.github.com/lobrien/5250556">gist.github.com/lobrien/5250556</a></p>&mdash; Miguel de Icaza (@migueldeicaza) <a href="https://twitter.com/migueldeicaza/status/316729282124709889">March 27, 2013</a></blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
