@@ -3,7 +3,7 @@ title: Contact
 ---
 
 <div class="row">
-<div class="span5">
+<div class="col-5">
 <address>
   <strong>Block Scope Limited</strong><br/>
   319 Hendersons Rd<br/>
@@ -13,7 +13,7 @@ title: Contact
   <a href="https://github.com/blockscope" target="_blank">github</a><br/>
 </address>
 </div> 
-<div class="span5">
+<div class="col-5">
 <address>
   <strong>Phil de Joux</strong><br/>
   53 Ryans Rd<br/>
@@ -25,18 +25,18 @@ title: Contact
   Skype: philderbeast<br/>
 </address>
 </div> 
-<div class="span2">
-  <i class="icon-github"></i>
+<div class="col-2">
+  <i class="fa fa-github"></i>
   <a href="https://github.com/philderbeast" target="_blank">github</a><br/>
-  <i class="icon-sign-blank"></i>
+  <i class="fa fa-bitbucket"></i>
   <a href="https://bitbucket.org/philderbeast" target="_blank">bitbucket</a><br/>
-  <i class="icon-twitter"></i>
+  <i class="fa fa-twitter"></i>
   <a href="https://twitter.com/philderbeast" target="_blank">twitter</a><br/>
-  <i class="icon-linkedin"></i>
+  <i class="fa fa-linkedin"></i>
   <a href="http://www.linkedin.com/pub/phil-de-joux/0/b19/a51" target="_blank">linkedin</a><br/>
-  <i class="icon-google-plus"></i>
+  <i class="fa fa-google-plus"></i>
   <a href="https://plus.google.com/110940964100348607306/about" target="_blank">plus</a><br/>
-  <i class="icon-facebook"></i>
+  <i class="fa fa-facebook"></i>
   <a href="http://www.facebook.com/phil.dejoux"
   target="_blank">facebook</a><br/>
 </div>
