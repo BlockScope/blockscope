@@ -1,18 +1,50 @@
 {-# LANGUAGE OverloadedStrings #-}
+
 import Control.Applicative ((<$>))
 import Data.Monoid (mappend)
 import Hakyll
-import Hakyll.Core.Item
-import Hakyll.Web.Pandoc
+    ( Rules, Pattern, Context(..), Compiler, Item(..), Configuration(..)
+    , defaultContext
+    , dateField
+    , constField
+    , listField
+    , loadAll
+    , loadBody
+    , loadAndApplyTemplate
+    , applyTemplateList
+    , applyAsTemplate
+    , templateCompiler
+    , compressCssCompiler
+    , copyFileCompiler
+    , match
+    , compile
+    , getResourceBody
+    , relativizeUrls
+    , route
+    , idRoute
+    , recentFirst
+    , create
+    , makeItem
+    , setExtension
+    , fromList
+    , fromGlob
+    , pandocCompilerWith
+    , hakyllWith
+    , defaultHakyllReaderOptions
+    , defaultHakyllWriterOptions
+    , defaultConfiguration
+    )
 import Text.Pandoc.Options
+    (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
 
 pandocReaderOptions :: ReaderOptions
 pandocReaderOptions = defaultHakyllReaderOptions
 
 pandocWriterOptions :: WriterOptions
-pandocWriterOptions = defaultHakyllWriterOptions
-    { writerHTMLMathMethod = MathJax ""
-    }
+pandocWriterOptions =
+    defaultHakyllWriterOptions
+        { writerHTMLMathMethod = MathJax ""
+        }
 
 static :: Pattern -> Rules ()
 static f = match f $ do
@@ -22,8 +54,14 @@ static f = match f $ do
 directory :: (Pattern -> Rules a) -> String -> Rules a
 directory act f = act $ fromGlob $ f ++ "/**"
 
+config :: Configuration
+config =
+    defaultConfiguration
+        { providerDirectory = "CampHog"
+        }
+
 main :: IO ()
-main = hakyll $ do
+main = hakyllWith config $ do
     match "images/*" $ do
         route idRoute
         compile copyFileCompiler
@@ -51,10 +89,13 @@ main = hakyll $ do
     create ["archive.html"] $ do
         route idRoute
         compile $ do
+            posts <- loadAll "posts/*" >>= recentFirst
+
             let archiveCtx =
-                    field "posts" (\_ -> postList recentFirst) `mappend`
-                    constField "title" "Archives" `mappend`
-                    defaultContext
+                    listField "posts" postCtx (return posts)
+                    `mappend` constField "title" "Archives"
+                    `mappend` defaultContext
+
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
                 >>= loadAndApplyTemplate "templates/default.html" archiveCtx
@@ -63,7 +104,13 @@ main = hakyll $ do
     match "index.html" $ do
         route idRoute
         compile $ do
-            let indexCtx = field "posts" $ \_ -> postList (take 3 . recentFirst)
+            posts <- loadAll "posts/*" >>= recentFirst
+
+            let indexCtx =
+                    listField "posts" postCtx (return posts)
+                    `mappend` constField "title" ""
+                    `mappend` defaultContext
+
             getResourceBody
                 >>= applyAsTemplate indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
