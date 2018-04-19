@@ -62,16 +62,8 @@ config =
 
 main :: IO ()
 main = hakyllWith config $ do
-    match "images/*" $ do
-        route idRoute
-        compile copyFileCompiler
-
     {-- SEE: http://vapaus.org/text/hakyll-configuration.html --}
-    mapM_ (directory static) ["font"]
-
-    match "css/*" $ do
-        route idRoute
-        compile compressCssCompiler
+    mapM_ (directory static) ["css", "font", "js", "images"]
 
     match (fromList ["about.markdown", "contact.markdown"]) $ do
         route $ setExtension "html"
