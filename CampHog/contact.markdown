@@ -6,23 +6,22 @@ title: Contact
 <div class="col-5">
 <address>
   <strong>Block Scope Limited</strong><br/>
-  319 Hendersons Rd<br/>
-  Christchurch 8025<br/>
+  638C Woodfields Rd<br/>
+  Cust<br/>
+  Canterbury 7475<br/>
   NEW ZEALAND<br/>
-  <i class="icon-github"></i>
-  <a href="https://github.com/blockscope" target="_blank">github</a><br/>
 </address>
 </div> 
 <div class="col-5">
 <address>
   <strong>Phil de Joux</strong><br/>
-  53 Ryans Rd<br/>
-  Northgate<br/>
-  Queensland 4013<br/>
-  AUSTRALIA<br/>
-  <a class="email" href="http://www.google.com/recaptcha/mailhide/d?k=01T2ym63gotF7mfLYsrut4JA==&c=ptNmr9pYzXwzBHizlxHLG-sMQmfixuQ1RrgCmVEYsC0=" target="_blank">e-mail</a><br/>
-  <i class="icon-phone"></i> (+61) 488-253-274<br/>
-  Skype: philderbeast<br/>
+  1425 chemin de la Rivière<br/>
+  Val-David<br/>
+  Quebec J0T 2N0<br/>
+  CANADA<br/>
+  <i class="fa fa-envelope"></i><a href="mailto:phil.dejoux@blockscope.com"> phil.dejoux@blockscope.com</a><br/>
+  <i class="fa fa-phone"></i> +1-405-675-9180<br/>
+  <i class="fa fa-skype"></i> philderbeast<br/>
 </address>
 </div> 
 <div class="col-2">
