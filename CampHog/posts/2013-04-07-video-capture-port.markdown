@@ -10,6 +10,7 @@ In response to this tweet, I set about converting the C# in that gist to F#, fig
 
 * Put the moving bits inside an auto-opening private module. This is something like an anonymous namespace in C++, a place to put stuff that is local to the source file but otherwise hidden. What was left to the class members was to unwrap a ```Choice<_, _>```, possibly fire an alert off and return an ```Option<_>``` ...
 
+```fsharp
         [<AutoOpen>]
         module private __ =
             let initializeSession f =
@@ -22,15 +23,19 @@ In response to this tweet, I set about converting the C# in that gist to F#, fig
                 match initializeSession x with
                 | Choice1Of2(s) -> Some(s)
                 | Choice2Of2(m) -> alert(m); None
+```
 
 * I stopped naming things I didn't care about using underscore, the discard binding from pattern matches. Note that I cannot use a single underscore for the this binding of a method so I use two.
 
+```fsharp
         override __.FinishedLaunching(_, _) = ...
+```
 
 * Replaced nulls with options and choices.
 * Dropped the use of new when constructing object except when the class implements IDisposable.
 * Collected related fields into records going with immutability where possible.
 
+```fsharp
         // From this ...
         type VideoCapture(imgView, label) = 
             inherit AVCaptureVideoDataOutputSampleBufferDelegate()
@@ -41,16 +46,20 @@ In response to this tweet, I set about converting the C# in that gist to F#, fig
         type LabelledView = {Label : UILabel; View : UIImageView}
         type VideoCapture(labelledView) = 
             inherit AVCaptureVideoDataOutputSampleBufferDelegate()
+```
 
 * Used pattern matching to deconstruct records.
 
+```fsharp
         match labelledView with
         | {Label = l; View = v} ->
+```
 
-* Dropped the Maybe- prefix on methods that were returning null but were now returning ```Option<_>```.
+* Dropped the `Maybe-` prefix on methods that were returning null but were now returning ```Option<_>```.
 * I preferred to use ```Ref<_>``` for the few remaining mutations of fields.
 * Encoded the same information in fewer fields by seeing that recording was tied to the existence of the capture.
 
+```fsharp
         type VideoCaptureController(viewColor, title) =
             inherit UIViewController()
             // from this ...
@@ -59,5 +68,6 @@ In response to this tweet, I set about converting the C# in that gist to F#, fig
 
             // to this ...
             let capture : Ref<VideoCapture option> = ref None
+```
 
 The [complete solution](https://github.com/philderbeast/XamarinVideoCapture) and [gist](https://gist.github.com/philderbeast/5253070) are up at github. I coded this blind, aiming only to get it compiling and don't know if it runs.
