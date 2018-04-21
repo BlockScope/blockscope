@@ -1,5 +1,8 @@
 /* SEE: https://github.com/jez/tufte-pandoc-css */
-div.sourceCode, pre:not(.sourceCode) { background: #FDF6E3; }
+div.sourceCode, pre:not(.sourceCode) {
+    background: #FDF6E3;
+    font-size: 0.8rem;
+}
 pre code { color: #657B83; }
 .sourceCode span.kw { color: #859900; font-weight: normal; font-style: normal; } /* Keyword */
 .sourceCode span.dt { color: #B58900; font-weight: normal; font-style: normal; } /* DataType */
