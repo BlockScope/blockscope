@@ -1,14 +1,19 @@
 // https://stackoverflow.com/questions/33649761/how-do-i-load-font-awesome-using-scss-sass-in-webpack-using-relative-paths
 $fa-font-path: "~font-awesome/fonts";
 @import "~font-awesome/scss/font-awesome.scss";
-@import "~bootstrap/scss/bootstrap";
 @import "pandoc-solarized.css";
+@import "~et-book/et-book.css";
 
-html
-    font-size: 12pt;
+$body-bg: #fffff8;
+@import "~bootstrap/scss/bootstrap";
 
-body, input, button, select, textarea
-    font-family: 'Open Sans', monospace;
+body
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    margin-left: 11.5rem;
+    margin-right: 2.5rem;
+
+.container
+  max-width: 780px;
 
 .spacer
     height: 20px;
