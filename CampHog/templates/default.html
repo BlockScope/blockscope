@@ -8,17 +8,7 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-                <div id="side" class="col-4 card">
-                    <div class="card-body">
-                        <h1 class="card-title"><a href="/">Block Scope</a></h1>
-                        <p class="card-text">A projection of corporation and self.</p>
-                        <nav class="nav">
-                            <a class="nav-link" href="/about.html">Company</a>
-                            <a class="nav-link" href="/contact.html">Individual</a>
-                            <a class="nav-link" href="/archive.html">Posts</a>
-                        </nav>
-                    </div>
-                </div>
+                $partial("templates/nav.html")$
                 <div id="content" class="col-6">
                     $body$
                 </div>
