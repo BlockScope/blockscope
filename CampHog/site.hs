@@ -26,12 +26,14 @@ import Hakyll
     , makeItem
     , setExtension
     , fromGlob
+    , fromCapture
     , pandocCompilerWith
     , hakyllWith
     , defaultHakyllReaderOptions
     , defaultHakyllWriterOptions
     , defaultConfiguration
     )
+import Hakyll.Web.Tags
 import Text.Pandoc.Options
     (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
 
@@ -63,7 +65,7 @@ config =
 
 main :: IO ()
 main = hakyllWith config $ do
-    {-- SEE: http://vapaus.org/text/hakyll-configuration.html --}
+    -- SEE: http://vapaus.org/text/hakyll-configuration.html
     mapM_ (directory static) ["css", "font", "js", "images"]
 
     match "*.md" $ do
@@ -72,12 +74,34 @@ main = hakyllWith config $ do
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
+    -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
+    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandoc
-            >>= loadAndApplyTemplate "templates/post.html" postCtx
-            >>= loadAndApplyTemplate "templates/default.html" postCtx
-            >>= relativizeUrls
+        compile $ do
+            let ctx = tagsField "tags" tags <> postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/post.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
+
+    tagsRules tags $ \tag pattern -> do
+        let title = "Posts tagged \"" ++ tag ++ "\""
+        route idRoute
+        compile $ do
+            posts <- loadAll pattern >>= recentFirst
+
+            let ctx =
+                    constField "title" title
+                    <> listField "posts" postCtx (return posts)
+                    <> defaultContext
+
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/tag.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
 
     create ["archive.html"] $ do
         route idRoute

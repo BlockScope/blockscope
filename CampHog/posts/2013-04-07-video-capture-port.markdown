@@ -1,5 +1,6 @@
 ---
 title: How would this look in idiomatic F#?
+tags: fsharp, conversion
 ---
 I've been watching the play for apps from the sidelines. Had I'd missed the
 boat by not getting in early with the first wave of farting and beer swilling
