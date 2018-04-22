@@ -45,6 +45,9 @@ pandocWriterOptions =
         { writerHTMLMathMethod = MathJax ""
         }
 
+pandoc :: Compiler (Item String)
+pandoc = pandocCompilerWith pandocReaderOptions pandocWriterOptions
+
 static :: Pattern -> Rules ()
 static f = match f $ do
     route idRoute
@@ -66,13 +69,13 @@ main = hakyllWith config $ do
 
     match (fromList ["about.markdown", "contact.markdown"]) $ do
         route $ setExtension "html"
-        compile $ pandocCompilerWith pandocReaderOptions pandocWriterOptions
+        compile $ pandoc
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
             >>= relativizeUrls
 
     match "posts/*" $ do
         route $ setExtension "html"
-        compile $ pandocCompilerWith pandocReaderOptions pandocWriterOptions
+        compile $ pandoc
             >>= loadAndApplyTemplate "templates/post.html" postCtx
             >>= loadAndApplyTemplate "templates/default.html" postCtx
             >>= relativizeUrls
