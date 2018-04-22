@@ -1,17 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Applicative ((<$>))
 import Data.Monoid ((<>))
 import Hakyll
     ( Rules, Pattern, Context(..), Compiler, Item(..), Configuration(..)
     , defaultContext
     , dateField
+    , tagsField
     , constField
     , listField
     , loadAll
-    , loadBody
     , loadAndApplyTemplate
-    , applyTemplateList
     , applyAsTemplate
     , templateCompiler
     , copyFileCompiler
@@ -33,7 +31,7 @@ import Hakyll
     , defaultHakyllWriterOptions
     , defaultConfiguration
     )
-import Hakyll.Web.Tags
+import Hakyll.Web.Tags (buildTags, tagsRules)
 import Text.Pandoc.Options
     (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
 
@@ -137,10 +135,3 @@ main = hakyllWith config $ do
 
 postCtx :: Context String
 postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
-
-postList :: ([Item String] -> [Item String]) -> Compiler String
-postList sortFilter = do
-    posts <- sortFilter <$> loadAll "posts/*"
-    item <- loadBody "templates/post-item.html"
-    list <- applyTemplateList item postCtx posts
-    return list
