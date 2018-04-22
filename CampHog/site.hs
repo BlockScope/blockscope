@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Control.Applicative ((<$>))
-import Data.Monoid (mappend)
+import Data.Monoid ((<>))
 import Hakyll
     ( Rules, Pattern, Context(..), Compiler, Item(..), Configuration(..)
     , defaultContext
@@ -14,7 +14,6 @@ import Hakyll
     , applyTemplateList
     , applyAsTemplate
     , templateCompiler
-    , compressCssCompiler
     , copyFileCompiler
     , match
     , compile
@@ -85,8 +84,8 @@ main = hakyllWith config $ do
 
             let archiveCtx =
                     listField "posts" postCtx (return posts)
-                    `mappend` constField "title" "Archives"
-                    `mappend` defaultContext
+                    <> constField "title" "Archives"
+                    <> defaultContext
 
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -100,8 +99,8 @@ main = hakyllWith config $ do
 
             let indexCtx =
                     listField "posts" postCtx (return posts)
-                    `mappend` constField "title" ""
-                    `mappend` defaultContext
+                    <> constField "title" ""
+                    <> defaultContext
 
             getResourceBody
                 >>= applyAsTemplate indexCtx
@@ -111,7 +110,7 @@ main = hakyllWith config $ do
     match "templates/*" $ compile templateCompiler
 
 postCtx :: Context String
-postCtx = dateField "date" "%Y-%m-%d" `mappend` defaultContext
+postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
 
 postList :: ([Item String] -> [Item String]) -> Compiler String
 postList sortFilter = do
