@@ -25,7 +25,6 @@ import Hakyll
     , create
     , makeItem
     , setExtension
-    , fromList
     , fromGlob
     , pandocCompilerWith
     , hakyllWith
@@ -67,7 +66,7 @@ main = hakyllWith config $ do
     {-- SEE: http://vapaus.org/text/hakyll-configuration.html --}
     mapM_ (directory static) ["css", "font", "js", "images"]
 
-    match (fromList ["about.markdown", "contact.markdown"]) $ do
+    match "*.md" $ do
         route $ setExtension "html"
         compile $ pandoc
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
