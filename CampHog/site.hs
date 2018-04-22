@@ -84,14 +84,14 @@ main = hakyllWith config $ do
         compile $ do
             posts <- loadAll "posts/*" >>= recentFirst
 
-            let archiveCtx =
+            let ctx =
                     listField "posts" postCtx (return posts)
                     <> constField "title" "Archives"
                     <> defaultContext
 
             makeItem ""
-                >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
-                >>= loadAndApplyTemplate "templates/default.html" archiveCtx
+                >>= loadAndApplyTemplate "templates/archive.html" ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
     match "index.html" $ do
@@ -99,13 +99,13 @@ main = hakyllWith config $ do
         compile $ do
             posts <- loadAll "posts/*" >>= recentFirst
 
-            let indexCtx =
+            let ctx =
                     listField "posts" postCtx (return posts)
                     <> constField "title" ""
                     <> defaultContext
 
             getResourceBody
-                >>= applyAsTemplate indexCtx
+                >>= applyAsTemplate ctx
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
 
@@ -117,6 +117,6 @@ postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
 postList :: ([Item String] -> [Item String]) -> Compiler String
 postList sortFilter = do
     posts <- sortFilter <$> loadAll "posts/*"
-    itemTpl <- loadBody "templates/post-item.html"
-    list <- applyTemplateList itemTpl postCtx posts
+    item <- loadBody "templates/post-item.html"
+    list <- applyTemplateList item postCtx posts
     return list
