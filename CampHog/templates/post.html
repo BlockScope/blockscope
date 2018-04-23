@@ -1,7 +1,15 @@
 <article>
+<header>
     <h1>$title$</h1>
+</header>
     $if(tags)$
-        Tags: $tags$
+        <div class="float-right">
+        $tags$
+        </div>
+        <div class="clearfix">
+            <br/>
+            <br/>
+        </div>
     $endif$
     $body$
     <div class="info">&copy; 2013-2018 Block Scope</div>

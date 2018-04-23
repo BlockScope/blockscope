@@ -13,6 +13,7 @@ executables:
     - base
     - hakyll
     - pandoc
+    - blaze-html
     main: site.hs
     source-dirs: CampHog
 author: Phil de Joux

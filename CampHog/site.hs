@@ -1,11 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Applicative (empty)
+import Data.List (intersperse)
 import Data.Monoid ((<>))
 import Hakyll
-    ( Rules, Pattern, Context(..), Compiler, Item(..), Configuration(..)
+    ( Context(..), Item(..), Configuration(..)
+    , Rules, Pattern, Compiler, Identifier
     , defaultContext
     , dateField
-    , tagsField
+    , tagsFieldWith
     , constField
     , listField
     , loadAll
@@ -30,10 +33,14 @@ import Hakyll
     , defaultHakyllReaderOptions
     , defaultHakyllWriterOptions
     , defaultConfiguration
+    , toUrl
     )
-import Hakyll.Web.Tags (buildTags, tagsRules)
+import Hakyll.Web.Tags (Tags, buildTags, tagsRules, getTags)
 import Text.Pandoc.Options
     (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
+import Text.Blaze.Html ((!), toHtml, toValue)
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as A
 
 pandocReaderOptions :: ReaderOptions
 pandocReaderOptions = defaultHakyllReaderOptions
@@ -78,7 +85,8 @@ main = hakyllWith config $ do
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ do
-            let ctx = tagsField "tags" tags <> postCtx
+            -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
+            let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
 
             pandoc
                 >>= loadAndApplyTemplate "templates/post.html" ctx
@@ -135,3 +143,21 @@ main = hakyllWith config $ do
 
 postCtx :: Context String
 postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
+
+tagsFieldNonEmpty :: String -> Tags -> Context a
+tagsFieldNonEmpty =
+    tagsFieldWith getTagsNonEmpty simpleRenderLink (mconcat . intersperse " ")
+    where
+        getTagsNonEmpty :: Identifier -> Compiler [String]
+        getTagsNonEmpty identifier = do
+            tags <- getTags identifier
+            if null tags then empty else return tags
+
+        simpleRenderLink :: String -> (Maybe FilePath) -> Maybe H.Html
+        simpleRenderLink _ Nothing = Nothing
+        simpleRenderLink tag (Just filePath) =
+            Just
+            $ H.a
+                ! A.class_ "badge badge-light"
+                ! A.href (toValue $ toUrl filePath)
+            $ toHtml (tag)
