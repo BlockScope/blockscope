@@ -1,7 +1,21 @@
-<ul>
-    $for(posts)$
-    <li>
-        <a href="$url$">$title$</a> - $date$
-    </li>
-    $endfor$
-</ul>
+<article>
+<header>
+    <h1>$title$</h1>
+</header>
+    $if(tags)$
+        <div class="float-right">
+        $tags$
+        </div>
+        <div class="clearfix">
+            <br/>
+            <br/>
+        </div>
+    $endif$
+    <ul>
+        $for(posts)$
+        <li>
+            <a href="$url$">$title$</a> - $date$
+        </li>
+        $endfor$
+    </ul>
+</article>

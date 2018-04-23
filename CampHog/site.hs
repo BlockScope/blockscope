@@ -34,6 +34,8 @@ import Hakyll
     , defaultHakyllWriterOptions
     , defaultConfiguration
     , toUrl
+    , gsubRoute
+    , composeRoutes
     )
 import Hakyll.Web.Tags (Tags, buildTags, tagsRules, getTags)
 import Text.Pandoc.Options
@@ -73,11 +75,26 @@ main = hakyllWith config $ do
     -- SEE: http://vapaus.org/text/hakyll-configuration.html
     mapM_ (directory static) ["css", "font", "js", "images"]
 
-    match "*.md" $ do
-        route $ setExtension "html"
-        compile $ pandoc
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
+    -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
+    match "static/b/*.md" $ do
+        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+        compile $ do
+            let ctx = postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/post.html" ctx
+                >>= loadAndApplyTemplate "templates/blockscope.html" ctx
+                >>= relativizeUrls
+
+    match "static/p/*.md" $ do
+        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+        compile $ do
+            let ctx = postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/post.html" ctx
+                >>= loadAndApplyTemplate "templates/philderbeast.html" ctx
+                >>= relativizeUrls
 
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
@@ -116,7 +133,7 @@ main = hakyllWith config $ do
 
             let ctx =
                     listField "posts" postCtx (return posts)
-                    <> constField "title" "Archives"
+                    <> constField "title" "Archive of Posts"
                     <> defaultContext
 
             makeItem ""
