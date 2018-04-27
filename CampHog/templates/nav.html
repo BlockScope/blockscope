@@ -1,12 +1,14 @@
-<div id="side" class="col-4 card">
-    <div class="card-body">
-        <h1 class="card-title"><a href="/">Camp Hog</a></h1>
-        <p class="card-text">A projection of corporation and self.</p>
-        <nav class="nav">
-            <a class="nav-link" href="/b/about.html">Company</a>
-            <a class="nav-link" href="/p/about.html">Individual</a>
-            <a class="nav-link" href="/archive.html">Posts</a>
-        </nav>
-        <div class="info">&copy; 2013-2018 Block Scope</div>
-    </div>
+<div class="card-body">
+    $partial("templates/banner.html")$
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="/b">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/archive.html">Blog</a>
+            </li>
+        </ul>
+    </nav>
+    $partial("templates/copyright.html")$
 </div>

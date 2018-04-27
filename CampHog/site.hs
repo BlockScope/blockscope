@@ -13,12 +13,10 @@ import Hakyll
     , listField
     , loadAll
     , loadAndApplyTemplate
-    , applyAsTemplate
     , templateCompiler
     , copyFileCompiler
     , match
     , compile
-    , getResourceBody
     , relativizeUrls
     , route
     , idRoute
@@ -126,7 +124,7 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    create ["archive.html"] $ do
+    create ["index.html", "archive.html"] $ do
         route idRoute
         compile $ do
             posts <- loadAll "posts/*" >>= recentFirst
@@ -139,21 +137,6 @@ main = hakyllWith config $ do
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
-
-    match "index.html" $ do
-        route idRoute
-        compile $ do
-            posts <- loadAll "posts/*" >>= recentFirst
-
-            let ctx =
-                    listField "posts" postCtx (return posts)
-                    <> constField "title" ""
-                    <> defaultContext
-
-            getResourceBody
-                >>= applyAsTemplate ctx
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler

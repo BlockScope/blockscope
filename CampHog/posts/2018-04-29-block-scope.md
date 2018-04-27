@@ -1,5 +1,6 @@
 ---
-title: About Block Scope
+title: What is block scope?
+tags: naming, compsci
 ---
 What about that name? It could be taken to mean looking for boulders, problem
 solving, sending projects, scope restricted to a block, a block of work,
@@ -22,3 +23,4 @@ a project with scope.
    or subject matter that something deals with or to which it is relevant.
 
 3. Assess or investigate something.
+
