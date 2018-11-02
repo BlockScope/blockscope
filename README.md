@@ -1,2 +1,13 @@
-CampHog
-=======
+# Camp Hog
+
+```
+CampHog> stack exec site watch
+Initialising...
+  Creating store...
+  Creating provider...
+Listening on http://127.0.0.1:8000
+  Running rules...
+Checking for out-of-date items
+Compiling
+Success
+```
