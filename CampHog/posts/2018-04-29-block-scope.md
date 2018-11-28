@@ -1,5 +1,5 @@
 ---
-title: What is block scope?
+title: What is a block scope?
 tags: naming, compsci
 ---
 What about that name? It could be taken to mean looking for boulders, problem
