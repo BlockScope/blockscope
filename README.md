@@ -1,13 +1,4 @@
-# Camp Hog
+# Block Scope
 
-```
-CampHog> stack exec site watch
-Initialising...
-  Creating store...
-  Creating provider...
-Listening on http://127.0.0.1:8000
-  Running rules...
-Checking for out-of-date items
-Compiling
-Success
-```
+The master branch has the files needed to publish
+[/blockscope.github.io/CampHog/](http://blockscope.github.io/CampHog/).
