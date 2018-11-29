@@ -1,6 +1,9 @@
     let defs = ./defaults.dhall
 
+in  let exts = ./default-extensions.dhall
+
 in    defs
+    ⫽ exts
     ⫽ { name =
           "camp-hog"
       , version =

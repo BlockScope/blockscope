@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: fb57adbaf3cdb917d7d7f0c2f98b64cdb5843ba7bea65c93d7523620e99a1771
+-- hash: 40234cf65d0abc6ded8a9292a0d891e43ac7309f7f9264a62ca7f492303bbbbc
 
 name:           camp-hog
 version:        1.0.0
@@ -36,7 +36,7 @@ executable site
       Paths_camp_hog
   hs-source-dirs:
       CampHog
-  default-extensions: PackageImports
+  default-extensions: DataKinds DeriveFunctor DeriveGeneric DeriveAnyClass DerivingStrategies DisambiguateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving GADTs LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PackageImports ParallelListComp PartialTypeSignatures PatternSynonyms QuasiQuotes RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TemplateHaskell TypeApplications TypeFamilies TypeOperators TypeSynonymInstances TupleSections UndecidableInstances
   ghc-options: -Wall -Werror
   build-depends:
       base
@@ -53,7 +53,7 @@ test-suite hlint
   hs-source-dirs:
       ./.
       test-suite-hlint
-  default-extensions: PackageImports
+  default-extensions: DataKinds DeriveFunctor DeriveGeneric DeriveAnyClass DerivingStrategies DisambiguateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving GADTs LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PackageImports ParallelListComp PartialTypeSignatures PatternSynonyms QuasiQuotes RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TemplateHaskell TypeApplications TypeFamilies TypeOperators TypeSynonymInstances TupleSections UndecidableInstances
   ghc-options: -Wall -Werror
   build-depends:
       base

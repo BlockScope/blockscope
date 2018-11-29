@@ -108,11 +108,11 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    tagsRules tags $ \tag pattern -> do
+    tagsRules tags $ \tag tagPattern -> do
         let title = "Posts tagged \"" ++ tag ++ "\""
         route idRoute
         compile $ do
-            posts <- loadAll pattern >>= recentFirst
+            posts <- loadAll tagPattern >>= recentFirst
 
             let ctx =
                     constField "title" title
