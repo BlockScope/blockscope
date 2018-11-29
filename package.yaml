@@ -4,38 +4,44 @@ synopsis: blockscope.com
 description: Static site generator for blockscope.com
 category: web
 homepage: https://github.com/blockscope/blockscope/tree/develop#readme
-github: BlockScope/blockscope
 author: Phil de Joux
 maintainer: phil.dejoux@blockscope.com
-license: BSD3
+copyright: © 2017-2018 Phil de Joux, © 2017-2018 Block Scope Limited
+license: MPL-2.0
 license-file: LICENSE.md
+tested-with: GHC == 8.2.2
+github: blockscope/blockscope
+extra-source-files:
+- package.dhall
+- package.yaml
+- changelog.md
+- README.md
+default-extensions:
+- PackageImports
 ghc-options:
 - -Wall
-extra-source-files:
-- package.yaml
-- stack.yaml
-- LICENSE.md
+- -Werror
+dependencies:
+- base >=4.10.1.0 && <5
 executables:
   site:
+    main: site.hs
+    source-dirs: CampHog
     dependencies:
     - base
     - hakyll
     - pandoc
     - blaze-html
-    main: site.hs
-    source-dirs: CampHog
 tests:
   hlint:
-    dependencies:
-    - base
-    - hakyll
-    - pandoc
-    - hlint
-    ghc-options:
-    - -rtsopts
-    - -threaded
-    - -with-rtsopts=-N
     main: HLint.hs
     source-dirs:
     - .
     - test-suite-hlint
+    dependencies:
+    - base
+    - hakyll
+    - pandoc
+    - blaze-html
+    - hlint
+
