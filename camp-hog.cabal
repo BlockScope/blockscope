@@ -1,0 +1,58 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: b4d405958daa9a3c923cd689e096f920d9e3cb2ad568e24ee3cc38f7b6a265ca
+
+name:           camp-hog
+version:        1.0.0
+synopsis:       blockscope.com
+description:    Static site generator for blockscope.com
+category:       web
+homepage:       https://github.com/blockscope/blockscope/tree/develop#readme
+bug-reports:    https://github.com/BlockScope/blockscope/issues
+author:         Phil de Joux
+maintainer:     phil.dejoux@blockscope.com
+license:        BSD3
+license-file:   LICENSE.md
+build-type:     Simple
+extra-source-files:
+    package.yaml
+    stack.yaml
+    LICENSE.md
+
+source-repository head
+  type: git
+  location: https://github.com/BlockScope/blockscope
+
+executable site
+  main-is: site.hs
+  other-modules:
+      Paths_camp_hog
+  hs-source-dirs:
+      CampHog
+  ghc-options: -Wall
+  build-depends:
+      base
+    , blaze-html
+    , hakyll
+    , pandoc
+  default-language: Haskell2010
+
+test-suite hlint
+  type: exitcode-stdio-1.0
+  main-is: HLint.hs
+  other-modules:
+      Paths_camp_hog
+  hs-source-dirs:
+      ./.
+      test-suite-hlint
+  ghc-options: -Wall -rtsopts -threaded -with-rtsopts=-N
+  build-depends:
+      base
+    , hakyll
+    , hlint
+    , pandoc
+  default-language: Haskell2010

@@ -1,9 +1,10 @@
 name: camp-hog
-version: '1.0.0'
-synopsis: Company website.
-description: Block scope camp hog website.
-category: Data
-github: BlockScope/CampHog
+version: 1.0.0
+synopsis: blockscope.com
+description: Static site generator for blockscope.com
+category: web
+homepage: https://github.com/blockscope/blockscope/tree/develop#readme
+github: BlockScope/blockscope
 author: Phil de Joux
 maintainer: phil.dejoux@blockscope.com
 license: BSD3

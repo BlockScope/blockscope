@@ -8,13 +8,9 @@ cabal-dev
 _cache
 _site
 .shake
-.stack-work
+.stack-work*
 __*
-*.cabal
 node_modules
-*.fsdb
-*.comp.yaml
-*.track.yaml
 *.jsexe
 *.js_hi
 *.js_o
