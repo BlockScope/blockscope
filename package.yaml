@@ -1,13 +1,13 @@
-name: CampHog
-version: '0.1.0'
-author: Phil de Joux
-maintainer: phil.dejoux@blockscope.com
+name: camp-hog
+version: '1.0.0'
 synopsis: Company website.
 description: Block scope camp hog website.
 category: Data
+github: BlockScope/CampHog
+author: Phil de Joux
+maintainer: phil.dejoux@blockscope.com
 license: BSD3
 license-file: LICENSE.md
-github: BlockScope/CampHog
 ghc-options:
 - -Wall
 extra-source-files:
