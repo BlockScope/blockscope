@@ -1,7 +1,7 @@
 let defs = ./defaults.dhall
 
 in  let exts = ./default-extensions.dhall
-    
+
     in    defs
         ⫽ exts
         ⫽ { name =
@@ -23,7 +23,7 @@ in  let exts = ./default-extensions.dhall
                   { dependencies =
                       [ "base", "hakyll", "pandoc", "blaze-html" ]
                   , source-dirs =
-                      "CampHog"
+                      "www-hakyll"
                   , main =
                       "site.hs"
                   }

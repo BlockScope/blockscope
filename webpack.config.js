@@ -14,11 +14,11 @@ module.exports = {
     },
     devtool: 'source-map',
     output: {
-        path: path.resolve(__dirname, './CampHog/css'),
+        path: path.resolve(__dirname, './www-hakyll/css'),
         filename: '[name].js'
     },
     devServer: {
-        contentBase: path.resolve(__dirname, "./CampHog/css"),
+        contentBase: path.resolve(__dirname, "./www-hakyll/css"),
         compress: true,
         port: 8000
     },

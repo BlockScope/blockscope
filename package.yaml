@@ -56,7 +56,7 @@ dependencies:
 executables:
   site:
     main: site.hs
-    source-dirs: CampHog
+    source-dirs: www-hakyll
     dependencies:
     - base
     - hakyll

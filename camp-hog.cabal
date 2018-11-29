@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.dhall by hpack version 0.31.0.
+-- This file has been generated from package.dhall by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 40234cf65d0abc6ded8a9292a0d891e43ac7309f7f9264a62ca7f492303bbbbc
+-- hash: aacbce22528897c97634ca820519d7c76368dd458739ba7cb7ff804f816bf0cf
 
 name:           camp-hog
 version:        1.0.0
@@ -35,7 +35,7 @@ executable site
   other-modules:
       Paths_camp_hog
   hs-source-dirs:
-      CampHog
+      www-hakyll
   default-extensions: DataKinds DeriveFunctor DeriveGeneric DeriveAnyClass DerivingStrategies DisambiguateRecordFields FlexibleContexts FlexibleInstances GeneralizedNewtypeDeriving GADTs LambdaCase MultiParamTypeClasses MultiWayIf NamedFieldPuns OverloadedStrings PackageImports ParallelListComp PartialTypeSignatures PatternSynonyms QuasiQuotes RankNTypes RecordWildCards ScopedTypeVariables StandaloneDeriving TemplateHaskell TypeApplications TypeFamilies TypeOperators TypeSynonymInstances TupleSections UndecidableInstances
   ghc-options: -Wall -Werror
   build-depends:

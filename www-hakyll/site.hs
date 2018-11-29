@@ -65,7 +65,7 @@ directory act f = act $ fromGlob $ f ++ "/**"
 config :: Configuration
 config =
     defaultConfiguration
-        { providerDirectory = "CampHog"
+        { providerDirectory = "www-hakyll"
         }
 
 main :: IO ()
