@@ -94,6 +94,16 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/philderbeast.html" ctx
                 >>= relativizeUrls
 
+    match "static/tweet/*.md" $ do
+        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+        compile $ do
+            let ctx = postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/about.html" ctx
+                >>= loadAndApplyTemplate "templates/tweet.html" ctx
+                >>= relativizeUrls
+
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
@@ -131,7 +141,7 @@ main = hakyllWith config $ do
 
             let ctx =
                     listField "posts" postCtx (return posts)
-                    <> constField "title" "Archive of Posts"
+                    <> constField "title" "Post it, Notes"
                     <> defaultContext
 
             makeItem ""
