@@ -80,7 +80,7 @@ main = hakyllWith config $ do
             let ctx = postCtx
 
             pandoc
-                >>= loadAndApplyTemplate "templates/post.html" ctx
+                >>= loadAndApplyTemplate "templates/about.html" ctx
                 >>= loadAndApplyTemplate "templates/blockscope.html" ctx
                 >>= relativizeUrls
 
@@ -90,7 +90,7 @@ main = hakyllWith config $ do
             let ctx = postCtx
 
             pandoc
-                >>= loadAndApplyTemplate "templates/post.html" ctx
+                >>= loadAndApplyTemplate "templates/about.html" ctx
                 >>= loadAndApplyTemplate "templates/philderbeast.html" ctx
                 >>= relativizeUrls
 
