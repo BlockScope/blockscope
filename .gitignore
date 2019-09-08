@@ -9,6 +9,7 @@ _cache
 _site
 .shake
 .stack-work
+.stack-work-dhall
 __*
 *.cabal
 node_modules
