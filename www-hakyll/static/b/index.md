@@ -1,5 +1,5 @@
 ---
-title: About @blockscope
+title: '@blockscope'
 ---
 
 Incorported in 2003 as a New Zealand registered company.

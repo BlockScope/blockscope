@@ -1,5 +1,5 @@
 ---
-title: About @philderbeast
+title: '@philderbeast'
 ---
 I develop software and climb, unfortunately doing only one of these activities
 professionally.
