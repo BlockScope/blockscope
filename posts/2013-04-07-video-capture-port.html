@@ -3,32 +3,27 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>BlockScope - How would this look in idiomatic F#?</title>
-        <link rel="stylesheet" href="../css/styles.css">
+        <link rel="stylesheet" type="text/css" href="../css/styles.css" />
     </head>
     <body>
         <div class="container-fluid">
             <div class="row">
                 <div id="side" class="col-4 card">
                     <div class="card-body">
-    <h1 class="card-title"><a href="../">Block Scope</a></h1>
-<p class="card-text">Software development consultancy</p>
+    <h1 class="card-title"><a href="../">{Block Scope}</a></h1>
+<p class="card-text">with curlies but I prefer indents</p>
 
     <nav>
         <ul class="nav flex-column">
-            <li class="nav-item">
-                <a class="nav-link active" href="../b">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../archive.html">Blog</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="../archive.html">blog</a></li>
+            <li class="nav-item"><a class="nav-link active" href="../b">@blockscope</a></li>
+            <li class="nav-item"><a class="nav-link active" href="../p">@philderbeast</a></li>
         </ul>
     </nav>
-    <div class="small text-muted">&copy; 2013-2018 Block Scope</div>
-
 </div>
 
                 </div>
-                <div class="col-6">
+                <div class="col-8">
                     <article>
 <header>
     <h1>How would this look in idiomatic F#?</h1>
@@ -54,56 +49,58 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <ul>
 <li>Put the moving bits inside an auto-opening private module. This is something like an anonymous namespace in C++, a place to put stuff that is local to the source file but otherwise hidden. What was left to the class members was to unwrap a <code>Choice&lt;_, _&gt;</code>, possibly fire an alert off and return an <code>Option&lt;_&gt;</code> …</li>
 </ul>
-<div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb1-1" data-line-number="1">        [&lt;AutoOpen&gt;]</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">        <span class="ot">module</span> <span class="kw">private</span> __ =</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">            <span class="kw">let</span> initializeSession f =</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">                //<span class="co"> the real work gets done here</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">        <span class="kw">type</span> VideoCapture(labelledView) = </a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">            //<span class="co"> ...</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">            <span class="kw">member</span> x.InitializeSession () =</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">                <span class="kw">match</span> initializeSession x <span class="kw">with</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">                | Choice1Of2(s) -&gt; Some(s)</a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">                | Choice2Of2(m) -&gt; alert(m); None</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb1-1" title="1">        [&lt;AutoOpen&gt;]</a>
+<a class="sourceLine" id="cb1-2" title="2">        <span class="ot">module</span> <span class="kw">private</span> __ =</a>
+<a class="sourceLine" id="cb1-3" title="3">            <span class="kw">let</span> initializeSession f =</a>
+<a class="sourceLine" id="cb1-4" title="4">                //<span class="co"> the real work gets done here</span></a>
+<a class="sourceLine" id="cb1-5" title="5"></a>
+<a class="sourceLine" id="cb1-6" title="6">        <span class="kw">type</span> VideoCapture(labelledView) = </a>
+<a class="sourceLine" id="cb1-7" title="7">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a>
+<a class="sourceLine" id="cb1-8" title="8">            //<span class="co"> ...</span></a>
+<a class="sourceLine" id="cb1-9" title="9">            <span class="kw">member</span> x.InitializeSession () =</a>
+<a class="sourceLine" id="cb1-10" title="10">                <span class="kw">match</span> initializeSession x <span class="kw">with</span></a>
+<a class="sourceLine" id="cb1-11" title="11">                | Choice1Of2(s) -&gt; Some(s)</a>
+<a class="sourceLine" id="cb1-12" title="12">                | Choice2Of2(m) -&gt; alert(m); None</a></code></pre></div>
 <ul>
 <li>I stopped naming things I didn’t care about using underscore, the discard binding from pattern matches. Note that I cannot use a single underscore for the this binding of a method so I use two.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb2-1" data-line-number="1">        <span class="kw">override</span> __.FinishedLaunching(_, _) = ...</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb2-1" title="1">        <span class="kw">override</span> __.FinishedLaunching(_, _) = ...</a></code></pre></div>
 <ul>
 <li>Replaced nulls with options and choices.</li>
 <li>Dropped the use of new when constructing object except when the class implements IDisposable.</li>
 <li>Collected related fields into records going with immutability where possible.</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb3-1" data-line-number="1">        //<span class="co"> From this ...</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">        <span class="kw">type</span> VideoCapture(imgView, label) = </a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">            <span class="kw">member</span> <span class="kw">val</span> ImageView : UIImageView = <span class="kw">null</span> <span class="kw">with</span> get, set</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">            <span class="kw">member</span> <span class="kw">val</span> InfoLabel : UILabel = <span class="kw">null</span> <span class="kw">with</span> get, set</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">        //<span class="co"> To this ...</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">        <span class="kw">type</span> LabelledView = {Label : UILabel; View : UIImageView}</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">        <span class="kw">type</span> VideoCapture(labelledView) = </a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb3-1" title="1">        //<span class="co"> From this ...</span></a>
+<a class="sourceLine" id="cb3-2" title="2">        <span class="kw">type</span> VideoCapture(imgView, label) = </a>
+<a class="sourceLine" id="cb3-3" title="3">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a>
+<a class="sourceLine" id="cb3-4" title="4">            <span class="kw">member</span> <span class="kw">val</span> ImageView : UIImageView = <span class="kw">null</span> <span class="kw">with</span> get, set</a>
+<a class="sourceLine" id="cb3-5" title="5">            <span class="kw">member</span> <span class="kw">val</span> InfoLabel : UILabel = <span class="kw">null</span> <span class="kw">with</span> get, set</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7">        //<span class="co"> To this ...</span></a>
+<a class="sourceLine" id="cb3-8" title="8">        <span class="kw">type</span> LabelledView = {Label : UILabel; View : UIImageView}</a>
+<a class="sourceLine" id="cb3-9" title="9">        <span class="kw">type</span> VideoCapture(labelledView) = </a>
+<a class="sourceLine" id="cb3-10" title="10">            <span class="kw">inherit</span> AVCaptureVideoDataOutputSampleBufferDelegate()</a></code></pre></div>
 <ul>
 <li>Used pattern matching to deconstruct records.</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb4-1" data-line-number="1">        <span class="kw">match</span> labelledView <span class="kw">with</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">        | {Label = l; View = v} -&gt;</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb4-1" title="1">        <span class="kw">match</span> labelledView <span class="kw">with</span></a>
+<a class="sourceLine" id="cb4-2" title="2">        | {Label = l; View = v} -&gt;</a></code></pre></div>
 <ul>
 <li>Dropped the <code>Maybe-</code> prefix on methods that were returning null but were now returning <code>Option&lt;_&gt;</code>.</li>
 <li>I preferred to use <code>Ref&lt;_&gt;</code> for the few remaining mutations of fields.</li>
 <li>Encoded the same information in fewer fields by seeing that recording was tied to the existence of the capture.</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb5-1" data-line-number="1">        <span class="kw">type</span> VideoCaptureController(viewColor, title) =</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">            <span class="kw">inherit</span> UIViewController()</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">            //<span class="co"> from this ...</span></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">            <span class="kw">member</span> <span class="kw">val</span> recording = <span class="kw">false</span> <span class="kw">with</span> get, set</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">            <span class="kw">member</span> <span class="kw">val</span> videoCapture : VideoCapture = <span class="kw">new</span> VideoCapture(cv.LabelledView) <span class="kw">with</span> get, set</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">            //<span class="co"> to this ...</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">            <span class="kw">let</span> capture : Ref&lt;VideoCapture <span class="dt">option</span>&gt; = <span class="kw">ref</span> None</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><a class="sourceLine" id="cb5-1" title="1">        <span class="kw">type</span> VideoCaptureController(viewColor, title) =</a>
+<a class="sourceLine" id="cb5-2" title="2">            <span class="kw">inherit</span> UIViewController()</a>
+<a class="sourceLine" id="cb5-3" title="3">            //<span class="co"> from this ...</span></a>
+<a class="sourceLine" id="cb5-4" title="4">            <span class="kw">member</span> <span class="kw">val</span> recording = <span class="kw">false</span> <span class="kw">with</span> get, set</a>
+<a class="sourceLine" id="cb5-5" title="5">            <span class="kw">member</span> <span class="kw">val</span> videoCapture : VideoCapture = <span class="kw">new</span> VideoCapture(cv.LabelledView) <span class="kw">with</span> get, set</a>
+<a class="sourceLine" id="cb5-6" title="6"></a>
+<a class="sourceLine" id="cb5-7" title="7">            //<span class="co"> to this ...</span></a>
+<a class="sourceLine" id="cb5-8" title="8">            <span class="kw">let</span> capture : Ref&lt;VideoCapture <span class="dt">option</span>&gt; = <span class="kw">ref</span> None</a></code></pre></div>
 <p>The <a href="https://github.com/philderbeast/XamarinVideoCapture">complete solution</a> and <a href="https://gist.github.com/philderbeast/5253070">gist</a> are up at github. I coded this blind, aiming only to get it compiling and don’t know if it runs.</p>
+    <div class="small">&copy; 2013-2019 Block Scope</div>
+
 </article>
 
                 </div>
