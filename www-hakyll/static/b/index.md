@@ -2,8 +2,6 @@
 title: '@blockscope'
 ---
 
-Incorported in 2003 as a New Zealand registered company.
-
 If you're interested in working together, these are the kinds of services I can
 provide.
 
