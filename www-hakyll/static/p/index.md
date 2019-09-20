@@ -1,13 +1,17 @@
 ---
 title: '@philderbeast'
 ---
-I develop software and climb, unfortunately doing only one of these activities
-professionally.
 
-When choosing a company name, I went with [block
-scope](/posts/2018-04-29-block-scope.html). It is a scoping rule in many
-programming languages.  I'm also often out scoping new lines to climb on the
-boulders ([blocs](https://fr.wikipedia.org/wiki/Bloc_(escalade)) in French).
+I develop software and climb. I would rather climb professionally and code for
+pleasure.
+
+I can draw a lot of parallels between these two activities.
+
+* On the sharp end, you're route finding and decision making.
+* Following is much easier than leading.
+* Guidebooks save a lot of wasted time searching for good lines.
+* Both wreak arms and tweak fingers.
+* Muscle memory and good technique reduce effort.
 
 When I first started working as a software developer, the team I joined was
 developing for DOS with Turbo Pascal.
