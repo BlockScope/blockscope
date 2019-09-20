@@ -4,10 +4,10 @@ tags: fsharp, conversion, xamarin
 ---
 I've been watching the play for apps from the sidelines. Had I'd missed the
 boat by not getting in early with the first wave of farting and beer swilling
-apps? Was the development experience raw and retrograde, like back to the '90s
-before virtual machines with many build targets and ```#pragma``` hell?
-[Xamarin](http://xamarin.com/) helps ease that cross-platform pain. With the
-recent release of F# 3.0 came another open source drop of the compiler and
+apps for mobile? Was the development experience raw and retrograde, like back
+to the '90s before virtual machines with many build targets and ```#pragma```
+hell?  [Xamarin](http://xamarin.com/) helps ease that cross-platform pain? With
+the recent release of F# 3.0 came another open source drop of the compiler and
 tools and a language binding for F# 3.0 has been added to [Xamarin
 Studio](http://xamarin.com/studio).
 
