@@ -3,9 +3,8 @@ title: '@philderbeast'
 ---
 
 I develop software and climb. I would rather climb professionally and code for
-pleasure.
-
-Let me share my experience and advice that run in parallel between these two activities.
+pleasure. Let me share my experience and advice that run in parallel between
+these two activities.
 
 * Check your knots and always have a backup.
 * Gear freaking is a distraction.
