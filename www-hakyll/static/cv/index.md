@@ -2,12 +2,6 @@
 title: PHIL DE JOUX
 ---
 
-## Education
-
-Computer Graphics *(A)* 1996, University of Canterbury  
-Mathematical Modeling B.Sc. *(2.1 Hons)* 1995, Lincoln University  
-Medicine *(4/7 years)* 1982/5, Otago University  
-
 ****
 
 # WORK HISTORY
@@ -189,3 +183,13 @@ industries such as construction, surveying and agriculture.
   Pascal.
 
 *Turbo Pascal, C++, MFC, Win16 API, Win32 API.*
+
+****
+
+## Education
+
+Computer Graphics *(A)* 1996, University of Canterbury  
+Mathematical Modeling B.Sc. *(2.1 Hons)* 1995, Lincoln University  
+Medicine *(4/7 years)* 1982/5, Otago University  
+
+****
