@@ -1,8 +1,6 @@
-# PHIL DE JOUX
-
-53 Ryans Rd, Northgate, Qld. 4013  
-+61488253274  
-[phil.dejoux@blockscope.com](mailto://phil.dejoux@blockscope.com)  
+---
+title: PHIL DE JOUX
+---
 
 ## Education
 
