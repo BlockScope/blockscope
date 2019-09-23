@@ -181,8 +181,3 @@ industries such as construction, surveying and agriculture.
   Pascal.
 
 *Turbo Pascal, C++, MFC, Win16 API, Win32 API.*
-
-## Colophon This document was authored in
-[markdown](http://daringfireball.net/projects/markdown/), converted with
-[pandoc](http://johnmacfarlane.net/pandoc/) and version controlled in
-[mercurial](http://mercurial.selenic.com/).
