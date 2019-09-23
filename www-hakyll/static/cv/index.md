@@ -2,8 +2,6 @@
 title: PHIL DE JOUX
 ---
 
-****
-
 # WORK HISTORY
 
 ## Feb14-Apr17: [Aqualinc Research](http://www.aqualinc.co.nz), Christchurch, NZ
@@ -184,10 +182,6 @@ industries such as construction, surveying and agriculture.
 
 *Turbo Pascal, C++, MFC, Win16 API, Win32 API.*
 
-****
-
 ## Education
 
 Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5, Medicine 1982/5
-
-****
