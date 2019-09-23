@@ -6,12 +6,22 @@
 
 ## Education
 
-Computer Graphics *(A)* 1996, University of Canterbury, NZ  Mathematical  
-Modeling B.Sc. *(2.1 Hons)* 1995, Lincoln University, NZ  
+Computer Graphics *(A)* 1996, University of Canterbury  
+Mathematical Modeling B.Sc. *(2.1 Hons)* 1995, Lincoln University  
+Medicine *(4/7 years)* 1982/5, Otago University  
 
 ****
 
 # WORK HISTORY
+
+## Feb14-Apr17: [Aqualinc Research](http://www.aqualinc.co.nz), Christchurch, NZ
+
+Layout the schema for a database associating users with farms to
+regulatory-body issued consents with monitoring of site measurements against
+consented levels. Issue alerts for breaching these levels. Devise alert-bands
+that could be viewed and simply understood on a chart but also be used to
+trigger alerts. Develop web services for two web apps, one for administrators
+and the other for end users.
 
 ## Aug11-Apr12: [Travieo](http://www.travieo.com), London, UK
 
