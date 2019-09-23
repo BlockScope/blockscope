@@ -104,6 +104,16 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/tweet.html" ctx
                 >>= relativizeUrls
 
+    match "static/cv/*.md" $ do
+        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+        compile $ do
+            let ctx = postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/about.html" ctx
+                >>= loadAndApplyTemplate "templates/cv.html" ctx
+                >>= relativizeUrls
+
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
