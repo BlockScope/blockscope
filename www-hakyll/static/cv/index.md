@@ -15,6 +15,12 @@ that could be viewed and simply understood on a chart but also be used to
 trigger alerts. Develop web services for two web apps, one for administrators
 and the other for end users.
 
+## [Tagly](https://angel.co/company/tagly)
+
+`2012/07-2012/12`
+
+Implement a live feed.
+
 ## [Travieo](http://www.travieo.com)
 
 `2011/04-2012/04`
