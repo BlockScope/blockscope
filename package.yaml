@@ -59,9 +59,10 @@ executables:
     source-dirs: www-hakyll
     dependencies:
     - base
+    - blaze-html
+    - filepath
     - hakyll
     - pandoc
-    - blaze-html
 tests:
   hlint:
     main: HLint.hs

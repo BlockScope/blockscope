@@ -20,10 +20,12 @@ import Hakyll
     , relativizeUrls
     , route
     , idRoute
+    , customRoute
     , recentFirst
     , create
     , makeItem
     , setExtension
+    , toFilePath
     , fromGlob
     , fromCapture
     , pandocCompilerWith
@@ -41,6 +43,7 @@ import Text.Pandoc.Options
 import Text.Blaze.Html ((!), toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
+import System.FilePath
 
 pandocReaderOptions :: ReaderOptions
 pandocReaderOptions = defaultHakyllReaderOptions
@@ -72,6 +75,10 @@ main :: IO ()
 main = hakyllWith config $ do
     -- SEE: http://vapaus.org/text/hakyll-configuration.html
     mapM_ (directory static) ["css", "font", "js", "images"]
+
+    match "favicon/*.*" $ do
+        route $ customRoute ((flip replaceDirectory) "" . toFilePath)
+        compile copyFileCompiler
 
     -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
     match "static/b/*.md" $ do
