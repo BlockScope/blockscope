@@ -4,7 +4,9 @@ title: Phil de Joux
 
 # WORK HISTORY
 
-## 2014/02-2017/04: [Aqualinc Research](http://www.aqualinc.co.nz), Christchurch, NZ
+## [Aqualinc Research](http://www.aqualinc.co.nz)
+
+`2014/02-2017/04`
 
 Layout the schema for a database associating users with farms to
 regulatory-body issued consents with monitoring of site measurements against
@@ -13,11 +15,15 @@ that could be viewed and simply understood on a chart but also be used to
 trigger alerts. Develop web services for two web apps, one for administrators
 and the other for end users.
 
-## 2011/04-2012/04: [Travieo](http://www.travieo.com), London, UK
+## [Travieo](http://www.travieo.com)
+
+`2011/04-2012/04`
 
 Prototype a travel booking website in ASP.NET MVC3.
 
-## 2008/02-2011/09: [Crop Logic](http://www.croplogic.com), Lincoln, NZ
+## [Crop Logic](http://www.croplogic.com)
+
+`2008/02-2011/09`
 
 This is an online management tool for potato growers based on a discrete
 computer simulation of plant growth in response to soil structure and
@@ -56,7 +62,9 @@ Services 2005, WPF, SOAP & WCF, ClickOnce, XML, XSD, Visual Studio 2008 & 2010,
 SQL Server Management Studio, Mercurial, FogBugz, NAnt, Mage, Red-Gate SQL
 Compare, Red-Gate SQL Data Compare.*
 
-## 2007/12-2010/4: [Waimakariri District Council](http://www.waimakariri.govt.nz), Rangiora, NZ
+## [Waimakariri District Council](http://www.waimakariri.govt.nz)
+
+`2007/12-2010/04`
 
 The council intranet site for logging public submissions and scheduling
 hearings.
@@ -68,7 +76,9 @@ hearings.
 
 *C#, LINQ to SQL, ASP.NET 3.5 & 4.0, SQL Server 2005.*
 
-## 2003/07-2008/05: [The Nutricentre](http://www.nutricentre.com), London, UK
+## [The Nutricentre](http://www.nutricentre.com)
+
+`2003/07-2008/05`
 
 The Nutricentre has a number of physical stores and a successful online retail
 web store for heath supplements.
@@ -91,7 +101,9 @@ web store for heath supplements.
 *C#, VB.NET, ASP.NET 1.1 & 2.0, SQL Server 2000 & 2005, Commerce Server 2002
 & 2007, ASMX, ASHX.*
 
-## 2003/06-2007/07: [NIWA](http://www.niwa.co.nz), Christchurch, NZ
+## [NIWA](http://www.niwa.co.nz)
+
+`2003/06-2007/07`
 
 The National Institute of Water and Atmospheric Research is a crown research
 institute.  [Flosys](http://www.niwa.co.nz/software/flosys) is a desktop tool
@@ -119,7 +131,9 @@ Zealand web site that shows real time data.
 
 *C++, C#, ASP.NET 1.1 & 2.0, Winforms, GDI+, WiX, XML, XSD, XSLT.*
 
-## 2001/08-2002/09: Aspelle, London, UK
+## Aspelle
+
+`2001/08-2002/09`
 
 Aspelle had a security product, a type of SSL VPN, that provided secure and
 restricted access to enterprise networks and applications.
@@ -139,7 +153,9 @@ restricted access to enterprise networks and applications.
 *C++, C#, COM, ADSI, Win32 API, ClearCase, ClearQuest, vmware, MMC Active
 Directory Users and Computers console.*
 
-## 1999/10-2001/03: Obvious Technology, Paris, FR
+## Obvious Technology
+
+`1999/10-2001/03`
 
 Their editing product annotated video for search and display of related
 content, showing a 3D tree of key frames. It could play and edit Windows Media,
@@ -155,7 +171,9 @@ but succumbed to the dot-com crash.
 
 *C++, COM, DirectShow, Quicktime.*
 
-## 1999/07-1999/09: [Software Migrations](http://www.smltd.com), Durham, UK
+## [Software Migrations](http://www.smltd.com)
+
+`1999/07-1999/09`
 
 SML provides tools for maintaining legacy assembly code on mainframes and for
 translating assembly code (ASM) modules to C.
@@ -165,7 +183,9 @@ translating assembly code (ASM) modules to C.
 
 *C++, MFC, Winsock.*
 
-## 1995/02-1999/01: [Trimble](http://www.trimble.com), Christchurch, NZ
+## [Trimble](http://www.trimble.com)
+
+`1995/02-1999/01`
 
 Trimble creates GPS receivers, handheld data loggers and software for
 industries such as construction, surveying and agriculture.
