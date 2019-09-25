@@ -75,31 +75,8 @@ backed by Commerce Server.
 
 ## [NIWA](http://www.niwa.co.nz)
 
-`2003/06-2007/07`
-
-The National Institute of Water and Atmospheric Research is a crown research
-institute.  [Flosys](http://www.niwa.co.nz/software/flosys) is a desktop tool
-for managing environmental monitoring stations such as river flow and air
-quality. It can also be used for analyzing time series.
-[EDENZ](http://edenz.niwa.co.nz) is the Environmental Data Explorer for New
-Zealand web site that shows real time data.
-
-* Introduce source control and bug tracking.
-* Port the client portion of Flosys from MFC to C# Winforms.
-* Prototype replacing a binary file time series database with a relational
-  database, i.e. replacing
-  [TIDEDA](http://www.niwa.co.nz/software/tideda-time-dependent-data) with SQL
-  Server.
-* Define an XML schema (XSD) for Flosys projects and automate project upgrades
-  using XML transforms (XSLT).
-* Develop interactive maps in Winforms with GDI+.
-* Develop dotNet remoting clients and servers for configuring alerts and
-  subscribing to events.
-* Develop ASMX web services for EDENZ data.
-* Develop a deployment web site that can automate and package deployments with
-  WiX for use by non-technical staff. 
-* Helped prepare a bid NIWA made for a hydrology rating curve editor the United
-  States Geological Survey ([USGS](http://www.usgs.gov/)) put out for tender.
+`2003/06-2007/07` Develop tools and the [EDENZ](http://edenz.niwa.co.nz)
+website for publishing environmental time series data.
 
 ## Aspelle
 
