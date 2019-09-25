@@ -25,39 +25,12 @@ and the other for end users.
 
 ## [Crop Logic](http://www.croplogic.com)
 
-`2008/02-2011/09`
-
-This is an online management tool for potato growers based on a discrete
-computer simulation of plant growth in response to soil structure and
-hydraulics, weather, irrigation and fertilization. An optimizer runs the crop
-model repeatedly to work out the best days to apply water and nitrogen.
-
-* Introduce source control and bug tracking to non-technical staff.
-* Design the product architecture and choose appropriate data structures.
-* Interview candidates and select developers for the team.
-* Port the simulation model from C++ to C#.
-* Prototype consuming third party weather web services.
-* Design the database schema and matching extensible markup language (XML)
-  schema (XSD).
-* Create and source control database migration scripts.
-* Setup virtual machines for production and test environments.
-* Script automated tests, build and package the product artifacts.
-* Deploy the product to test, staging and production on 3 servers in California
-  at [SVWH](http://www.svwh.net/).
-* Digitally sign ClickOnce product artifacts for separate domains.
-* Configure web services across domains with the `@configSource` attribute.
-* Develop the frontend in ASP.NET, cascading style sheets (CSS) and jQuery.
-* Design and develop setup, simulation and weather web services with Windows
-  Communication Foundation (WCF) and message security.
-* Develop a class library based on The Unified Code for Units of Measure
-  ([UCUM](http://unitsofmeasure.org/)) for unit conversions and display.
-* Develop the data access layer in language integrated query (LINQ) for SQL and
-  SQL stored procedures.
-* Develop charts in SQL Server reporting services (SSRS).
-* Develop an admin tool for managing weather stations and data in Windows
-  Presentation Foundation (WPF) model-view-viewmodel (MVVM).
-* Develop a cache for weather data observations.
-* Develop an algorithm in F# for detecting rainfall time series.
+`2008/02-2011/09` Work with scientists tuning and testing a discrete event
+simulation crop model. Work with the product team developing a website for
+potato growers. Pull in external weather and field observations. Provide a way
+for growers to setup their crops, to enter their irrigation and fertilizer
+applications and to view the model recommended future inputs and expected
+yields.
 
 ## [Waimakariri District Council](http://www.waimakariri.govt.nz)
 
