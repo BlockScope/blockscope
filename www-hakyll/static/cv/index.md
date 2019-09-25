@@ -2,6 +2,11 @@
 title: Phil de Joux
 ---
 
+I prefer simple and raw over convoluted and crufty.
+
+Give me VIM and a REPL over an IDE with wizards any day.  
+Leave me a build and tests I can reproduce from the command line any time.  
+
 ### Work History
 
 * `2014/02-2017/04` [**Aqualinc Research**](http://www.aqualinc.co.nz)  
