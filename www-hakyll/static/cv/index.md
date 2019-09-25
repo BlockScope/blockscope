@@ -80,22 +80,8 @@ website for publishing environmental time series data.
 
 ## Aspelle
 
-`2001/08-2002/09`
-
-Aspelle had a security product, a type of SSL VPN, that provided secure and
-restricted access to enterprise networks and applications.
-
-* Develop authentication and authorization in Active Directory (AD).
-* Extend the AD schema with classes, attributes and extended rights.
-* Create ADSI extensions for these new classes and attributes. ADSI is AD
-  service interface, a Component Object Model (COM) interface.
-* Evaluate the discretionary access control list (DACL) of AD objects without
-  a login token.
-* Create logon sessions with Local Security Authority (LSA) functions and the
-  Security Support Provider Interface (SSPI).
-* Impersonate and duplicate logon tokens.
-* Develop an Internet Security and Acceleration (ISA) Server web filter for URL
-  rewriting using regular expression matching.
+`2001/08-2002/09` Develop authentication and authorization parts of a security
+product.
 
 ## [Obvious Technology](https://angel.co/company/obvious-technology)
 
