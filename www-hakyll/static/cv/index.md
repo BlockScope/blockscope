@@ -73,7 +73,7 @@ from PHP to ASP.NET, allocate submitters to hearing times and layout reoprts.
 `2003/07-2008/05`
 
 The Nutricentre has a number of physical stores and a successful online retail
-web store for heath supplements.
+web store for health supplements.
 
 * Deploy the product to production on a remote server in Canada at
   [EpiDirect](http://www.epidirect.com/).
