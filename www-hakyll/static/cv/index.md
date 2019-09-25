@@ -17,15 +17,11 @@ and the other for end users.
 
 ## [Tagly](https://angel.co/company/tagly)
 
-`2012/07-2012/12`
-
-Implement a live feed.
+`2012/07-2012/12` Develop server and browser components of a live feed.
 
 ## [Travieo](http://www.travieo.com)
 
-`2011/04-2012/04`
-
-Prototype a travel booking website in ASP.NET MVC3.
+`2011/04-2012/04` Develop a travel booking website.
 
 ## [Crop Logic](http://www.croplogic.com)
 
