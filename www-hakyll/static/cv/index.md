@@ -35,28 +35,14 @@ Develop a frontend for tools translating mainframe assembly code modules to C.
 Maintain the inhouse computer graphics library, improving clipping and
 multithreading.
 
-### Tech to Favour
+### Tech I quite like
 
-* Languages: F# and Haskell.
-* XML: XML and XSD.
-* SQL: SQL and LINQ to SQL.
-* Build: Paket, Shake, Bazel and Stack.
-* COMMS: JSON.
-* Source Control and Bug Tracking: Mercurial, Git, GitHub, GitLab and FogBugz.
-* Environment: NixOS and NixPkgs.
-* Frameworks and Platforms: Reflex-FRP.
-
-### Tech to Shun
-
-* Languages: Pascal, C++, VB.NET and Elm.
-* XML: XSLT.
-* SQL: Reporting Services.
-* Build: NAnt, Mage, ClickOnce, Nuget and Cabal.
-* COMMS: SOAP and WCF.
-* Source Control and Bug Tracking: ClearCase, ClearQuest, Jira.
-* Environment: virtual machines and containers.
-* Frameworks and Platforms: Win16, Win32, Winsock, COM, DirectShow, Quicktime,
-  MFC, ADSI, ASP.NET, Winforms, GDI+, WiX, Commerce Server, ASMX, ASHX and WPF.
+F# and Haskell as general purpose **programming languages**  
+SQL, XML, JSON and Dhall for **data**  
+Paket, Shake, Bazel and Stack for **dependencies and builds**  
+Hg and Git for **source control**  
+NixOS and NixPkgs for **reproducible environments**  
+Model-View-Update and Reflex-FRP for **application architecture**
 
 ## Education
 
