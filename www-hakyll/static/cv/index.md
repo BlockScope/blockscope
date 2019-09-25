@@ -70,24 +70,13 @@ but succumbed to the dot-com crash.
 
 ## [Software Migrations](http://www.smltd.com)
 
-`1999/07-1999/09` Develop a frontend for tools translating mainframe assembly code modules to C.
+`1999/07-1999/09` Develop a frontend for tools translating mainframe assembly
+code modules to C.
 
 ## [Trimble](http://www.trimble.com)
 
-`1995/02-1999/01`
-
-Trimble creates GPS receivers, handheld data loggers and software for
-industries such as construction, surveying and agriculture.
-
-* Maintain a mapping graphics library in STL, C++ and MFC, from 1996 onwards.
-  In this role I improved clipping and multi-threading.
-* Implement a terrain model triangulation algorithm used in roading and
-  construction.
-* Lead developer for the Auckland Skytower special project using real time
-  kinematic (RTK) GPS for surveying the as-built tower and positioning the
-  formwork for each concrete pour during upper level construction.
-* Maintain hydrographic surveying and aerial spray apps written in Turbo
-  Pascal.
+`1995/02-1999/01` Maintain the inhouse computer graphics library, improving
+clipping and multithreading.
 
 ## Tech Touched
 
