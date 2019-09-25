@@ -68,27 +68,10 @@ model repeatedly to work out the best days to apply water and nitrogen.
 `2007/12-2010/04` Port the council's site for logging public submissions and scheduling hearings
 from PHP to ASP.NET, allocate submitters to hearing times and layout reoprts.
 
-## [The Nutricentre](http://www.nutricentre.com)
+## [NutriCentre](http://www.nutricentre.com)
 
-`2003/07-2008/05`
-
-The Nutricentre has a number of physical stores and a successful online retail
-web store for health supplements.
-
-* Deploy the product to production on a remote server in Canada at
-  [EpiDirect](http://www.epidirect.com/).
-* Monitor the event log for errors.
-* Transform and load 30,000 products into the product catalog.
-* Develop the data access layer in Commerce Server 2002 & 2007.
-* Develop the frontend in ASP.NET and CSS.
-* Secure some pages with secure sockets layer (SSL) tranport security.
-* Request, install and renew SSL certificates.
-* Develop an ASMX web service for orders, secured with basic authentication and
-  SSL.
-* Develop a Winforms app for downloading orders.
-* Provide for forgotten password reset using one time pad URLs.
-* Develop the checkout pipeline.
-* Prototype and test marketing campaigns.
+`2003/07-2008/05` Develop an online store for the NutriCentre with ASP.Net
+backed by Commerce Server.
 
 ## [NIWA](http://www.niwa.co.nz)
 
