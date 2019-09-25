@@ -7,6 +7,15 @@ I prefer simple and raw over convoluted and crufty.
 Give me VIM and a REPL over an IDE with wizards any day.  
 Leave me a build and tests I can reproduce from the command line any time.  
 
+### Tech I quite like
+
+F# and Haskell as general purpose **programming languages**  
+SQL, XML, JSON and Dhall for **data**  
+Paket, Shake, Bazel and Stack for **dependencies and builds**  
+Hg and Git for **source control**  
+NixOS and NixPkgs for **reproducible environments**  
+Model-View-Update and Reflex-FRP for **application architecture**
+
 ### Work History
 
 * `2014/02-2017/04` [**Aqualinc Research**](http://www.aqualinc.co.nz)  
@@ -40,15 +49,6 @@ Develop a frontend for tools translating mainframe assembly code modules to C.
 Maintain the inhouse computer graphics library, improving clipping and
 multithreading.
 
-### Tech I quite like
-
-F# and Haskell as general purpose **programming languages**  
-SQL, XML, JSON and Dhall for **data**  
-Paket, Shake, Bazel and Stack for **dependencies and builds**  
-Hg and Git for **source control**  
-NixOS and NixPkgs for **reproducible environments**  
-Model-View-Update and Reflex-FRP for **application architecture**
-
-## Education
+### Education
 
 Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5, Medicine 1982/5
