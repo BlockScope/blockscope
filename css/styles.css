@@ -9432,4 +9432,12 @@ body {
 #side > .card-body {
   padding-top: 0; }
 
+@media print {
+  body {
+    font-size: 1em;
+    margin-top: 2cm;
+    margin-right: 2cm;
+    margin-bottom: 1.5cm;
+    margin-left: 2cm; } }
+
 /*# sourceMappingURL=styles.css.map*/
