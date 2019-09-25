@@ -34,8 +34,8 @@ yields.
 
 ## [Waimakariri District Council](http://www.waimakariri.govt.nz)
 
-`2007/12-2010/04` Port the council's site for logging public submissions and scheduling hearings
-from PHP to ASP.NET, allocate submitters to hearing times and layout reoprts.
+`2007/12-2010/04` Develop a website for logging public submissions and
+scheduling hearing time slots.
 
 ## [NutriCentre](http://www.nutricentre.com)
 
@@ -70,13 +70,7 @@ but succumbed to the dot-com crash.
 
 ## [Software Migrations](http://www.smltd.com)
 
-`1999/07-1999/09`
-
-SML provides tools for maintaining legacy assembly code on mainframes and for
-translating assembly code (ASM) modules to C.
-
-* Develop a windows frontend in MFC.
-* Speak with the backend using Winsock and TCP.
+`1999/07-1999/09` Develop a frontend for tools translating mainframe assembly code modules to C.
 
 ## [Trimble](http://www.trimble.com)
 
