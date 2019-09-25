@@ -54,19 +54,8 @@ product.
 
 ## [Obvious Technology](https://angel.co/company/obvious-technology)
 
-`1999/10-2001/03`
-
-Their editing product annotated video for search and display of related
-content, showing a 3D tree of key frames. It could play and edit Windows Media,
-Real Networks and QuickTime video formats. They operated a web site hosting
-video with text searchable multimedia annotations (txt, rtf, html) and links
-but succumbed to the dot-com crash.
-
-* Team leader.
-* Mentor the Component Object Model (COM) and registry spelunking.
-* Design for pluggable components using COM monikers.
-* Specify XML formats for batch processing and for production quality control.
-* Develop the video and annotation engine.
+`1999/10-2001/03` Develop a product for searching video, hitting on annotated
+key frames.
 
 ## [Software Migrations](http://www.smltd.com)
 
