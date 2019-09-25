@@ -6,14 +6,8 @@ title: Phil de Joux
 
 ## [Aqualinc Research](http://www.aqualinc.co.nz)
 
-`2014/02-2017/04`
-
-Layout the schema for a database associating users with farms to
-regulatory-body issued consents with monitoring of site measurements against
-consented levels. Issue alerts for breaching these levels. Devise alert-bands
-that could be viewed and simply understood on a chart but also be used to
-trigger alerts. Develop web services for two web apps, one for administrators
-and the other for end users.
+`2014/02-2017/04` Develop a website for monitoring on farm measurements for
+regulated level breaches.
 
 ## [Tagly](https://angel.co/company/tagly)
 
