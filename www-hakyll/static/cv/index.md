@@ -21,8 +21,7 @@ the model recommended future inputs and expected yields.
 Develop a website for logging public submissions and scheduling hearing time
 slots.
 * `2003/07-2008/05` [**NutriCentre**](http://www.nutricentre.com)  
-Develop an online store for the NutriCentre with ASP.Net backed by Commerce
-Server.
+Develop an online store.
 * `2003/06-2007/07` [**NIWA**](http://www.niwa.co.nz)  
 Develop tools and the [EDENZ](http://edenz.niwa.co.nz) website for publishing
 environmental time series data.
@@ -36,18 +35,28 @@ Develop a frontend for tools translating mainframe assembly code modules to C.
 Maintain the inhouse computer graphics library, improving clipping and
 multithreading.
 
-## Tech Touched
+### Tech to Favour
 
-* Languages: Pascal, C++, VB.NET, C#, F#, Haskell.
-* XML: XML, XSD, XSLT.
-* SQL: SQL, LINQ to SQL, SQL Server and Reporting Services, Red-Gate SQL Compare,
-Red-Gate SQL Data Compare.
-* Build, Dependency and Deployment: NAnt, Mage, ClickOnce, Nuget, Paket, Shake, Stack, Cabal.
-* COMMS: SOAP, WCF
-* Source Control and Bug Tracking: ClearCase, ClearQuest, Mercurial, FogBugz
-* Virtualization: vmware
-* Frameworks and Platforms: Win16, Win32, Winsock, COM, DirectShow, Quicktime, MFC, ADSI, ASP.NET, Winforms,
-GDI+, WiX, Commerce Server, ASMX, ASHX, WPF.
+* Languages: F# and Haskell.
+* XML: XML and XSD.
+* SQL: SQL and LINQ to SQL.
+* Build: Paket, Shake, Bazel and Stack.
+* COMMS: JSON.
+* Source Control and Bug Tracking: Mercurial, Git, GitHub, GitLab and FogBugz.
+* Environment: NixOS and NixPkgs.
+* Frameworks and Platforms: Reflex-FRP.
+
+### Tech to Shun
+
+* Languages: Pascal, C++, VB.NET and Elm.
+* XML: XSLT.
+* SQL: Reporting Services.
+* Build: NAnt, Mage, ClickOnce, Nuget and Cabal.
+* COMMS: SOAP and WCF.
+* Source Control and Bug Tracking: ClearCase, ClearQuest, Jira.
+* Environment: virtual machines and containers.
+* Frameworks and Platforms: Win16, Win32, Winsock, COM, DirectShow, Quicktime,
+  MFC, ADSI, ASP.NET, Winforms, GDI+, WiX, Commerce Server, ASMX, ASHX and WPF.
 
 ## Education
 
