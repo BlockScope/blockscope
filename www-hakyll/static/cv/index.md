@@ -63,24 +63,10 @@ model repeatedly to work out the best days to apply water and nitrogen.
 * Develop a cache for weather data observations.
 * Develop an algorithm in F# for detecting rainfall time series.
 
-*C++, C#, LINQ to SQL, F#, ASP.NET 4.0, SQL Server 2008, SQL Server Reporting
-Services 2005, WPF, SOAP & WCF, ClickOnce, XML, XSD, Visual Studio 2008 & 2010,
-SQL Server Management Studio, Mercurial, FogBugz, NAnt, Mage, Red-Gate SQL
-Compare, Red-Gate SQL Data Compare.*
-
 ## [Waimakariri District Council](http://www.waimakariri.govt.nz)
 
-`2007/12-2010/04`
-
-The council intranet site for logging public submissions and scheduling
-hearings.
-
-* Port the website site from PHP to ASP.NET.
-* Develop a user control (ASCX) for allocating submitters to hearing times.
-* Layout reports with SSRS to word output.
-* Upgrade from ASP.NET Webforms to MVC3.
-
-*C#, LINQ to SQL, ASP.NET 3.5 & 4.0, SQL Server 2005.*
+`2007/12-2010/04` Port the council's site for logging public submissions and scheduling hearings
+from PHP to ASP.NET, allocate submitters to hearing times and layout reoprts.
 
 ## [The Nutricentre](http://www.nutricentre.com)
 
@@ -103,9 +89,6 @@ web store for heath supplements.
 * Provide for forgotten password reset using one time pad URLs.
 * Develop the checkout pipeline.
 * Prototype and test marketing campaigns.
-
-*C#, VB.NET, ASP.NET 1.1 & 2.0, SQL Server 2000 & 2005, Commerce Server 2002
-& 2007, ASMX, ASHX.*
 
 ## [NIWA](http://www.niwa.co.nz)
 
@@ -135,8 +118,6 @@ Zealand web site that shows real time data.
 * Helped prepare a bid NIWA made for a hydrology rating curve editor the United
   States Geological Survey ([USGS](http://www.usgs.gov/)) put out for tender.
 
-*C++, C#, ASP.NET 1.1 & 2.0, Winforms, GDI+, WiX, XML, XSD, XSLT.*
-
 ## Aspelle
 
 `2001/08-2002/09`
@@ -156,10 +137,7 @@ restricted access to enterprise networks and applications.
 * Develop an Internet Security and Acceleration (ISA) Server web filter for URL
   rewriting using regular expression matching.
 
-*C++, C#, COM, ADSI, Win32 API, ClearCase, ClearQuest, vmware, MMC Active
-Directory Users and Computers console.*
-
-## Obvious Technology
+## [Obvious Technology](https://angel.co/company/obvious-technology)
 
 `1999/10-2001/03`
 
@@ -175,8 +153,6 @@ but succumbed to the dot-com crash.
 * Specify XML formats for batch processing and for production quality control.
 * Develop the video and annotation engine.
 
-*C++, COM, DirectShow, Quicktime.*
-
 ## [Software Migrations](http://www.smltd.com)
 
 `1999/07-1999/09`
@@ -186,8 +162,6 @@ translating assembly code (ASM) modules to C.
 
 * Develop a windows frontend in MFC.
 * Speak with the backend using Winsock and TCP.
-
-*C++, MFC, Winsock.*
 
 ## [Trimble](http://www.trimble.com)
 
@@ -206,7 +180,18 @@ industries such as construction, surveying and agriculture.
 * Maintain hydrographic surveying and aerial spray apps written in Turbo
   Pascal.
 
-*Turbo Pascal, C++, MFC, Win16 API, Win32 API.*
+## Tech Touched
+
+* Languages: Pascal, C++, VB.NET, C#, F#, Haskell.
+* XML: XML, XSD, XSLT.
+* SQL: SQL, LINQ to SQL, SQL Server and Reporting Services, Red-Gate SQL Compare,
+Red-Gate SQL Data Compare.
+* Build, Dependency and Deployment: NAnt, Mage, ClickOnce, Nuget, Paket, Shake, Stack, Cabal.
+* COMMS: SOAP, WCF
+* Source Control and Bug Tracking: ClearCase, ClearQuest, Mercurial, FogBugz
+* Virtualization: vmware
+* Frameworks and Platforms: Win16, Win32, Winsock, COM, DirectShow, Quicktime, MFC, ADSI, ASP.NET, Winforms,
+GDI+, WiX, Commerce Server, ASMX, ASHX, WPF.
 
 ## Education
 
