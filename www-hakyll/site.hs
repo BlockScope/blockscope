@@ -111,6 +111,16 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/tweet.html" ctx
                 >>= relativizeUrls
 
+    match "static/project/*.md" $ do
+        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+        compile $ do
+            let ctx = postCtx
+
+            pandoc
+                >>= loadAndApplyTemplate "templates/about.html" ctx
+                >>= loadAndApplyTemplate "templates/project.html" ctx
+                >>= relativizeUrls
+
     match "static/cv/*.md" $ do
         route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
         compile $ do
