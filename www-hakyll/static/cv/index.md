@@ -2,12 +2,9 @@
 title: Phil de Joux
 ---
 
-I prefer simple and raw over convoluted and crufty.
+I am a software engineer, bold in learning but otherwise cautious.
 
-Give me VIM and a REPL over an IDE with wizards any day.  
-Leave me a build and tests I can reproduce from the command line any time.  
-
-### Tech I quite like
+### Tech I like
 
 F# and Haskell as general purpose **programming languages**  
 SQL, XML, JSON and Dhall for **data**  
