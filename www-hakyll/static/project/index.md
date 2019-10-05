@@ -51,3 +51,8 @@ After seeing a presentation on this compiler plugin at the Haskell symposium
 2018,
 I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
 some build warnings and got it compiling with ghc-8.6.1.
+* [**ghc**](https://www.haskell.org/ghc/)  
+For the newcomer labelled bug
+[12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
+pretty printing [explicit
+quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d).
