@@ -40,4 +40,5 @@ I helped document how to convert an existing solution to use paket,
 some assumptions in the way the project files need to be organized on disk.
 This is now
 a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html).
-
+* [**snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
+An incremental build tool for Haskell projects.
