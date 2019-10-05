@@ -42,5 +42,7 @@ This is now
 a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html).
 * [**snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
 An incremental build tool for Haskell projects.
-* [**rules_haskell**](https://github.com/tweag/rules_haskell/commits?author=philderbeast)  
-Fast Google Bazel builds for Haskell.
+* [**rules_haskell**](https://haskell.build/)  
+I helped
+[document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
+how to use build Haskell fast with Google Bazel.
