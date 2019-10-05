@@ -25,34 +25,34 @@ add clarifying appendices and to suggest changes.
 
 I contribute to projects that I use or want to succeed.
 
-* [**hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
-I started contributing and ended up
-[owner and maintainer](https://github.com/BlockScope/hpack-dhall/issues/3) of
-this way to setup Haskell projects.
-* [**uom-plugin**](http://hackage.haskell.org/package/uom-plugin)  
-A compiler plugin for units of measure.
-* [**pier**](https://github.com/judah/pier)  
-I added [test-suite](https://github.com/judah/pier/issues/50) running to this
-experimental way of building Haskell projects.
 * [**paket**](https://fsprojects.github.io/Paket/)  
 I helped document how to convert an existing solution to use paket,
 [explaining](https://github.com/fsprojects/Paket/commit/3db8c5b8701adf345c8cf4c1b3cfcb8d4bc11fca)
 some assumptions in the way the project files need to be organized on disk.
 This is now
 a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html).
-* [**snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
-An incremental build tool for Haskell projects.
-* [**rules_haskell**](https://haskell.build/)  
-I helped
-[document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
-how to use build Haskell fast with Google Bazel.
-* [**Thoralf**](https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf)  
-After seeing a presentation on this compiler plugin at the Haskell symposium
-2018,
-I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
-some build warnings and got it compiling with ghc-8.6.1.
 * [**ghc**](https://www.haskell.org/ghc/)  
 For the newcomer labelled bug
 [12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
 pretty printing [explicit
 quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d).
+* [**hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
+I started contributing and ended up
+[owner and maintainer](https://github.com/BlockScope/hpack-dhall/issues/3) of
+this way to setup Haskell projects.
+* [**uom-plugin**](http://hackage.haskell.org/package/uom-plugin)  
+A compiler plugin for units of measure.
+* [**rules_haskell**](https://haskell.build/)  
+I helped
+[document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
+how to use build Haskell fast with Google Bazel.
+* [**pier**](https://github.com/judah/pier)  
+I added [test-suite](https://github.com/judah/pier/issues/50) running to this
+experimental way of building Haskell projects.
+* [**snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
+An incremental build tool for Haskell projects.
+* [**Thoralf**](https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf)  
+After seeing a presentation on this compiler plugin at the Haskell symposium
+2018,
+I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
+some build warnings and got it compiling with ghc-8.6.1.
