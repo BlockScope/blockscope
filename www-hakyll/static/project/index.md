@@ -45,7 +45,7 @@ A compiler plugin for units of measure.
 * [**rules_haskell**](https://haskell.build/)  
 I helped
 [document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
-how to use build Haskell fast with Google Bazel.
+how to build Haskell fast with Google Bazel and rules_haskell.
 * [**pier**](https://github.com/judah/pier)  
 I added [test-suite](https://github.com/judah/pier/issues/50) running to this
 experimental way of building Haskell projects.
