@@ -34,4 +34,10 @@ A compiler plugin for units of measure.
 * [**pier**](https://github.com/judah/pier)  
 I added [test-suite](https://github.com/judah/pier/issues/50) running to this
 experimental way of building Haskell projects.
+* [**paket**](https://fsprojects.github.io/Paket/)  
+I helped document how to convert an existing solution to use paket,
+[explaining](https://github.com/fsprojects/Paket/commit/3db8c5b8701adf345c8cf4c1b3cfcb8d4bc11fca)
+some assumptions in the way the project files need to be organized on disk.
+This is now
+a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html).
 
