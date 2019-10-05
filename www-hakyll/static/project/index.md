@@ -46,3 +46,8 @@ An incremental build tool for Haskell projects.
 I helped
 [document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
 how to use build Haskell fast with Google Bazel.
+* [**Thoralf**](https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf)  
+After seeing a presentation on this compiler plugin at the Haskell symposium
+2018,
+I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
+some build warnings and got it compiling with ghc-8.6.1.
