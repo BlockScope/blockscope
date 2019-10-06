@@ -65,11 +65,11 @@ After seeing a presentation on this compiler plugin at the Haskell symposium
 2018,
 I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
 some build warnings and got it compiling with ghc-8.6.1.
-* [**NixOS/cabal2nix**](https://github.com/NixOS/cabal2nix)  
+* [**cabal2nix**](https://github.com/NixOS/cabal2nix)  
 I made a [pull request](https://github.com/NixOS/cabal2nix/pull/375) adding
 hpack-dhall packages that we agreed should not be merged as cabal2nix should
 focus on `.cabal` files and drop support for other package file formats.
-* [**typeable/stackage2nix**]()  
+* [**stackage2nix**](https://github.com/typeable/stackage2nix)  
 [Redirect](https://github.com/typeable/stackage2nix/commit/9bf94e1ded1d52feddbdbd560ecd4f9a70aa6c34)
 stale links to `all-cabal-hashes` and `lts-haskell`.
 
