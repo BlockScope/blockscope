@@ -72,4 +72,7 @@ focus on `.cabal` files and drop support for other package file formats.
 * [**stackage2nix**](https://github.com/typeable/stackage2nix)  
 [Redirect](https://github.com/typeable/stackage2nix/commit/9bf94e1ded1d52feddbdbd560ecd4f9a70aa6c34)
 stale links to `all-cabal-hashes` and `lts-haskell`.
+* [**stack2nix**](https://github.com/input-output-hk/stack2nix)  
+[Parse](https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55)
+the mac operating system as `osx` or `darwin`.
 
