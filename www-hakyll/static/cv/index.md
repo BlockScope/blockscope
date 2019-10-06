@@ -46,6 +46,10 @@ Develop a frontend for tools translating mainframe assembly code modules to C.
 Maintain the inhouse computer graphics library, improving clipping and
 multithreading.
 
+Contracts have been short, long, paused and overlapped.
+
+<div id="timeline" style="height: 510px"></div>
+
 ### Education
 
 Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5, Medicine 1982/5

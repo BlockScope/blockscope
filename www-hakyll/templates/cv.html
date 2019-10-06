@@ -5,6 +5,79 @@
         <title>CV - $title$</title>
         <link rel="stylesheet" href="/css/styles.css" >
         $partial("templates/favicon.html")$
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['timeline']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var container = document.getElementById('timeline');
+                var chart = new google.visualization.Timeline(container);
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn({ type: 'string', id: 'President' });
+                dataTable.addColumn({ type: 'date', id: 'Start' });
+                dataTable.addColumn({ type: 'date', id: 'End' });
+
+                dataTable.addRows([
+                        [ 'Aqualinc'
+                        , new Date(2014, 2)
+                        , new Date(2017, 4)
+                        ]
+                    ,   [ 'Tagly'
+                        , new Date(2012,  7)
+                        , new Date(2012, 12)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2011,  4)
+                        , new Date(2012,  4)
+                        ]
+                    ,
+                        [ 'CropLogic'
+                        , new Date(2008,  2)
+                        , new Date(2011,  9)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2007, 12)
+                        , new Date(2010,  4)
+                        ]
+                    ,
+                        [ 'NutriCentre'
+                        , new Date(2003,  7)
+                        , new Date(2008,  5)
+                        ]
+                    ,
+                        [ 'NIWA'
+                        , new Date(2003,  6)
+                        , new Date(2007,  7)
+                        ]
+                    ,
+                        [ 'Aspelle'
+                        , new Date(2001,  8)
+                        , new Date(2002,  9)
+                        ]
+                    ,
+                        [ 'Obvious'
+                        , new Date(1999, 10)
+                        , new Date(2001,  3)
+                        ]
+                    ,
+                        [ 'Software Migrations'
+                        , new Date(1999,  7)
+                        , new Date(1999,  9)
+                        ]
+                    ,
+                        [ 'Trimble'
+                        , new Date(1995,  2)
+                        , new Date(1999,  1)
+                        ]
+                    ]);
+
+                chart.draw(dataTable);
+            }
+        </script>
     </head>
     <body>
         <div class="container-fluid">
