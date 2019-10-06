@@ -20,7 +20,7 @@ Develop a website for monitoring on farm measurements for regulated level
 breaches.
 * `2012/07-2012/12` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
-* `2011/04-2012/04` [**Travieo**](http://www.travieo.com)  
+* `2011/08-2015/10` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
 * `2008/02-2011/09` [**CropLogic**](http://www.croplogic.com)  
 Work with scientists tuning and testing a discrete event simulation crop model.
