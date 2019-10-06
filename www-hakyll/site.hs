@@ -25,6 +25,7 @@ import Hakyll
     , create
     , makeItem
     , setExtension
+    , fromFilePath
     , toFilePath
     , fromGlob
     , fromCapture
@@ -71,6 +72,17 @@ config =
         { providerDirectory = "www-hakyll"
         }
 
+mkStatic :: FilePath -> FilePath -> Rules ()
+mkStatic p0 p1 = do
+    route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
+    compile $ do
+        let ctx = postCtx
+
+        pandoc
+            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> p0) ctx
+            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> p1) ctx
+            >>= relativizeUrls
+
 main :: IO ()
 main = hakyllWith config $ do
     -- SEE: http://vapaus.org/text/hakyll-configuration.html
@@ -81,55 +93,11 @@ main = hakyllWith config $ do
         compile copyFileCompiler
 
     -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
-    match "static/b/*.md" $ do
-        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
-        compile $ do
-            let ctx = postCtx
-
-            pandoc
-                >>= loadAndApplyTemplate "templates/about.html" ctx
-                >>= loadAndApplyTemplate "templates/blockscope.html" ctx
-                >>= relativizeUrls
-
-    match "static/p/*.md" $ do
-        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
-        compile $ do
-            let ctx = postCtx
-
-            pandoc
-                >>= loadAndApplyTemplate "templates/about.html" ctx
-                >>= loadAndApplyTemplate "templates/philderbeast.html" ctx
-                >>= relativizeUrls
-
-    match "static/tweet/*.md" $ do
-        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
-        compile $ do
-            let ctx = postCtx
-
-            pandoc
-                >>= loadAndApplyTemplate "templates/about.html" ctx
-                >>= loadAndApplyTemplate "templates/tweet.html" ctx
-                >>= relativizeUrls
-
-    match "static/project/*.md" $ do
-        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
-        compile $ do
-            let ctx = postCtx
-
-            pandoc
-                >>= loadAndApplyTemplate "templates/about.html" ctx
-                >>= loadAndApplyTemplate "templates/project.html" ctx
-                >>= relativizeUrls
-
-    match "static/cv/*.md" $ do
-        route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
-        compile $ do
-            let ctx = postCtx
-
-            pandoc
-                >>= loadAndApplyTemplate "templates/about.html" ctx
-                >>= loadAndApplyTemplate "templates/cv.html" ctx
-                >>= relativizeUrls
+    match "static/b/*.md" $ mkStatic "about.html" "blockscope.html"
+    match "static/p/*.md" $ mkStatic "about.html" "philderbeast.html"
+    match "static/tweet/*.md" $ mkStatic "about.html" "tweet.html"
+    match "static/project/*.md" $ mkStatic "about.html" "project.html"
+    match "static/cv/*.md" $ mkStatic "about.html" "cv.html"
 
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
