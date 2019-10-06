@@ -66,6 +66,14 @@
                         , new Date(2012,  7)
                         , new Date(2012, 12)
                         ]
+                    ,   [ 'Apress'
+                        , new Date(2012,  6,  8)
+                        , new Date(2012,  9, 20)
+                        ]
+                    ,   [ 'Apress'
+                        , new Date(2015,  4)
+                        , new Date(2015,  11)
+                        ]
                     ,
                         [ 'Travieo'
                         , new Date(2011,  8, 12)
@@ -225,6 +233,21 @@
                         barLabelStyle: { fontName: 'monospace', fontSize: 10 }
                     },
                     hAxis: { maxValue: Date.now() },
+                    // SEE: http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=12
+                    colors: [
+                          '#a6cee3'
+                        , '#1f78b4'
+                        , '#b2df8a'
+                        , '#33a02c'
+                        , '#fb9a99'
+                        , '#e31a1c'
+                        , '#fdbf6f'
+                        , '#ff7f00'
+                        , '#cab2d6'
+                        , '#6a3d9a'
+                        , '#ffff99'
+                        , '#b15928'
+                        ]
                 };
 
                 chart.draw(dataTable, options);

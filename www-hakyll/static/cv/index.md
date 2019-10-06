@@ -20,6 +20,8 @@ Develop a website for monitoring on farm measurements for regulated level
 breaches.
 * `2012/07-2012/12` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
+* `2012/06-2015/11` [**Apress**](https://angel.co/company/tagly)  
+Technical review of Expert F#, editions 3 and 4.
 * `2011/08-2015/10` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
 * `2008/01-2011/08` [**CropLogic**](http://www.croplogic.com)  
@@ -46,9 +48,9 @@ Develop a frontend for tools translating mainframe assembly code modules to C.
 Maintain the inhouse computer graphics library, improving clipping and
 multithreading.
 
-Contracts have been short, long, intermittent, paused and overlapped.
+Contract lengths and continuity vary.
 
-<div id="timeline" style="height: 460px"></div>
+<div id="timeline" style="height: 496px"></div>
 
 ### Education
 
