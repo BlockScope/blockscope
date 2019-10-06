@@ -95,9 +95,10 @@ main = hakyllWith config $ do
     -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
     match "static/b/*.md" $ mkStatic "blockscope"
     match "static/p/*.md" $ mkStatic "philderbeast"
-    match "static/tweet/*.md" $ mkStatic "tweet"
-    match "static/project/*.md" $ mkStatic "project"
     match "static/cv/*.md" $ mkStatic "cv"
+    match "static/project/*.md" $ mkStatic "project"
+    match "static/contrib/*.md" $ mkStatic "project"
+    match "static/tweet/*.md" $ mkStatic "tweet"
 
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
