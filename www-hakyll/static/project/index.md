@@ -35,9 +35,8 @@ a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html
 [Tweak](https://github.com/fsprojects/FSharp.Linq.ComposableQuery/commit/1706939d7573fdef3e017637a264871cff1c5fcc)
 the database creation script for an example and [find
 a query](https://github.com/fsprojects/FSharp.Linq.ComposableQuery/issues/13)
-that fails with  
-`MakeGenericType may only be called on a type for which IsGenericTypeDefinition
-is true`.
+that fails. Composable queries are now part of the
+[SQLProvider](https://fsprojects.github.io/SQLProvider/core/composable.html).
 * [**ghc**](https://www.haskell.org/ghc/)  
 For the newcomer labelled bug
 [12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
