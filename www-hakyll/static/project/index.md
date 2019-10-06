@@ -75,4 +75,6 @@ stale links to `all-cabal-hashes` and `lts-haskell`.
 * [**stack2nix**](https://github.com/input-output-hk/stack2nix)  
 [Parse](https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55)
 the mac operating system as `osx` or `darwin`.
-
+* [**purescript-unicode**](https://github.com/purescript-contrib/purescript-unicode)  
+[Help](https://github.com/purescript-contrib/purescript-unicode/commit/c161145fe403e520e505e7631ce9d77b9a2de9df)
+document the behaviour of `digitToInt` with examples.
