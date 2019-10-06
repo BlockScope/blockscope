@@ -75,7 +75,15 @@
                         ]
                     ]);
 
-                chart.draw(dataTable);
+                var options = {
+                    backgroundColor: '#fffff8',
+                    timeline: {
+                        rowLabelStyle: { fontName: 'monospace', fontSize: 10 },
+                        barLabelStyle: { fontName: 'monospace', fontSize: 10 }
+                    }
+                };
+
+                chart.draw(dataTable, options);
             }
         </script>
     </head>
