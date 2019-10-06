@@ -28,7 +28,7 @@ Work with the product team developing a website for potato growers. Pull in
 external weather and field observations. Provide a way for growers to setup
 their crops, to enter their irrigation and fertilizer applications and to view
 the model recommended future inputs and expected yields.
-* `2007/12-2010/04` [**Waimakariri District Council**](http://www.waimakariri.govt.nz)  
+* `2007/12-2011/04` [**Waimakariri District Council**](http://www.waimakariri.govt.nz)  
 Develop a website for logging public submissions and scheduling hearing time
 slots.
 * `2003/07-2008/05` [**NutriCentre**](http://www.nutricentre.com)  
