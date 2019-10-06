@@ -21,6 +21,14 @@ paragliding. Marked up in LaTeX and stored in a git repo, this is a place for
 myself and others to raise questions about the rules, correct obvious mistakes,
 add clarifying appendices and to suggest changes.
 
+A few of the packages making up flare-timing I've released to hackage.
+
+* [siggy-chardust](http://hackage.haskell.org/package/siggy-chardust)
+* [detour-via-sci](http://hackage.haskell.org/package/detour-via-sci)
+* [detour-via-uom](http://hackage.haskell.org/package/detour-via-uom)
+* [flight-igc](http://hackage.haskell.org/package/flight-igc)
+* [flight-kml](http://hackage.haskell.org/package/flight-kml)
+
 ### Supporting Acts
 
 I contribute to projects that I use or want to succeed.
