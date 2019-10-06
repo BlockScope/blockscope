@@ -80,7 +80,12 @@
                     timeline: {
                         rowLabelStyle: { fontName: 'monospace', fontSize: 10 },
                         barLabelStyle: { fontName: 'monospace', fontSize: 10 }
-                    }
+                    },
+                    hAxis: {
+                        format: 'yyyy',
+                        minValue: new Date(1995, 1),
+                        maxValue: Date.now()
+                    },
                 };
 
                 chart.draw(dataTable, options);
