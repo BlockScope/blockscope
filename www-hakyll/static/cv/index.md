@@ -22,7 +22,7 @@ breaches.
 Develop server and browser components of a live feed.
 * `2011/08-2015/10` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
-* `2008/02-2011/09` [**CropLogic**](http://www.croplogic.com)  
+* `2008/01-2011/08` [**CropLogic**](http://www.croplogic.com)  
 Work with scientists tuning and testing a discrete event simulation crop model.
 Work with the product team developing a website for potato growers. Pull in
 external weather and field observations. Provide a way for growers to setup
