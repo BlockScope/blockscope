@@ -12,6 +12,255 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', {'packages':['timeline']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            function drawChart() {
+                var container = document.getElementById('timeline');
+                var chart = new google.visualization.Timeline(container);
+                var dataTable = new google.visualization.DataTable();
+
+                dataTable.addColumn({ type: 'string', id: 'President' });
+                dataTable.addColumn({ type: 'date', id: 'Start' });
+                dataTable.addColumn({ type: 'date', id: 'End' });
+
+                dataTable.addRows([
+                        [ 'Flare Timing'
+                        , new Date(2017,  5,  1)
+                        , new Date(2017,  9,  8)
+                        ]
+                    ,
+                        [ 'Flare Timing'
+                        , new Date(2017, 10,  5)
+                        , new Date(2019,  9,  7)
+                        ]
+                    ,
+                        [ 'Flare Timing'
+                        , new Date(2019, 10,  7)
+                        , new Date(2019, 11)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2014,  2, 18)
+                        , new Date(2014,  2, 25)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2014,  4,  4)
+                        , new Date(2015,  3,  3)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2015,  4, 10)
+                        , new Date(2015,  5,  6)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2015,  6, 19)
+                        , new Date(2015,  9,  8)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2015, 10, 12)
+                        , new Date(2016,  5,  8)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2016,  6,  8)
+                        , new Date(2016,  8,  4)
+                        ]
+                    ,   [ 'Aqualinc'
+                        , new Date(2016,  9,  9)
+                        , new Date(2017,  4, 19)
+                        ]
+                    ,   [ 'Tagly'
+                        , new Date(2012,  7)
+                        , new Date(2012, 12)
+                        ]
+                    ,   [ 'Apress'
+                        , new Date(2012,  6,  8)
+                        , new Date(2012,  9, 20)
+                        ]
+                    ,   [ 'Apress'
+                        , new Date(2015,  4)
+                        , new Date(2015,  11)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2011,  8, 12)
+                        , new Date(2011,  9,  6)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2011,  9, 29)
+                        , new Date(2011, 10, 29)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2012,  5, 10)
+                        , new Date(2012,  5, 17)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2012,  9, 21)
+                        , new Date(2012, 10, 28)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2013,   1, 13)
+                        , new Date(2013,   3, 21)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2013,   5,  1)
+                        , new Date(2013,  12,  8)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2014,   2, 13)
+                        , new Date(2014,   2, 25)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2014,   3, 24)
+                        , new Date(2014,   6,  3)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2015,   2, 13)
+                        , new Date(2015,   4, 27)
+                        ]
+                    ,
+                        [ 'Travieo'
+                        , new Date(2015,   7, 19)
+                        , new Date(2015,  10, 11)
+                        ]
+                    ,
+                        [ 'CropLogic'
+                        , new Date(2008,  1,  8)
+                        , new Date(2008,  6, 20)
+                        ]
+                    ,
+                        [ 'CropLogic'
+                        , new Date(2008,  7, 14)
+                        , new Date(2008,  9, 26)
+                        ]
+                    ,
+                        [ 'CropLogic'
+                        , new Date(2008, 10, 24)
+                        , new Date(2010,  4, 21)
+                        ]
+                    ,
+                        [ 'CropLogic'
+                        , new Date(2010,  6,  6)
+                        , new Date(2011,  8, 27)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2007, 12, 12)
+                        , new Date(2007, 12, 28)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2008,  1, 15)
+                        , new Date(2008,  3, 31)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2008,  7, 29)
+                        , new Date(2008,  9, 25)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2008, 12, 22)
+                        , new Date(2008, 12, 31)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2009,  1,  7)
+                        , new Date(2009,  3, 15)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2009,  5, 28)
+                        , new Date(2009,  7, 10)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2009, 11,  3)
+                        , new Date(2009, 12, 11)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2010,  1, 14)
+                        , new Date(2010,  5, 17)
+                        ]
+                    ,
+                        [ "Waimakariri"
+                        , new Date(2011,  3,  5)
+                        , new Date(2011,  4,  7)
+                        ]
+                    ,
+                        [ 'NutriCentre'
+                        , new Date(2003,  7)
+                        , new Date(2008,  5)
+                        ]
+                    ,
+                        [ 'NIWA'
+                        , new Date(2003,  6, 23)
+                        , new Date(2006,  7, 10)
+                        ]
+                    ,
+                        [ 'NIWA'
+                        , new Date(2007,  5, 16)
+                        , new Date(2007,  7, 13)
+                        ]
+                    ,
+                        [ 'Aspelle'
+                        , new Date(2001,  8)
+                        , new Date(2002,  9)
+                        ]
+                    ,
+                        [ 'Obvious'
+                        , new Date(1999, 10)
+                        , new Date(2001,  3)
+                        ]
+                    ,
+                        [ 'Software Migrations'
+                        , new Date(1999,  7)
+                        , new Date(1999,  9)
+                        ]
+                    ,
+                        [ 'Trimble'
+                        , new Date(1995,  2)
+                        , new Date(1999,  1)
+                        ]
+                    ]);
+
+                var options = {
+                    backgroundColor: '#fffff8',
+                    timeline: {
+                        rowLabelStyle: { fontName: 'monospace', fontSize: 10 },
+                        barLabelStyle: { fontName: 'monospace', fontSize: 10 }
+                    },
+                    hAxis: { maxValue: Date.now() },
+                    // SEE: http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=12
+                    colors: [
+                          '#b15928'
+                        , '#a6cee3'
+                        , '#1f78b4'
+                        , '#b2df8a'
+                        , '#33a02c'
+                        , '#fb9a99'
+                        , '#e31a1c'
+                        , '#fdbf6f'
+                        , '#ff7f00'
+                        , '#cab2d6'
+                        , '#6a3d9a'
+                        , '#ffff99'
+                        , '#b15928'
+                        ]
+                };
+
+                chart.draw(dataTable, options);
+            }
+        </script>
     </head>
     <body>
         <div class="container-fluid">
@@ -23,11 +272,12 @@
     <nav>
         <ul class="nav flex-column">
             <li class="nav-item"><a class="nav-link" href="../b">@blockscope</a></li>
-            <li class="nav-item"><a class="nav-link" href="../project">projects</a></li>
-            <li class="nav-item"><a class="nav-link" href="../archive.html">posts</a></li>
-            <li class="nav-item"><a class="nav-link" href="../tweet">tweets</a></li>
             <li class="nav-item"><a class="nav-link" href="../p">@philderbeast</a></li>
             <li class="nav-item"><a class="nav-link" href="../cv">worker threads</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">projects</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">supporting acts</a></li>
+            <li class="nav-item"><a class="nav-link" href="../archive.html">posts</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">tweets</a></li>
         </ul>
     </nav>
 </div>
@@ -48,30 +298,38 @@ Hg and Git for <strong>source control</strong><br />
 NixOS and NixPkgs for <strong>reproducible environments</strong><br />
 Model-View-Update and Reflex-FRP for <strong>application architecture</strong></p>
 <h3 id="work-history">Work History</h3>
+<p>Contract lengths and continuity vary.</p>
+<div id="timeline" style="height: 496px">
+
+</div>
+<div id="work-history">
 <ul>
-<li><code>2014/02-2017/04</code> <a href="http://www.aqualinc.co.nz"><strong>Aqualinc Research</strong></a><br />
+<li><span class="aqualinc">▩</span> <code>2014/02-2017/04</code> <a href="http://www.aqualinc.co.nz"><strong>Aqualinc Research</strong></a><br />
 Develop a website for monitoring on farm measurements for regulated level breaches.</li>
-<li><code>2012/07-2012/12</code> <a href="https://angel.co/company/tagly"><strong>Tagly</strong></a><br />
+<li><span class="tagly">▩</span> <code>2012/07-2012/12</code> <a href="https://angel.co/company/tagly"><strong>Tagly</strong></a><br />
 Develop server and browser components of a live feed.</li>
-<li><code>2011/04-2012/04</code> <a href="http://www.travieo.com"><strong>Travieo</strong></a><br />
+<li><span class="apress">▩</span> <code>2012/06-2015/11</code> <a href="https://angel.co/company/tagly"><strong>Apress</strong></a><br />
+Technical review of Expert F#, editions 3 and 4.</li>
+<li><span class="travieo">▩</span> <code>2011/08-2015/10</code> <a href="http://www.travieo.com"><strong>Travieo</strong></a><br />
 Develop a travel booking website.</li>
-<li><code>2008/02-2011/09</code> <a href="http://www.croplogic.com"><strong>CropLogic</strong></a><br />
+<li><span class="croplogic">▩</span> <code>2008/01-2011/08</code> <a href="http://www.croplogic.com"><strong>CropLogic</strong></a><br />
 Work with scientists tuning and testing a discrete event simulation crop model. Work with the product team developing a website for potato growers. Pull in external weather and field observations. Provide a way for growers to setup their crops, to enter their irrigation and fertilizer applications and to view the model recommended future inputs and expected yields.</li>
-<li><code>2007/12-2010/04</code> <a href="http://www.waimakariri.govt.nz"><strong>Waimakariri District Council</strong></a><br />
+<li><span class="waimak">▩</span> <code>2007/12-2011/04</code> <a href="http://www.waimakariri.govt.nz"><strong>Waimakariri District Council</strong></a><br />
 Develop a website for logging public submissions and scheduling hearing time slots.</li>
-<li><code>2003/07-2008/05</code> <a href="http://www.nutricentre.com"><strong>NutriCentre</strong></a><br />
+<li><span class="nutricentre">▩</span> <code>2003/07-2008/05</code> <a href="http://www.nutricentre.com"><strong>NutriCentre</strong></a><br />
 Develop an online store.</li>
-<li><code>2003/06-2007/07</code> <a href="http://www.niwa.co.nz"><strong>NIWA</strong></a><br />
+<li><span class="niwa">▩</span> <code>2003/06-2007/07</code> <a href="http://www.niwa.co.nz"><strong>NIWA</strong></a><br />
 Develop tools and the <a href="http://edenz.niwa.co.nz">EDENZ</a> website for publishing environmental time series data.</li>
-<li><code>2001/08-2002/09</code> <strong>Aspelle</strong><br />
+<li><span class="aspelle">▩</span> <code>2001/08-2002/09</code> <strong>Aspelle</strong><br />
 Develop authentication and authorization parts of a security product.</li>
-<li><code>1999/10-2001/03</code> <a href="https://angel.co/company/obvious-technology"><strong>Obvious Technology</strong></a><br />
+<li><span class="obvious">▩</span> <code>1999/10-2001/03</code> <a href="https://angel.co/company/obvious-technology"><strong>Obvious Technology</strong></a><br />
 Develop a product for searching video, hitting on annotated key frames.</li>
-<li><code>1999/07-1999/09</code> <a href="http://www.smltd.com"><strong>Software Migrations</strong></a><br />
+<li><span class="sml">▩</span> <code>1999/07-1999/09</code> <a href="http://www.smltd.com"><strong>Software Migrations</strong></a><br />
 Develop a frontend for tools translating mainframe assembly code modules to C.</li>
-<li><code>1995/02-1999/01</code> <a href="http://www.trimble.com"><strong>Trimble</strong></a><br />
+<li><span class="trimble">▩</span> <code>1995/02-1999/01</code> <a href="http://www.trimble.com"><strong>Trimble</strong></a><br />
 Maintain the inhouse computer graphics library, improving clipping and multithreading.</li>
 </ul>
+</div>
 <h3 id="education">Education</h3>
 <p>Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5, Medicine 1982/5</p>
 </article>
