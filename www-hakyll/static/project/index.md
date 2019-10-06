@@ -31,6 +31,13 @@ I helped document how to convert an existing solution to use paket,
 some assumptions in the way the project files need to be organized on disk.
 This is now
 a [tutorial](https://fsprojects.github.io/Paket/convert-from-nuget-tutorial.html).
+* [**FSharp.Linq.ComposableQuery**](http://fsprojects.github.io/FSharp.Linq.ComposableQuery/)  
+[Tweak](https://github.com/fsprojects/FSharp.Linq.ComposableQuery/commit/1706939d7573fdef3e017637a264871cff1c5fcc)
+the database creation script for an example and [find
+a query](https://github.com/fsprojects/FSharp.Linq.ComposableQuery/issues/13)
+that fails with  
+`MakeGenericType may only be called on a type for which IsGenericTypeDefinition
+is true`.
 * [**ghc**](https://www.haskell.org/ghc/)  
 For the newcomer labelled bug
 [12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
@@ -46,6 +53,9 @@ A compiler plugin for units of measure.
 I helped
 [document](https://github.com/tweag/rules_haskell/commits?author=philderbeast)
 how to build Haskell fast with Google Bazel and rules_haskell.
+* [**stack**](https://docs.haskellstack.org)  
+[Document](https://github.com/commercialhaskell/stack/pull/4392/files) how to
+suppress the ``-nopie`` warnings on macOS.
 * [**pier**](https://github.com/judah/pier)  
 I added [test-suite](https://github.com/judah/pier/issues/50) running to this
 experimental way of building Haskell projects.
