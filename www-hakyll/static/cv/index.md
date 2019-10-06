@@ -48,7 +48,7 @@ multithreading.
 
 Contracts have been short, long, paused and overlapped.
 
-<div id="timeline" style="height: 426px"></div>
+<div id="timeline" style="height: 460px"></div>
 
 ### Education
 
