@@ -72,15 +72,15 @@ config =
         { providerDirectory = "www-hakyll"
         }
 
-mkStatic :: FilePath -> FilePath -> Rules ()
-mkStatic p0 p1 = do
+mkStatic :: FilePath -> Rules ()
+mkStatic filename = do
     route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
     compile $ do
         let ctx = postCtx
 
         pandoc
-            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> p0) ctx
-            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> p1) ctx
+            >>= loadAndApplyTemplate "templates/about.html" ctx
+            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> filename <.> "html") ctx
             >>= relativizeUrls
 
 main :: IO ()
@@ -93,11 +93,11 @@ main = hakyllWith config $ do
         compile copyFileCompiler
 
     -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
-    match "static/b/*.md" $ mkStatic "about.html" "blockscope.html"
-    match "static/p/*.md" $ mkStatic "about.html" "philderbeast.html"
-    match "static/tweet/*.md" $ mkStatic "about.html" "tweet.html"
-    match "static/project/*.md" $ mkStatic "about.html" "project.html"
-    match "static/cv/*.md" $ mkStatic "about.html" "cv.html"
+    match "static/b/*.md" $ mkStatic "blockscope"
+    match "static/p/*.md" $ mkStatic "philderbeast"
+    match "static/tweet/*.md" $ mkStatic "tweet"
+    match "static/project/*.md" $ mkStatic "project"
+    match "static/cv/*.md" $ mkStatic "cv"
 
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
