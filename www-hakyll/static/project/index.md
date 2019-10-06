@@ -46,6 +46,9 @@ quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757
 I started contributing and ended up
 [owner and maintainer](https://github.com/BlockScope/hpack-dhall/issues/3) of
 this way to setup Haskell projects.
+* [**units-parser**](https://github.com/adamgundry/units-parser)  
+[Bump](https://github.com/adamgundry/units-parser/commit/9db2652bfbeea5d69f590ce15c171d7b9801bb60)
+expected test output for later ghc versions.
 * [**uom-plugin**](http://hackage.haskell.org/package/uom-plugin)  
 A compiler plugin for units of measure.
 * [**rules_haskell**](https://haskell.build/)  
