@@ -26,7 +26,9 @@ breaches.
 * <span class="tagly">▩</span> `2012/07-2012/12` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
 * <span class="apress">▩</span> `2012/06-2015/11` [**Apress**](https://angel.co/company/tagly)  
-Technical review of Expert F#, editions 3 and 4.
+Technical review of Expert F#, editions
+[3](https://www.apress.com/us/book/9781430246503) and
+[4](https://www.apress.com/us/book/9781484207413).
 * <span class="travieo">▩</span> `2011/08-2015/10` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
 * <span class="croplogic">▩</span> `2008/01-2011/08` [**CropLogic**](http://www.croplogic.com)  
