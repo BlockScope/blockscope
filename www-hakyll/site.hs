@@ -133,7 +133,7 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    create ["archive/index.html"] $ do
+    create ["post/index.html"] $ do
         route idRoute
         compile $ do
             posts <- loadAll "posts/*" >>= recentFirst
