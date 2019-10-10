@@ -7,7 +7,7 @@ title: 'Who?'
 <div class="container">
 <div class="row">
 
-<div class="col-9 align-self-left">
+<div class="col-9 align-self-left" style="padding-left: 0">
 I go by two monikers on the interwebs:
 
 * **@philderbeast** is a nickname given to me by
