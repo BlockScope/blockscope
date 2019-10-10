@@ -1,10 +1,13 @@
 ---
-title: What is a block scope?
+title: What is block scope?
 tags: naming, compsci
 ---
-What about that name? It could be taken to mean looking for boulders, problem
-solving, sending projects, scope restricted to a block, a block of work,
-a project with scope.
+It could be:
+
+* scoping for boulders (blocs)
+* scope restricted to a block (of code)
+* a block of work (scoped to requirements)
+* the scope of a project or subproject
 
 #### /blok/
 
