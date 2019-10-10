@@ -1,5 +1,5 @@
 ---
-title: 'Projects'
+title: 'Labour of Love'
 ---
 
 My activity on github is nicely summarised by <a

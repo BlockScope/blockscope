@@ -76,11 +76,9 @@ mkStatic :: FilePath -> Rules ()
 mkStatic filename = do
     route $ gsubRoute "static/" (const "") `composeRoutes` setExtension "html"
     compile $ do
-        let ctx = postCtx
-
         pandoc
-            >>= loadAndApplyTemplate "templates/about.html" ctx
-            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> filename <.> "html") ctx
+            >>= loadAndApplyTemplate "templates/about.html" postCtx
+            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> filename <.> "html") postCtx
             >>= relativizeUrls
 
 main :: IO ()
@@ -93,12 +91,12 @@ main = hakyllWith config $ do
         compile copyFileCompiler
 
     -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
-    match "static/b/*.md" $ mkStatic "blockscope"
-    match "static/p/*.md" $ mkStatic "philderbeast"
-    match "static/cv/*.md" $ mkStatic "cv"
-    match "static/project/*.md" $ mkStatic "project"
-    match "static/contrib/*.md" $ mkStatic "project"
-    match "static/tweet/*.md" $ mkStatic "tweet"
+    match "static/b/index.md" $ mkStatic "blockscope"
+    match "static/p/index.md" $ mkStatic "philderbeast"
+    match "static/cv/index.md" $ mkStatic "cv"
+    match "static/project/index.md" $ mkStatic "project"
+    match "static/contrib/index.md" $ mkStatic "project"
+    match "static/tweet/index.md" $ mkStatic "tweet"
 
     -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
@@ -130,7 +128,7 @@ main = hakyllWith config $ do
                 >>= loadAndApplyTemplate "templates/default.html" ctx
                 >>= relativizeUrls
 
-    create ["index.html", "archive.html"] $ do
+    create ["archive/index.html"] $ do
         route idRoute
         compile $ do
             posts <- loadAll "posts/*" >>= recentFirst
@@ -143,6 +141,13 @@ main = hakyllWith config $ do
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" ctx
                 >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
+
+    match "static/index/index.md" $ do
+        route . customRoute $ const "index.html"
+        compile $ do
+            pandoc
+                >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
