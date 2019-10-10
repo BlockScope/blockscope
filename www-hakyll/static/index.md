@@ -4,6 +4,10 @@ title: 'Who?'
 
 # Phil de Joux
 
+<div class="container">
+<div class="row">
+
+<div class="col-9 align-self-left">
 I go by two monikers on the interwebs:
 
 * **@philderbeast** is a nickname given to me by
@@ -12,7 +16,7 @@ I go by two monikers on the interwebs:
 
 I spent my youth climbing back in the '80s.  With no sponsors to upset, new
 route names were sometimes an irreverent play on words, twisted in bad taste or
-simply bad puns. I made up more route names than I ever climbed. I try to stay
+simply bad puns. I made up more route names than I ever climbed.  I try to stay
 true to my roots (routes with diversionary and distracting names) so you'll see
 that:
 
@@ -21,3 +25,13 @@ that:
 * little by little, I hope I help others with small **supporting acts** of open source
 * **post it, notes** are notes posted here
 * **reflected tweets** are mirrored twitter interactions (twitteractions)
+</div>
+
+<div class="col-3 align-self-center">
+<div class="d-flex justify-content-center">
+<img src="/images/selfie.jpg" class="shadow-lg img-thumbnail" style="width: 14em;" />
+</div>
+</div>
+
+</div>
+</div>
