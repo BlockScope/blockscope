@@ -4,7 +4,7 @@ title: 'Phil de Joux'
 
 # Phil de Joux
 
-<div class="container">
+<div class="fluid-container">
 <div class="row">
 
 <div class="col-9 align-self-left" style="padding-left: 0">
