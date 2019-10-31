@@ -25,7 +25,7 @@ Develop a website for monitoring on farm measurements for regulated level
 breaches.
 * <span class="tagly">▩</span> `2012/07-2012/12` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
-* <span class="apress">▩</span> `2012/06-2015/11` [**Apress**](https://angel.co/company/tagly)  
+* <span class="apress">▩</span> `2012/06-2015/11` [**Apress**](https://www.apress.com)  
 Technical review of Expert F#, editions
 [3](https://www.apress.com/us/book/9781430246503) and
 [4](https://www.apress.com/us/book/9781484207413).
@@ -40,7 +40,7 @@ the model recommended future inputs and expected yields.
 * <span class="waimak">▩</span> `2007/12-2011/04` [**Waimakariri District Council**](http://www.waimakariri.govt.nz)  
 Develop a website for logging public submissions and scheduling hearing time
 slots.
-* <span class="nutricentre">▩</span> `2003/07-2008/05` [**NutriCentre**](http://www.nutricentre.com)  
+* <span class="nutricentre">▩</span> `2003/07-2008/05` [**NutriCentre**](https://www.naturalproductsonline.co.uk/news/tesco-closes-loss-making-nutricentre-operation/)  
 Develop an online store.
 * <span class="niwa">▩</span> `2003/06-2007/07` [**NIWA**](http://www.niwa.co.nz)  
 Develop tools and the [EDENZ](http://edenz.niwa.co.nz) website for publishing
