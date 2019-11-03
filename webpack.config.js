@@ -1,7 +1,6 @@
 var webpack = require("webpack");
 var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin'); 
-var extractScss = new ExtractTextPlugin({ filename: 'styles.css' });
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: {
@@ -9,7 +8,7 @@ module.exports = {
     },
     externals: /(all|rts|lib|out|runmain).js$/,
     resolve: {
-        extensions: ['.webpack.js', '.js', '.css', '.less', '.scss' ],
+        extensions: ['.webpack.js', '.js', '.css', '.less', '.scss'],
         modules: ['node_modules']
     },
     devtool: 'source-map',
@@ -24,28 +23,46 @@ module.exports = {
     },
     module: {
         noParse: /(all|rts|lib|out|runmain).js$/,
-        rules: [ {
+        rules: [{
             test: /\.html$/,
             exclude: /node_modules/,
-            loader: 'file-loader?name=[name].[ext]'
+            loader: 'file-loader',
+            options: { name: '[name].[ext]' }
         }, {
-            test: /\.css$/,
-            loader: ExtractTextPlugin.extract([ 'style-loader', 'css-loader' ])
-        }, {
-            test: /\.sass$/,
-            loader: extractScss.extract([ 'css-loader', 'sass-loader' ])
+            test: /\.(sa|sc|c)ss$/,
+            use: [
+                {
+                    loader: MiniCssExtractPlugin.loader,
+                    options: {
+                        hmr: process.env.NODE_ENV === 'development',
+                    },
+                },
+                'css-loader',
+                'sass-loader',
+            ]
         }, {
             test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'url-loader?limit=10000&minetype=application/font-woff'
+            use: [
+                {
+                    loader: 'url-loader',
+                    options: {
+                        limit: 10000,
+                        mimetype: 'application/font-woff'
+                    }
+                }]
         }, {
             test: /(all|rts|lib|out|runmain).js$/,
-            loader: 'file-loader'
+            use: [{ loader: 'file-loader' }]
         }, {
             test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-            loader: 'file-loader'
+            use: [{ loader: 'file-loader' }]
         }]
     },
     plugins: [
-        extractScss
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[id].css',
+            ignoreOrder: false,
+        })
     ]
 };
