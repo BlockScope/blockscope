@@ -6,9 +6,7 @@
   "dependencies": {
     "bootstrap": "^4.1.0",
     "et-book": "https://github.com/edwardtufte/et-book",
-    "font-awesome": "^4.7.0",
-    "tufte-css": "https://github.com/edwardtufte/tufte-css",
-    "tufte-pandoc-css": "https://github.com/jez/tufte-pandoc-css"
+    "font-awesome": "^4.7.0"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",
