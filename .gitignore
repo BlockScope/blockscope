@@ -33,5 +33,5 @@ result
 **/_template/**
 
 *.log
-**/CampHog/css/**
+**/www-hakyll/css/**
 *.tgz
