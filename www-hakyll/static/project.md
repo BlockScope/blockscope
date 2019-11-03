@@ -13,10 +13,14 @@ unseen turnpoints in the sky. It's a wild ride.
 
 With data points coming in every second for upwards of a hundred pilots and
 geometry on a sphere or ellipsoid, scoring is a complex task.  FAI-CIVL govern
-the sport. They make the rules and provide FS, the offcial program or scoring.
+the sport. They make the rules and provide FS, the official program for
+scoring.
 
 The paragliding world cup has its own set of rules but these are very close to
 those of FAI-CIVL. They use another program for scoring, CompCheck.
+
+Both FS and CompCheck are closed source. Many of those involved with FS want to
+make it open source but this has not happened yet.
 
 I help maintain FS and started flare-timing and CIVL-GAP.
 
