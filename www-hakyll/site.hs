@@ -152,6 +152,7 @@ main = hakyllWith config $ do
         route . customRoute $ const "index.html"
         compile $ do
             pandoc
+                >>= loadAndApplyTemplate "templates/index.html" postCtx
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
 

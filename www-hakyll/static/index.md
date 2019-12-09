@@ -2,8 +2,6 @@
 title: 'Phil de Joux'
 ---
 
-# Phil de Joux
-
 <div class="fluid-container">
 <div class="row">
 
