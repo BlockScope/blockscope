@@ -17,7 +17,7 @@ It could be:
 2. A lexical structure of source code which is [grouped
    together](https://en.wikipedia.org/wiki/Block_(programming)).
 
-#### /skohp/
+# /skohp/
 
 1. A [region](http://en.wikipedia.org/wiki/Scope_(computer_science)) of
    a computer program where a name binding is valid.
