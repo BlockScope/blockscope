@@ -31,19 +31,20 @@ like.  So what is out there and how is it licensed?
 
 > Agricultural Systems Modelling and Simulation
 
-The newer version is named APSIMX. A [custom license
-agreement](https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md) is
-needed for any use but this is free for non-commercial use.
+A [custom
+license](https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md) is
+needed for any use but this is free for non-commercial use. The
+[code](https://github.com/APSIMInitiative/ApsimX) is C#.
 
 # DSSAT
 
 > Decision Support System for Agrotechnology Transfer
 
-This is BSD-3 licensed.
+This is BSD-3 licensed. The [code](https://github.com/DSSAT/dssat-csm-os) is Fortran.
 
 # BioMA
 
 > Biophysical Model Applications
 
-Core code is licensed MIT but components can be licensed CC with commercial
-exclusions.
+Its core code in C# is licensed MIT but components can be licensed CC with
+commercial exclusions.
