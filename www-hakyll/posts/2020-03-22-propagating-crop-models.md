@@ -25,7 +25,26 @@ and nutrients are input directly or indirectly, like with thermal time.
 Equations for evapotranspiration are well known. Zoom out enough and many crop
 models will look similar if one was to draw a logical diagram of how they
 worked.  There's more code out in the open these days and much of it can be
-found easily centralized on github or the like. Some of the published code I've
-found has mixed licensing models, open and free for scientific collaboration
-but any commercial use must be negotiated separately.  So what is out there and
-how is it licensed?
+found easily centralized on github or the like.  So what is out there and how
+is it licensed?
+
+# APSIM
+
+> Agricultural Systems Modelling and Simulation
+
+The newer version is named APSIMX. A [custom license
+agreement](https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md) is
+needed for any use but this is free for non-commercial use.
+
+# DSSAT
+
+> Decision Support System for Agrotechnology Transfer
+
+This is BSD-3 licensed.
+
+# BioMA
+
+> Biophysical Model Applications
+
+Core code is licensed MIT but components can be licensed CC with commercial
+exclusions.
