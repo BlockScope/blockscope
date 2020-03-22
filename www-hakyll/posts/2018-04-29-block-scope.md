@@ -1,5 +1,5 @@
 ---
-title: What is block scope?
+title: What is Block Scope?
 tags: naming, compsci
 ---
 It could be:
