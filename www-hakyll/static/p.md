@@ -14,5 +14,11 @@ When I first started working as a software developer, the team I joined was
 developing for DOS with Turbo Pascal on the 80486. I've learnt a lot since
 then.
 
-I've disorientated from objects and prefer first class functions, algebraic
-data types and lazy evaluation.
+I've been disorientated debugging objects with nested state and shared state.
+Sure the scope of changes can be restricted among friends and among methods
+partitioned into public, private, protected and internal groups but that
+doesn't really help that much.
+
+I have reorientated towards first class functions, algebraic data types,
+persistent data structures and lazy evaluation. Development life is much
+simpler now.
