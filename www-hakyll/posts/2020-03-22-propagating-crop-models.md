@@ -24,9 +24,8 @@ and nutrients are input directly or indirectly, like with thermal time.
 
 Equations for evapotranspiration are well known. Zoom out enough and many crop
 models will look similar if one was to draw a logical diagram of how they
-worked.  There's more code out in the open these days and much of it can be
-found easily centralized on github or the like.  So what is out there and how
-is it licensed?
+worked.  Much code is out in the open these days, found easily on github or the
+like.  So what is out there and how is it licensed?
 
 # APSIM
 
