@@ -9,13 +9,13 @@ than 10 years ago. This was developed by a Crown Research Institute in Lincoln,
 New Zealand.  I worked closely with
 a [modeller](https://www.researchgate.net/profile/Robert_Zyskowski) and an
 [agronomist](https://www.researchgate.net/profile/Hamish_Brown) from the
-institute.
+institute, Rob and Hamish.
 
 Porting the guts of the model from C++ to C# was quick but I needed help from
-the modeller at the institude with domain knowledge to find the bugs I'd
-introduced.  Some of these were to do with differences in programming languages
-and some were to do with units of measure and the many different ways of
-quantifying acreage, yields, irrigation flows and fertilizer applications.
+Rob with his domain knowledge to find the bugs I'd introduced.  Some of these
+were to do with differences in programming languages and some were to do with
+units of measure and the many different ways of quantifying acreage, yields,
+irrigation flows and fertilizer applications.
 
 The science involves running field experiments, gathering and analysing data,
 fitting curves and using those equations of fit inside the models. Models have
