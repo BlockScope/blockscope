@@ -22,10 +22,9 @@ fitting curves and using those equations of fit inside the models. Models have
 components for soil and components for parts of the plant. Water, insolation
 and nutrients are input directly or indirectly, like with thermal time.
 
-Equations for evapotranspiration are well known. Zoom out enough and many crop
-models will look similar if one was to draw a logical diagram of how they
-worked.  Much code is out in the open these days, found easily on github or the
-like.  So what is out there and how is it licensed?
+Equations for evapotranspiration are well known and will be part of every crop
+model. What about whole models? Zoomed out enough, will they look logically
+similar? What's out there and how do they compare?
 
 # APSIM
 
