@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Propagating Crop Models</title>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container-fluid">
+            <div class="row">
+                <div id="side" class="col-3 card">
+                    <div class="card-body">
+    <h1 class="card-title"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../p">@philderbeast</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">@blockscope</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">worker threads</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">labour of love</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">supporting acts</a></li>
+            <li class="nav-item"><a class="nav-link" href="../post">post it, notes</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">reflected tweets</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div class="col-9">
+                    <article>
+<header>
+    <h1>Propagating Crop Models</h1>
+</header>
+    
+        <div class="float-right">
+        <a class="badge badge-light" href="../tags/thermal-time.html">thermal-time</a> <a class="badge badge-light" href="../tags/simulation.html">simulation</a> <a class="badge badge-light" href="../tags/evapotranspiration.html">evapotranspiration</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>I worked with <a href="../cv#croplogic">CropLogic</a> between 2008/11. Their product then was a website for farmers. They’ve since changed the product. I don’t know much about what they’re up to now. The initial work with the crop model I did more than 10 years ago. This was developed by a Crown Research Institute in Lincoln, New Zealand. I worked closely with a <a href="https://www.researchgate.net/profile/Robert_Zyskowski">modeller</a> and an <a href="https://www.researchgate.net/profile/Hamish_Brown">agronomist</a> from the institute, Rob and Hamish.</p>
+<p>Porting the guts of the model from C++ to C# was quick but I needed help from Rob with his domain knowledge to find the bugs I’d introduced. Some of these were to do with differences in programming languages and some were to do with units of measure and the many different ways of quantifying acreage, yields, irrigation flows and fertilizer applications.</p>
+<p>The science involves running field experiments, gathering and analysing data, fitting curves and using those equations of fit inside the models. Models have components for soil and components for parts of the plant. Water, insolation and nutrients are input directly or indirectly, like with thermal time.</p>
+<p>Equations for evapotranspiration are well known and will be part of every crop model. What about whole models? Zoomed out enough, will they look logically similar? What’s out there and how do they compare?</p>
+<h1 id="apsim">APSIM</h1>
+<blockquote>
+<p>Agricultural Systems Modelling and Simulation</p>
+</blockquote>
+<p>A <a href="https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md">custom license</a> is needed for any use but this is free for non-commercial use. The <a href="https://github.com/APSIMInitiative/ApsimX">code</a> is C#.</p>
+<h1 id="dssat">DSSAT</h1>
+<blockquote>
+<p>Decision Support System for Agrotechnology Transfer</p>
+</blockquote>
+<p>This is BSD-3 licensed. The <a href="https://github.com/DSSAT/dssat-csm-os">code</a> is Fortran.</p>
+<h1 id="bioma">BioMA</h1>
+<blockquote>
+<p>Biophysical Model Applications</p>
+</blockquote>
+<p>Its core code in C# is licensed MIT but components can be licensed CC with commercial exclusions.</p>
+    <div class="small">&copy; 2013-2019 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>
