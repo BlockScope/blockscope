@@ -2,13 +2,11 @@
 title: Propagating Crop Models
 tags: thermal-time, simulation, evapotranspiration
 ---
-I worked with [CropLogic](/cv#croplogic) between 2008/11. Their product then
-was a website for farmers. They've since changed the product. I don't know much
-about what they're up to now. The initial work with the crop model I did more
-than 10 years ago. This was developed by a Crown Research Institute in Lincoln,
-New Zealand.  I worked closely with
-a [modeller](https://www.researchgate.net/profile/Robert_Zyskowski) and an
-[agronomist](https://www.researchgate.net/profile/Hamish_Brown) from the
+I worked with CropLogic_ between 2008/11. Their product then was a website for
+farmers. They've since changed the product. I don't know much about what
+they're up to now. The initial work with the crop model I did more than 10
+years ago. This was developed by a Crown Research Institute in Lincoln, New
+Zealand.  I worked closely with a modeller_ and an agronomist_ from the
 institute, Rob and Hamish.
 
 Porting the guts of the model from C++ to C# was quick but I needed help from
@@ -26,32 +24,49 @@ Equations for evapotranspiration are well known and will be part of every crop
 model. What about whole models? Zoomed out enough, will they look logically
 similar? What's out there and how do they compare?
 
-# AgMIP
+AgMIP
+_____
 
     Agricultural Model Intercomparison and Improvement Project
 
-This is for comparing models, sharing data and converting between data formats.
+This is for comparing models, sharing data and converting between data formats
+[#]_.
 
-$$DSSAT \leftarrow JSON \rightarrow APSIM$$
+$$DSSAT \\leftarrow AgMIP \\leftrightarrow APSIM$$
 
-# APSIM
+APSIM
+_____
 
     Agricultural Systems Modelling and Simulation
 
-A [custom
-license](https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md) is
-needed for any use but this is free for non-commercial use. The
-[code](https://github.com/APSIMInitiative/ApsimX) is C#.
+An `APSIM custom license`_ is needed for any use but this is free for
+non-commercial use. `APSIM code`_ is C#.
 
-# DSSAT
+DSSAT
+_____
 
     Decision Support System for Agrotechnology Transfer
 
-This is BSD-3 licensed. The [code](https://github.com/DSSAT/dssat-csm-os) is Fortran.
+This is BSD-3 licensed. The `DSSAT code`_ is Fortran.
 
-# BioMA
+BioMA
+_____
 
     Biophysical Model Applications
 
 Its core code in C# is licensed MIT but components can be licensed CC with
 commercial exclusions.
+
+.. _CropLogic: /cv#croplogic
+
+.. _modeller: https://www.researchgate.net/profile/Robert_Zyskowski
+
+.. _agronomist: https://www.researchgate.net/profile/Hamish_Brown
+
+.. _APSIM code: https://github.com/APSIMInitiative/ApsimX
+
+.. _DSSAT code: https://github.com/DSSAT/dssat-csm-os
+
+.. _APSIM custom license: https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md
+
+.. [#] Conversion from APSIM to AgMIP is partial, weather and soil only.
