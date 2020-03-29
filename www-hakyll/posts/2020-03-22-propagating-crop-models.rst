@@ -34,6 +34,13 @@ This is for comparing models, sharing data and converting between data formats
 
 $$DSSAT \\leftarrow AgMIP \\leftrightarrow APSIM$$
 
+AMEI
+____
+
+    Agricultural Model Exchange Initiative
+
+Their Crop2ML_ is an XML format for describing models.
+
 APSIM
 _____
 
@@ -68,5 +75,7 @@ commercial exclusions.
 .. _DSSAT code: https://github.com/DSSAT/dssat-csm-os
 
 .. _APSIM custom license: https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md
+
+.. _Crop2ML: https://github.com/AgriculturalModelExchangeInitiative/Crop2ML
 
 .. [#] Conversion from APSIM to AgMIP is partial, weather and soil only.
