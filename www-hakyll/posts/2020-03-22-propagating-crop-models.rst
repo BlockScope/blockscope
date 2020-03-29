@@ -64,6 +64,13 @@ _____
 Its core code in C# is licensed MIT but components can be licensed CC with
 commercial exclusions.
 
+OpenAlea
+________
+
+OpenAlea_ is a software environment for plant modelling in Python with a core
+licensed CeCILL-C_ and external packages free to specify their own licenses.
+Last release was made 2010.
+
 .. _CropLogic: /cv#croplogic
 
 .. _modeller: https://www.researchgate.net/profile/Robert_Zyskowski
@@ -77,5 +84,9 @@ commercial exclusions.
 .. _APSIM custom license: https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md
 
 .. _Crop2ML: https://github.com/AgriculturalModelExchangeInitiative/Crop2ML
+
+.. _OpenAlea: http://openalea.gforge.inria.fr
+
+.. _CeCILL-C: https://en.wikipedia.org/wiki/CeCILL
 
 .. [#] Conversion from APSIM to AgMIP is partial, weather and soil only.
