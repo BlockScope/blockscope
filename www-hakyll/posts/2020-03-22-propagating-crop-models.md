@@ -32,6 +32,8 @@ similar? What's out there and how do they compare?
 
 This is for comparing models, sharing data and converting between data formats.
 
+$$DSSAT \leftarrow JSON \rightarrow APSIM$$
+
 # APSIM
 
     Agricultural Systems Modelling and Simulation
