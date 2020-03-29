@@ -26,9 +26,15 @@ Equations for evapotranspiration are well known and will be part of every crop
 model. What about whole models? Zoomed out enough, will they look logically
 similar? What's out there and how do they compare?
 
+# AgMIP
+
+    Agricultural Model Intercomparison and Improvement Project
+
+This is for comparing models, sharing data and converting between data formats.
+
 # APSIM
 
-> Agricultural Systems Modelling and Simulation
+    Agricultural Systems Modelling and Simulation
 
 A [custom
 license](https://github.com/APSIMInitiative/ApsimX/blob/master/LICENSE.md) is
@@ -37,13 +43,13 @@ needed for any use but this is free for non-commercial use. The
 
 # DSSAT
 
-> Decision Support System for Agrotechnology Transfer
+    Decision Support System for Agrotechnology Transfer
 
 This is BSD-3 licensed. The [code](https://github.com/DSSAT/dssat-csm-os) is Fortran.
 
 # BioMA
 
-> Biophysical Model Applications
+    Biophysical Model Applications
 
 Its core code in C# is licensed MIT but components can be licensed CC with
 commercial exclusions.
