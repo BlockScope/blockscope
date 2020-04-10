@@ -10,7 +10,7 @@ tradeoffs and constraints to consider.
 
 ### Work History
 
-<div id="timeline" style="height: 536px"></div>
+<div id="timeline" style="height: 536px; width: 100%"></div>
 
 <div id="work-history">
 * <span class="flaretiming">▩</span> `[2017/04 .. ]` [**Flare Timing**](http://www.flaretiming.com)  
@@ -37,8 +37,8 @@ discharge;
     - generate annual reports; pull data from web services and typeset with
       LaTeX
 * <span class="cactus">▩</span> `[2012/08 .. 2013/02]` [**Cactus** Outdoor](https://www.cactusoutdoor.co.nz/)  
-Scope and prototype upgrades to a production planning system for their factory
-operation.
+Scope and prototype upgrades to a production planning system for factory
+operations.
 * <span class="tagly">▩</span> `[2012/07 .. 2012/12]` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
 * <span class="apress">▩</span> `[2012/06 .. 2015/11]` [**Apress**](https://www.apress.com)  
@@ -48,8 +48,8 @@ Technical review of Expert F#, editions
 * <span class="travieo">▩</span> `[2011/08 .. 2015/10]` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
 * <span class="croplogic">▩</span> `[2008/01 .. 2011/08]` <a name="croplogic" href="http://www.croplogic.com"><strong>CropLogic</strong></a>  
-To grow potatoes with more yield, less water and fertilizer input and less
-pollutant runoff;
+For more potato yield with less water and fertilizer input and less pollutant
+runoff;
     - port, tune and test a discrete event simulation crop model with
       scientists
     - pull in field data and external weather data from numerous and disparate
