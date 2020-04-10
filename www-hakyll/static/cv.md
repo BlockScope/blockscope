@@ -14,11 +14,20 @@ tradeoffs and constraints to consider.
 
 <div id="work-history">
 * <span class="flaretiming">▩</span> `[2017/04 .. ]` [**Flare Timing**](http://www.flaretiming.com)  
-Develop a reference implementation of the GAP scoring rules for hang gliding
-and paragliding.
+For scoring hang gliding and paragliding competitions;
+    - develop a reference implementation of the GAP scoring rules
+    - convert and mirror the rules document as a set of plain-text LaTeX files
+    - question, discuss and raise issues about the interpretation of the rules
+    - develop a web frontend with rich visualization of the results with
+      tables, maps and plots
+    - rescore past competitions and publish these as static web sites at
+      *.flaretiming.com
+    - with the aid of the visualization tooling, compare results across scoring
+      implementations, find, raise and fix bugs in the official implementation
+      of the rules
 * <span class="aqualinc">▩</span> `[2014/02 .. 2017/04]` [**Aqualinc Research**](http://www.aqualinc.co.nz)  
-Develop a website for monitoring on farm measurements for regulated level
-breaches.
+For monitoring for breaches of regulated levels of water take and pollutant
+discharge; develop administrator and farmer web frontends.
 * <span class="tagly">▩</span> `[2012/07 .. 2012/12]` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
 * <span class="apress">▩</span> `[2012/06 .. 2015/11]` [**Apress**](https://www.apress.com)  
