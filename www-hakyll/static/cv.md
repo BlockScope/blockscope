@@ -35,6 +35,9 @@ discharge;
     - develop separate web frontends for administrators and farmers
     - generate annual reports; pull data from web services and typeset with
       LaTeX
+* <span class="cactus">▩</span> `[2012/08 .. 2013/02]` [**Cactus** Outdoor](https://www.cactusoutdoor.co.nz/)  
+Scope and prototype upgrades to a production planning system for their factory
+operation.
 * <span class="tagly">▩</span> `[2012/07 .. 2012/12]` [**Tagly**](https://angel.co/company/tagly)  
 Develop server and browser components of a live feed.
 * <span class="apress">▩</span> `[2012/06 .. 2015/11]` [**Apress**](https://www.apress.com)  
