@@ -22,7 +22,7 @@
                 var chart = new google.visualization.Timeline(container);
                 var dataTable = new google.visualization.DataTable();
 
-                dataTable.addColumn({ type: 'string', id: 'President' });
+                dataTable.addColumn({ type: 'string', id: 'Project' });
                 dataTable.addColumn({ type: 'date', id: 'Start' });
                 dataTable.addColumn({ type: 'date', id: 'End' });
 
@@ -39,7 +39,12 @@
                     ,
                         [ 'Flare Timing'
                         , new Date(2019, 10,  7)
-                        , new Date(2019, 11)
+                        , new Date(2019, 11,  1)
+                        ]
+                    ,
+                        [ 'Flare Timing'
+                        , new Date(2020,  3,  5)
+                        , new Date(2020,  4, 10)
                         ]
                     ,   [ 'Aqualinc'
                         , new Date(2014,  2, 18)
@@ -68,6 +73,10 @@
                     ,   [ 'Aqualinc'
                         , new Date(2016,  9,  9)
                         , new Date(2017,  4, 19)
+                        ]
+                    ,   [ 'Cactus Outdoor'
+                        , new Date(2012,  8)
+                        , new Date(2013, 2)
                         ]
                     ,   [ 'Tagly'
                         , new Date(2012,  7)
@@ -234,7 +243,6 @@
                     ]);
 
                 var options = {
-                    backgroundColor: '#fffff8',
                     timeline: {
                         rowLabelStyle: { fontName: 'monospace', fontSize: 10 },
                         barLabelStyle: { fontName: 'monospace', fontSize: 10 }
@@ -242,8 +250,7 @@
                     hAxis: { maxValue: Date.now() },
                     // SEE: http://colorbrewer2.org/#type=qualitative&scheme=Paired&n=12
                     colors: [
-                          '#b15928'
-                        , '#a6cee3'
+                          '#a6cee3'
                         , '#1f78b4'
                         , '#b2df8a'
                         , '#33a02c'
@@ -289,44 +296,61 @@
     <h1>Phil de Joux</h1>
 </header>
     
-    <p>I am a software engineer, bold in learning but otherwise cautious.</p>
-<h3 id="tech-i-like">Tech I like</h3>
-<p>F# and Haskell as general purpose <strong>programming languages</strong><br />
-SQL, XML, JSON and Dhall for <strong>data</strong><br />
-Paket, Shake, Bazel and Stack for <strong>dependencies and builds</strong><br />
-Hg and Git for <strong>source control</strong><br />
-NixOS and NixPkgs for <strong>reproducible environments</strong><br />
-Model-View-Update and Reflex-FRP for <strong>application architecture</strong></p>
+    <p>I am a software developer, have been since 1995. I could list the tech I’ve used but the list would be long. Some I really like, some I can tolerate to get the job done but a lot of it I’d now shun when there are better alternatives around. I’m not going to second guess your choice of tech. There are always tradeoffs and constraints to consider.</p>
 <h3 id="work-history">Work History</h3>
-<p>Contract lengths and continuity vary.</p>
-<div id="timeline" style="height: 496px">
+<div id="timeline" style="height: 536px; width: 100%">
 
 </div>
 <div id="work-history">
 <ul>
-<li><span class="aqualinc">▩</span> <code>2014/02-2017/04</code> <a href="http://www.aqualinc.co.nz"><strong>Aqualinc Research</strong></a><br />
-Develop a website for monitoring on farm measurements for regulated level breaches.</li>
-<li><span class="tagly">▩</span> <code>2012/07-2012/12</code> <a href="https://angel.co/company/tagly"><strong>Tagly</strong></a><br />
+<li><span class="flaretiming">▩</span> <code>[2017/04 .. ]</code> <a href="http://www.flaretiming.com"><strong>Flare Timing</strong></a><br />
+For scoring hang gliding and paragliding competitions;
+<ul>
+<li>develop a reference implementation of the GAP scoring rules</li>
+<li>convert and mirror the rules document as a set of plain-text LaTeX files</li>
+<li>question, discuss and raise issues about the interpretation of the rules</li>
+<li>develop a web frontend with rich visualization of the results with tables, maps and plots</li>
+<li>rescore past competitions and publish these as static web sites at *.flaretiming.com</li>
+<li>with the aid of the visualization tooling, compare results across scoring implementations, find, raise and fix bugs in the official implementation of the rules</li>
+</ul></li>
+<li><span class="aqualinc">▩</span> <code>[2014/02 .. 2017/04]</code> <a href="http://www.aqualinc.co.nz"><strong>Aqualinc Research</strong></a><br />
+For monitoring breaches of regulated levels of water take and pollutant discharge;
+<ul>
+<li>design a relational database schema</li>
+<li>unmunge munged data</li>
+<li>develop system services to pull and cache metadata from <a href="http://www.hilltop.co.nz/"><strong>Hilltop</strong></a> web services</li>
+<li>expose web services over the top of the relational and time series data</li>
+<li>develop separate web frontends for administrators and farmers</li>
+<li>generate annual reports; pull data from web services and typeset with LaTeX</li>
+</ul></li>
+<li><span class="cactus">▩</span> <code>[2012/08 .. 2013/02]</code> <a href="https://www.cactusoutdoor.co.nz/"><strong>Cactus</strong> Outdoor</a><br />
+Scope and prototype upgrades to a production planning system for factory operations.</li>
+<li><span class="tagly">▩</span> <code>[2012/07 .. 2012/12]</code> <a href="https://angel.co/company/tagly"><strong>Tagly</strong></a><br />
 Develop server and browser components of a live feed.</li>
-<li><span class="apress">▩</span> <code>2012/06-2015/11</code> <a href="https://www.apress.com"><strong>Apress</strong></a><br />
+<li><span class="apress">▩</span> <code>[2012/06 .. 2015/11]</code> <a href="https://www.apress.com"><strong>Apress</strong></a><br />
 Technical review of Expert F#, editions <a href="https://www.apress.com/us/book/9781430246503">3</a> and <a href="https://www.apress.com/us/book/9781484207413">4</a>.</li>
-<li><span class="travieo">▩</span> <code>2011/08-2015/10</code> <a href="http://www.travieo.com"><strong>Travieo</strong></a><br />
+<li><span class="travieo">▩</span> <code>[2011/08 .. 2015/10]</code> <a href="http://www.travieo.com"><strong>Travieo</strong></a><br />
 Develop a travel booking website.</li>
-<li><span class="croplogic">▩</span> <code>2008/01-2011/08</code> <a name="croplogic" href="http://www.croplogic.com"><strong>CropLogic</strong></a><br />
-Work with scientists tuning and testing a discrete event simulation crop model. Work with the product team developing a website for potato growers. Pull in external weather and field observations. Provide a way for growers to setup their crops, to enter their irrigation and fertilizer applications and to view the model recommended future inputs and expected yields.</li>
-<li><span class="waimak">▩</span> <code>2007/12-2011/04</code> <a href="http://www.waimakariri.govt.nz"><strong>Waimakariri District Council</strong></a><br />
+<li><span class="croplogic">▩</span> <code>[2008/01 .. 2011/08]</code> <a name="croplogic" href="http://www.croplogic.com"><strong>CropLogic</strong></a><br />
+For more potato yield with less water and fertilizer input and less pollutant runoff;
+<ul>
+<li>port, tune and test a discrete event simulation crop model with scientists</li>
+<li>pull in field data and external weather data from numerous and disparate sources</li>
+<li>develop a website for growers to setup their crops, to enter their irrigation and fertilizer applications and to view the model recommended future inputs and expected yields</li>
+</ul></li>
+<li><span class="waimak">▩</span> <code>[2007/12 .. 2011/04]</code> <a href="http://www.waimakariri.govt.nz"><strong>Waimakariri District Council</strong></a><br />
 Develop a website for logging public submissions and scheduling hearing time slots.</li>
-<li><span class="nutricentre">▩</span> <code>2003/07-2008/05</code> <a href="https://www.naturalproductsonline.co.uk/news/tesco-closes-loss-making-nutricentre-operation/"><strong>NutriCentre</strong></a><br />
+<li><span class="nutricentre">▩</span> <code>[2003/07 .. 2008/05]</code> <a href="https://www.naturalproductsonline.co.uk/news/tesco-closes-loss-making-nutricentre-operation/"><strong>NutriCentre</strong></a><br />
 Develop an online store.</li>
-<li><span class="niwa">▩</span> <code>2003/06-2007/07</code> <a href="http://www.niwa.co.nz"><strong>NIWA</strong></a><br />
+<li><span class="niwa">▩</span> <code>[2003/06 .. 2007/07]</code> <a href="http://www.niwa.co.nz"><strong>NIWA</strong></a><br />
 Develop tools and the <a href="http://edenz.niwa.co.nz">EDENZ</a> website for publishing environmental time series data.</li>
-<li><span class="aspelle">▩</span> <code>2001/08-2002/09</code> <strong>Aspelle</strong><br />
+<li><span class="aspelle">▩</span> <code>[2001/08 .. 2002/09]</code> <strong>Aspelle</strong><br />
 Develop authentication and authorization parts of a security product.</li>
-<li><span class="obvious">▩</span> <code>1999/10-2001/03</code> <a href="https://angel.co/company/obvious-technology"><strong>Obvious Technology</strong></a><br />
+<li><span class="obvious">▩</span> <code>[1999/10 .. 2001/03]</code> <a href="https://angel.co/company/obvious-technology"><strong>Obvious Technology</strong></a><br />
 Develop a product for searching video, hitting on annotated key frames.</li>
-<li><span class="sml">▩</span> <code>1999/07-1999/09</code> <a href="http://www.smltd.com"><strong>Software Migrations</strong></a><br />
+<li><span class="sml">▩</span> <code>[1999/07 .. 1999/09]</code> <a href="http://www.smltd.com"><strong>Software Migrations</strong></a><br />
 Develop a frontend for tools translating mainframe assembly code modules to C.</li>
-<li><span class="trimble">▩</span> <code>1995/02-1999/01</code> <a href="http://www.trimble.com"><strong>Trimble</strong></a><br />
+<li><span class="trimble">▩</span> <code>[1995/02 .. 1999/01]</code> <a href="http://www.trimble.com"><strong>Trimble</strong></a><br />
 Maintain the inhouse computer graphics library, improving clipping and multithreading.</li>
 </ul>
 </div>
@@ -349,7 +373,7 @@ Maintain the inhouse computer graphics library, improving clipping and multithre
 <div class="col-6">
     <address>
         <i class="fa fa-envelope"></i><a href="mailto:phil.dejoux@blockscope.com"> phil.dejoux@blockscope.com</a><br />
-        <i class="fa fa-phone"></i> +64-27-321-3890<br />
+        <i class="fa fa-phone"></i> +1-450-675-9180<br />
         <i style="color:#00aff0" class="fa fa-skype"></i> philderbeast<br />
     </address>
     <div class="d-print-none">
