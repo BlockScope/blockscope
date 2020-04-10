@@ -10,7 +10,7 @@ tradeoffs and constraints to consider.
 
 ### Work History
 
-<div id="timeline" style="height: 496px"></div>
+<div id="timeline" style="height: 536px"></div>
 
 <div id="work-history">
 * <span class="flaretiming">▩</span> `[2017/04 .. ]` [**Flare Timing**](http://www.flaretiming.com)  
