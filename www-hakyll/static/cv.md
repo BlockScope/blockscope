@@ -28,9 +28,10 @@ For scoring hang gliding and paragliding competitions;
 * <span class="aqualinc">▩</span> `[2014/02 .. 2017/04]` [**Aqualinc Research**](http://www.aqualinc.co.nz)  
 For monitoring breaches of regulated levels of water take and pollutant
 discharge;
-    - develop system services to pull and cache metadata data from
-      [**Hilltop**](http://www.hilltop.co.nz/) web services
     - design a relational database schema
+    - unmunge munged data
+    - develop system services to pull and cache metadata from
+      [**Hilltop**](http://www.hilltop.co.nz/) web services
     - expose web services over the top of the relational and time series data
     - develop separate web frontends for administrators and farmers
     - generate annual reports; pull data from web services and typeset with
