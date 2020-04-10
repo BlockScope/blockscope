@@ -44,11 +44,15 @@ Technical review of Expert F#, editions
 * <span class="travieo">▩</span> `[2011/08 .. 2015/10]` [**Travieo**](http://www.travieo.com)  
 Develop a travel booking website.
 * <span class="croplogic">▩</span> `[2008/01 .. 2011/08]` <a name="croplogic" href="http://www.croplogic.com"><strong>CropLogic</strong></a>  
-Work with scientists tuning and testing a discrete event simulation crop model.
-Work with the product team developing a website for potato growers. Pull in
-external weather and field observations. Provide a way for growers to setup
-their crops, to enter their irrigation and fertilizer applications and to view
-the model recommended future inputs and expected yields.
+To grow potatoes with more yield, less water and fertilizer input and less
+pollutant runoff;
+    - port, tune and test a discrete event simulation crop model with
+      scientists
+    - pull in field data and external weather data from numerous and disparate
+      sources
+    - develop a website for growers to setup their crops, to enter their
+      irrigation and fertilizer applications and to view the model recommended
+      future inputs and expected yields
 * <span class="waimak">▩</span> `[2007/12 .. 2011/04]` [**Waimakariri District Council**](http://www.waimakariri.govt.nz)  
 Develop a website for logging public submissions and scheduling hearing time
 slots.
