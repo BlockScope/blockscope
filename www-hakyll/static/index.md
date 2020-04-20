@@ -18,11 +18,11 @@ simply bad puns. I made up more route names than I ever climbed.  I try to stay
 true to my roots (routes with diversionary and distracting names) so you'll see
 that:
 
-* **worker threads** run through the curriculum vitae
-* the side project is a **labour of love**
-* little by little, I hope I help others with small **supporting acts** of open source
-* **post it, notes** are notes posted here
-* **reflected tweets** are mirrored twitter interactions (twitteractions)
+* **"worker threads"** run through the curriculum vitae
+* the side project is a **"labour of love"**
+* little by little, I hope I help others with small **"supporting acts"** of open source
+* **"post it, notes"** are notes posted here
+* **"reflected tweets"** are mirrored twitter interactions
 </div>
 
 <div class="col-3 align-self-center">
