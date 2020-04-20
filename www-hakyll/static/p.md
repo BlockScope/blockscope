@@ -2,8 +2,8 @@
 title: '@philderbeast'
 ---
 
-I develop software and climb. I would rather climb professionally and code for
-pleasure. I have some advice that could apply to both activities:
+I develop software and climb. Proficient at both, I have some advice that could
+apply to either activity:
 
 * Check your knots and always have a backup.
 * Gear freaking is a distraction.
@@ -15,9 +15,9 @@ developing for DOS with Turbo Pascal on the 80486. I've learnt a lot since
 then.
 
 I've been disorientated debugging objects with nested state and shared state.
-Sure the scope of changes can be restricted among friends and among methods
-partitioned into public, private, protected and internal groups but that
-doesn't really help that much.
+Sure the scope of changes can be restricted among methods partitioned into
+public, private, protected and internal groups but that doesn't really help
+that much.
 
 I have reorientated towards first class functions, algebraic data types,
 persistent data structures and lazy evaluation. Development life is much
