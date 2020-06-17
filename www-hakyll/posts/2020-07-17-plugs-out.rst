@@ -14,7 +14,8 @@ together[#]_. Each test suite in the package demonstrates something I've learnt.
 
 Wiring Diagram
 --------------
-There's more than one way to wire up a plugin.
+There's more than one way to wire up a plugin; with a pragma, with an option
+or both.
 
 Undefined is not a Function
 ---------------------------
@@ -81,9 +82,9 @@ functions need solving and others don't. Getting an ``a`` from ``undefined``, it
     main = undefined
 
 Going from ``()`` to ``()`` needs no further resolution. GHC can handle this
-by itself. The ``test-undefined-*-carefree`` test suites with suffix have
-these mains. The ones without the ``-carefree`` suffix don't. They have the
-``a`` from ``undefined`` mains.
+by itself. The ``test-undefined-*-carefree`` test suites have these mains.
+The ones without carefree in their name don't. They have the ``a`` from
+``undefined`` mains.
 
 .. code-block:: haskell
 
