@@ -1,0 +1,34 @@
+---
+title: Type Checker Plugs-Out Testing
+tags: haskell, build
+---
+When getting ready to launch a human-rated spacecraft, one of the steps is
+the plugs-out test. Can the the spacecraft function on its own without power
+or fuel from all cables and umbilicals?
+
+I'm very interested in ways I can use units of measure in application code
+and have the correctness of calculations with respect to units checked at
+compile time. The only language I've used with this capability baked in is
+F#. I've done geodesic calculations at least twice, with F# and Haskell. For
+Haskell, I took a dependency on the uom-plugin, a units of measure type
+checker plugin that works with the compiler, solving type equalities and
+conversions that GHC can't solve. Here are equivalent calculations with each.
+
+The development of GHC moves fast, type checker plugins are not part of its
+test suite and from ghc-8.4 something has changed so that the uom-plugin
+fails to resolve equalities it was once able to resolve. Without really
+wanting to I've had to look at the innards of GHC typechecker plugins to see
+what the upset is between GHC and this plugin.
+
+Another plugin I've looked at is the thoralf-plugin. I attended the talk
+about this at ICFP 2018. I thought it looked very cool, wiring up an SMT
+solver to do equality reasoning. The authors of the paper presented at the
+conference suggest that it could subsume the uom-plugin. I dabbled at bit
+with this plugin. It requires adding more constraints than needed with the
+uom-plugin so that we can avoid unification variables because unification
+with SMT solvers is difficult.
+
+As part of my debugging efforts I have written some simple plugins that
+demonstrate some things about type checker plugins. These I've collected into
+a package, ghc-plugs-out. It is a multiple library package, each library is a
+plugin. The test suites in the package each demonstrate something.
