@@ -1,0 +1,14 @@
+---
+title: Cabal Up
+tags: haskell, build
+---
+Back in the day it was quite hard to get going on Windows with Haskell. There
+was the Haskell Platform but I dropped this for minghc and then stack. Once
+there it has served me pretty well. I've tried to get things going with cabal,
+I really have but it never seems to be able to resolve dependencies for the projects
+I have. I don't want to be dicking around managing dependencies. There's a lot
+of work going on with cabal. Every once in a while I go back to try it again
+and I now have it working for flare-timing. Here's what I did.
+
+Went to stackage and grabbed the versions of each package that matched the
+version of GHC I'm compiling with, 8.2.2.
