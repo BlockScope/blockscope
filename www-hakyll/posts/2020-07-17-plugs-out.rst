@@ -1,6 +1,6 @@
 ---
-title: Type Checker Plugs-Out Testing
-tags: haskell, build
+title: Plugs-Out Testing
+tags: haskell, type checker plugins
 ---
 When getting ready to launch a human-rated spacecraft, one of the steps is
 the plugs-out test. Can the the spacecraft function on its own without power
@@ -8,8 +8,9 @@ or fuel from all cables and umbilicals?
 
 As part of my debugging efforts I have written some simple plugins that
 demonstrate some things about type checker plugins. These I've collected into
-a package, `ghc-plugs-out`_. It is a multiple library package, each library is a
-plugin. The test suites in the package each demonstrate something.
+a package, `ghc-plugs-out`_, a kind of plugs-out test for GHC type checker
+plugins. It is a multiple library package, each library is a plugin. The test
+suites in the package each demonstrate something.
 
 The undefined plugins show that GHC will panic if a type checker plugin is
 not well behaved. There's one of these for each of the three functions a type
@@ -17,13 +18,28 @@ checker plugin must implement.
 
 .. code-block:: haskell
 
-    TcPlugin
-        { tcPluginInit = return ()
-        , tcPluginSolve = \_ _ _ _ -> undefined
-        , tcPluginStop = const $ return ()
-        }
+    plugin :: Plugin
+    plugin = mkPureTcPlugin undefSolve
 
-.. code-block:: bash
+    undefSolve :: TcPlugin
+    undefSolve = noOp { tcPluginSolve = \_ _ _ _ -> undefined } -- 1
+
+    noOp :: TcPlugin
+    noOp =
+        TcPlugin
+            { tcPluginInit = return ()
+            , tcPluginSolve = \_ _ _ _ -> return $ TcPluginOk [] []
+            , tcPluginStop = const $ return ()
+            }
+
+    mkPureTcPlugin :: TcPlugin -> Plugin
+    mkPureTcPlugin p =
+        defaultPlugin
+            { tcPlugin = const $ Just p
+            , pluginRecompile = purePlugin
+            }
+
+.. code-block:: pre
 
     > cabal build test-undefined-solve
     [1 of 1] Compiling Undefined.Solve.Plugin
@@ -31,4 +47,26 @@ checker plugin must implement.
     ghc: panic! (the 'impossible' happened)
     Please report this as a GHC bug:  http://www.haskell.org/ghc/reportabug
 
+I would have liked to use record update syntax for undefSolve as shown above
+but this is not yet possible [#]_ with GHC when the data type has an
+existential qualifier and that is how TcPlugin is defined [#]_.
+
+.. code-block:: haskell
+
+    data TcPlugin = forall s. TcPlugin
+        { tcPluginInit  :: TcPluginM s
+        -- ^ Initialize plugin, when entering type-checker.
+        , tcPluginSolve :: s -> TcPluginSolver
+        -- ^ Solve some constraints.
+        -- TODO: WRITE MORE DETAILS ON HOW THIS WORKS.
+        , tcPluginStop  :: s -> TcPluginM ()
+        -- ^ Clean up after the plugin, when exiting the type-checker.
+        }
+
 .. _ghc-plugs-out: https://github.com/BlockScope/ghc-plugs-out
+
+.. _ghc-2595: https://gitlab.haskell.org/ghc/ghc/issues/2595
+
+.. [#] The error if you try is "Record update for insufficiently polymorphic field", see ghc-2595_.
+.. [#] These field haddock comments are verbatim from the GHC source.
+       

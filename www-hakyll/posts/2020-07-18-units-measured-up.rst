@@ -1,6 +1,6 @@
 ---
 title: Units, Measured Up
-tags: haskell, build
+tags: fsharp, haskell, uom
 ---
 I'm very interested in ways I can use units of measure in application code
 and have the correctness of calculations with respect to units checked at
