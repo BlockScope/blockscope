@@ -1,20 +1,26 @@
 ---
-title: Plugs-Out Testing
+title: Plugs Out Testing
 tags: haskell, type checker plugins
 ---
 When getting ready to launch a human-rated spacecraft, one of the steps is
 the plugs-out test. Can the the spacecraft function on its own without power
 or fuel from all cables and umbilicals?
 
-As part of my debugging efforts I have written some simple plugins that
-demonstrate some things about type checker plugins. These I've collected into
-a package, `ghc-plugs-out`_, a kind of plugs-out test for GHC type checker
-plugins. It is a multiple library package, each library is a plugin. The test
-suites in the package each demonstrate something.
+While debugging plugins, I've found out a thing or two along the way by
+adding tracing and changing how I wire up the plugin. I've collected snippets
+of that work into a package, `ghc-plugs-out`_, a kind of plugs-out test for
+GHC type checker plugins. It is the first multiple library package I've put
+together[#]_. Each test suite in the package demonstrates something I've learnt.
 
-The undefined plugins show that GHC will panic if a type checker plugin is
-not well behaved. There's one of these for each of the three functions a type
-checker plugin must implement.
+Wiring Diagram
+--------------
+There's more than one way to wire up a plugin.
+
+Undefined is not a Function
+---------------------------
+
+If your plugin behaves badly it is going to hurt. GHC panics when any one of
+the functions required of a type checker plugin is implemented undefined.
 
 .. code-block:: haskell
 
@@ -22,7 +28,7 @@ checker plugin must implement.
     plugin = mkPureTcPlugin undefSolve
 
     undefSolve :: TcPlugin
-    undefSolve = noOp { tcPluginSolve = \_ _ _ _ -> undefined } -- 1
+    undefSolve = noOp { tcPluginSolve = \_ _ _ _ -> undefined }
 
     noOp :: TcPlugin
     noOp =
@@ -63,10 +69,59 @@ existential qualifier and that is how TcPlugin is defined [#]_.
         -- ^ Clean up after the plugin, when exiting the type-checker.
         }
 
+The plugin is of course called on by GHC to resolve constraints. Some
+functions need solving and others don't. Getting an ``a`` from ``undefined``, it's needed.
+
+.. code-block:: haskell
+
+    {-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}
+    module Main where
+
+    main :: IO a
+    main = undefined
+
+Going from ``()`` to ``()`` needs no further resolution. GHC can handle this
+by itself. The ``test-undefined-*-carefree`` test suites with suffix have
+these mains. The ones without the ``-carefree`` suffix don't. They have the
+``a`` from ``undefined`` mains.
+
+.. code-block:: haskell
+
+    {-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}
+    module Main where
+
+    main :: IO ()
+    main = return ()
+
+  So we've seen that a typechecker plugin's solve function may be called but
+  its init and stop functions are always called.
+
+.. code-block:: pre
+
+  +-------------------------------+------------+
+  | Test Suite                    | GHC Panics |
+  +===============================+============+
+  | test-undefined-init           |     x      |
+  +-------------------------------+------------+
+  | test-undefined-init-carefree  |     x      |
+  +-------------------------------+------------+
+  | test-undefined-solve          |     x      |
+  +-------------------------------+------------+
+  | test-undefined-solve-carefree |            |
+  +-------------------------------+------------+
+  | test-undefined-stop           |     x      |
+  +-------------------------------+------------+
+  | test-undefined-stop-carefree  |     x      |
+  +-------------------------------+------------+
+
+
 .. _ghc-plugs-out: https://github.com/BlockScope/ghc-plugs-out
 
 .. _ghc-2595: https://gitlab.haskell.org/ghc/ghc/issues/2595
 
+.. _fgaz-GSoC-2018: https://fgaz.me/posts/2019-11-14-cabal-multiple-libraries/
+
+.. [#] Multiple libraries were added to cabal 3.0, see fgaz-GSoC-2018_.
 .. [#] The error if you try is "Record update for insufficiently polymorphic field", see ghc-2595_.
 .. [#] These field haddock comments are verbatim from the GHC source.
        
