@@ -15,7 +15,46 @@ together[#]_. Each test suite in the package demonstrates something I've learnt.
 Wiring Diagram
 --------------
 There's more than one way to wire up a plugin; with a pragma, with an option
-or both.
+or both. If your plugin is impure, it's going to force an extra recompilation
+to boot. It is recommended to wire up plugins with pragmas for only the
+modules that need them. It is probably fine to use options if all your
+modules need a plugin. If you mix and match both ways of doing the wiring
+you'll end up with two instances of the plugin in the compilation.
+
+.. code-block:: pre
+
+  > cabal build test-wireup-pure-by-pragma
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+
+  > cabal build test-wireup-pure-by-option
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+
+  > cabal build test-wireup-pure-by-both
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin-CallCount (1)
+
+  > cabal build test-wireup-impure-by-pragma
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+  [1 of 1] Compiling Main [Impure plugin forced recompilation]
+  >>> GHC-TcPlugin-CallCount (1)
+
+  > cabal build test-wireup-impure-by-option
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+  [1 of 1] Compiling Main [Impure plugin forced recompilation]
+  >>> GHC-TcPlugin-CallCount (1)
+
+  > cabal build test-wireup-impure-by-both
+  [1 of 1] Compiling Main
+  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin-CallCount (1)
+  [1 of 1] Compiling Main [Impure plugin forced recompilation]
+  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin-CallCount (1)
 
 Undefined is not a Function
 ---------------------------
