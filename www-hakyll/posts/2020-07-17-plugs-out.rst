@@ -10,3 +10,14 @@ As part of my debugging efforts I have written some simple plugins that
 demonstrate some things about type checker plugins. These I've collected into
 a package, ghc-plugs-out. It is a multiple library package, each library is a
 plugin. The test suites in the package each demonstrate something.
+
+The undefined plugins show that GHC will panic if a type checker plugin is
+not well behaved.
+
+.. code-block:: bash
+
+    > cabal build test-undefined-solve
+    [1 of 1] Compiling Undefined.Solve.Plugin
+    [1 of 1] Compiling Main
+    ghc: panic! (the 'impossible' happened)
+    Please report this as a GHC bug:  http://www.haskell.org/ghc/reportabug
