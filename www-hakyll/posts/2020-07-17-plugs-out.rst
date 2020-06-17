@@ -1,5 +1,5 @@
 ---
-title: Plugs Out Testing
+title: Plugs Out
 tags: haskell, type checker plugins
 ---
 When getting ready to launch a human-rated spacecraft, one of the steps is

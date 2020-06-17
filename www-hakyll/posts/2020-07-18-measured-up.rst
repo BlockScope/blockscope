@@ -1,5 +1,5 @@
 ---
-title: Units, Measured Up
+title: Measured Up
 tags: fsharp, haskell, uom
 ---
 I'm very interested in ways I can use units of measure in application code
