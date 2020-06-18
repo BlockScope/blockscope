@@ -1,0 +1,14 @@
+---
+title: Iffy Defy
+tags: haskell
+---
+There's a great effort being made to create a language server for Haskell so
+that we might have better editors. Various projects and people are coming
+together to work on this. Beneath it all is ghc-lib_, an API for GHC decoupled
+from GHC versions. I took this idea, the custom prelude idea and the idea of
+using cabal mixins to avoid use of the ``{-# LANGUAGE CPP #-}`` pragma to
+create a flatter API into the guts of GHC for those writing type checker
+plugins and created ghc-corroborate_.
+
+.. _ghc-lib: https://hackage.haskell.org/package/ghc-lib
+.. _ghc-corroborate: https://github.com/BlockScope/uom-plugin/tree/wip/thoralf/ghc-corroborate
