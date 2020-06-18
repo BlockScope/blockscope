@@ -1,5 +1,7 @@
 ---
 title: Iffy Defy
+subtitle: Import one module writing type checker plugins
+slug: The iffy challenge of keeping a straight face.
 tags: haskell
 ---
 There's a great effort being made to create a language server for Haskell so

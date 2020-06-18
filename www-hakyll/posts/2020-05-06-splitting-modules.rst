@@ -1,5 +1,7 @@
 ---
 title: Splitting Modules
+subtitle: Worth doing even if the compile times are no better.
+slug: Splitting modules for no better compile times.
 tags: haskell, build
 ---
 It is taking what seems a long time to build flare-timing, nearly 9 minutes.

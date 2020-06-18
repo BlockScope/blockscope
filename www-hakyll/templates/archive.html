@@ -14,7 +14,11 @@
     <ul>
         $for(posts)$
         <li>
-            <a href="$url$">$title$</a> - $date$
+            $if(slug)$
+            $date$ <a href="$url$">$slug$</a>
+            $else$
+            $date$ <a href="$url$">$title$</a>
+            $endif$
         </li>
         $endfor$
     </ul>

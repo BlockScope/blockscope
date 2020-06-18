@@ -1,5 +1,7 @@
 ---
 title: Plugs Out
+subtitle: Type checker plugins without the type checking.
+slug: Type checker plugins without the type checking.
 tags: haskell, type checker plugins
 ---
 When getting ready to launch a human-rated spacecraft, one of the steps is

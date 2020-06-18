@@ -1,5 +1,7 @@
 ---
-title: Measured Up
+title: Units of Measure
+subtitle: How do they measure up?
+slug: Units of Measure. How do they measure up?
 tags: fsharp, haskell, uom
 ---
 I'm very interested in ways to get compile time checking of application code

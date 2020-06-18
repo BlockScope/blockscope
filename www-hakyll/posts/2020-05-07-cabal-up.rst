@@ -1,5 +1,7 @@
 ---
-title: Cabal Up
+title: Pinning down.
+subtitle: What's hard with Cabal?
+slug: Pinning down what's hard with Cabal.
 tags: haskell, build
 ---
 Back in the day it was quite hard to get going on Windows with Haskell. There

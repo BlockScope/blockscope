@@ -1,5 +1,7 @@
 ---
-title: Propagating Crop Models
+title: Crop Models
+subtitle: A harvest of simulated progating.
+slug: Crop models, a survey.
 tags: thermal-time, simulation, evapotranspiration
 ---
 I worked with CropLogic_ between 2008/11. Their product then was a website for

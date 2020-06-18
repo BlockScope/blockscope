@@ -1,6 +1,11 @@
 <article>
 <header>
-    <h1>$title$</h1>
+    <div class="jumbotron">
+        <h1 class="display-4">$title$</h1>
+        $if(subtitle)$
+        <p class="lead">$subtitle$</p>
+        $endif$
+    </div>
 </header>
     $if(tags)$
         <div class="float-right">
