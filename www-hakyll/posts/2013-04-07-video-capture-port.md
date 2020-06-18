@@ -90,8 +90,10 @@ the code changes I made were ...
         type VideoCaptureController(viewColor, title) =
             inherit UIViewController()
             // from this ...
-            member val recording = false with get, set
-            member val videoCapture : VideoCapture = new VideoCapture(cv.LabelledView) with get, set
+            member val recording =
+                false with get, set
+            member val videoCapture : VideoCapture =
+                new VideoCapture(cv.LabelledView) with get, set
 
             // to this ...
             let capture : Ref<VideoCapture option> = ref None
