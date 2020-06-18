@@ -2,16 +2,15 @@
 title: Measured Up
 tags: fsharp, haskell, uom
 ---
-I'm very interested in ways I can use units of measure in application code
-and have the correctness of calculations with respect to units checked at
-compile time. The only language I've used with this capability baked in is
-F#. I've done geodesic calculations at least twice, with F# and Haskell. For
-Haskell, I took a dependency on the uom-plugin, a units of measure type
-checker plugin that works with the compiler, solving type equalities and
-conversions that GHC can't solve.
+I'm very interested in ways to get compile time checking of application code
+with units of measure. The only language I've used with this capability baked
+in is F# but there's a compiler type checker plugin for Haskell that gives us
+similar capabilities.  The uom-plugin_ works with the compiler, solving unit
+type equalities and conversions that the GHC compiler can't solve without
+outside help.
 
 A pair of monomorphic functions for converting between degrees and radians.
-  
+
 .. code-block:: fsharp
 
     open System
@@ -39,10 +38,13 @@ fails to resolve equalities it was once able to resolve. Without really
 wanting to I've had to look at the innards of GHC typechecker plugins to see
 what the upset is between GHC and this plugin.
 
-Another plugin I've looked at is the thoralf-plugin. I attended the talk
-about this at ICFP 2018. I thought it looked very cool, wiring up an SMT
-solver to do equality reasoning. The authors of the paper presented at the
-conference suggest that it could subsume the uom-plugin. I dabbled at bit
-with this plugin. It requires adding more constraints than needed with the
-uom-plugin so that we can avoid unification variables because unification
-with SMT solvers is difficult.
+Another plugin I've looked at is the thoralf-plugin. I attended the talk about
+the thoralf-paper_ at ICFP 2018. I thought it looked very cool, wiring up an
+SMT solver to do equality reasoning. The authors of the paper presented at the
+conference suggest that it could subsume the uom-plugin. I dabbled at bit with
+this plugin. It requires adding more constraints than needed with the
+uom-plugin so that we can avoid unification variables because unification with
+SMT solvers is difficult.
+
+.. _uom-plugin: https://github.com/adamgundry/uom-plugin
+.. _thoralf-paper: https://icfp18.sigplan.org/details/haskellsymp-2018-papers/12/The-Thoralf-Plugin-For-Your-Fancy-Type-Needs
