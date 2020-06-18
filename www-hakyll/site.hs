@@ -4,7 +4,7 @@ import Control.Applicative (empty)
 import Data.List (intersperse)
 import Data.Monoid ((<>))
 import Hakyll
-    ( Context(..), Item(..), Configuration(..)
+    ( (.||.), Context(..), Item(..), Configuration(..)
     , Rules, Pattern, Compiler, Identifier
     , defaultContext
     , dateField
@@ -45,15 +45,13 @@ import Text.Blaze.Html ((!), toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import System.FilePath
+import System.Environment (getArgs)
 
 pandocReaderOptions :: ReaderOptions
 pandocReaderOptions = defaultHakyllReaderOptions
 
 pandocWriterOptions :: WriterOptions
-pandocWriterOptions =
-    defaultHakyllWriterOptions
-        { writerHTMLMathMethod = MathJax ""
-        }
+pandocWriterOptions = defaultHakyllWriterOptions { writerHTMLMathMethod = MathJax "" }
 
 pandoc :: Compiler (Item String)
 pandoc = pandocCompilerWith pandocReaderOptions pandocWriterOptions
@@ -67,10 +65,7 @@ directory :: (Pattern -> Rules a) -> String -> Rules a
 directory act f = act $ fromGlob $ f ++ "/**"
 
 config :: Configuration
-config =
-    defaultConfiguration
-        { providerDirectory = "www-hakyll"
-        }
+config = defaultConfiguration { providerDirectory = "www-hakyll" }
 
 mkStatic :: FilePath -> Rules ()
 mkStatic path = do
@@ -87,76 +82,85 @@ mkStatic path = do
             >>= relativizeUrls
 
 main :: IO ()
-main = hakyllWith config $ do
-    -- SEE: http://vapaus.org/text/hakyll-configuration.html
-    mapM_ (directory static) ["css", "font", "js", "images"]
+main = do
+    args <- getArgs
+    hakyllWith config $ do
 
-    match "favicon/*.*" $ do
-        route $ customRoute ((flip replaceDirectory) "" . toFilePath)
-        compile copyFileCompiler
+        -- SEE: https://github.com/turboMaCk/turboMaCk.github.io/blob/develop/src/site.hs
+        let postsPattern =
+                if "watch" `elem` args
+                    then fromGlob "posts/*" .||. fromGlob "drafts/*"
+                    else fromGlob "posts/*"
 
-    -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
-    match "static/b.md" $ mkStatic "blockscope"
-    match "static/p.md" $ mkStatic "philderbeast"
-    match "static/cv.md" $ mkStatic "cv"
-    match "static/project.md" $ mkStatic "project"
-    match "static/contrib.md" $ mkStatic "project"
-    match "static/tweet.md" $ mkStatic "tweet"
+        -- SEE: http://vapaus.org/text/hakyll-configuration.html
+        mapM_ (directory static) ["css", "font", "js", "images"]
 
-    -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
-    tags <- buildTags "posts/*" (fromCapture "tags/*.html")
+        match "favicon/*.*" $ do
+            route $ customRoute ((flip replaceDirectory) "" . toFilePath)
+            compile copyFileCompiler
 
-    match "posts/*" $ do
-        route $ setExtension "html"
-        compile $ do
-            -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
-            let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
+        -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
+        match "static/b.md" $ mkStatic "blockscope"
+        match "static/p.md" $ mkStatic "philderbeast"
+        match "static/cv.md" $ mkStatic "cv"
+        match "static/project.md" $ mkStatic "project"
+        match "static/contrib.md" $ mkStatic "project"
+        match "static/tweet.md" $ mkStatic "tweet"
 
-            pandoc
-                >>= loadAndApplyTemplate "templates/post.html" ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
+        -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
+        tags <- buildTags postsPattern (fromCapture "tags/*.html")
 
-    tagsRules tags $ \tag tagPattern -> do
-        let title = "Posts tagged \"" ++ tag ++ "\""
-        route idRoute
-        compile $ do
-            posts <- loadAll tagPattern >>= recentFirst
+        match postsPattern $ do
+            route $ setExtension "html"
+            compile $ do
+                -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
+                let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
 
-            let ctx =
-                    constField "title" title
-                    <> listField "posts" postCtx (return posts)
-                    <> defaultContext
+                pandoc
+                    >>= loadAndApplyTemplate "templates/post.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
-            makeItem ""
-                >>= loadAndApplyTemplate "templates/tag.html" ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
+        tagsRules tags $ \tag tagPattern -> do
+            let title = "Posts tagged \"" ++ tag ++ "\""
+            route idRoute
+            compile $ do
+                posts <- loadAll tagPattern >>= recentFirst
 
-    create ["post/index.html"] $ do
-        route idRoute
-        compile $ do
-            posts <- loadAll "posts/*" >>= recentFirst
+                let ctx =
+                        constField "title" title
+                        <> listField "posts" postCtx (return posts)
+                        <> defaultContext
 
-            let ctx =
-                    listField "posts" postCtx (return posts)
-                    <> constField "title" "Post it, Notes"
-                    <> defaultContext
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/tag.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
-            makeItem ""
-                >>= loadAndApplyTemplate "templates/archive.html" ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
-                >>= relativizeUrls
+        create ["post/index.html"] $ do
+            route idRoute
+            compile $ do
+                posts <- loadAll postsPattern >>= recentFirst
 
-    match "static/index.md" $ do
-        route . customRoute $ const "index.html"
-        compile $ do
-            pandoc
-                >>= loadAndApplyTemplate "templates/index.html" postCtx
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
-                >>= relativizeUrls
+                let ctx =
+                        listField "posts" postCtx (return posts)
+                        <> constField "title" "Post it, Notes"
+                        <> defaultContext
 
-    match "templates/*" $ compile templateCompiler
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
+
+        match "static/index.md" $ do
+            route . customRoute $ const "index.html"
+            compile $ do
+                pandoc
+                    >>= loadAndApplyTemplate "templates/index.html" postCtx
+                    >>= loadAndApplyTemplate "templates/default.html" postCtx
+                    >>= relativizeUrls
+
+        match "templates/*" $ compile templateCompiler
 
 postCtx :: Context String
 postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
