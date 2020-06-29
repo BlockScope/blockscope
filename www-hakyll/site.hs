@@ -122,13 +122,13 @@ main = do
                     >>= relativizeUrls
 
         tagsRules tags $ \tag tagPattern -> do
-            let title = "Posts tagged \"" ++ tag ++ "\""
             route idRoute
             compile $ do
                 posts <- loadAll tagPattern >>= recentFirst
 
                 let ctx =
-                        constField "title" title
+                        (constField "title" $ "Posts tagged \"" ++ tag ++ "\"")
+                        <> constField "subtitle" "That's all there is."
                         <> listField "posts" postCtx (return posts)
                         <> defaultContext
 
