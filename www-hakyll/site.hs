@@ -127,8 +127,7 @@ main = do
                 posts <- loadAll tagPattern >>= recentFirst
 
                 let ctx =
-                        (constField "title" $ "Posts tagged \"" ++ tag ++ "\"")
-                        <> constField "subtitle" "That's all there is."
+                        constField "tag" tag
                         <> listField "posts" postCtx (return posts)
                         <> defaultContext
 
