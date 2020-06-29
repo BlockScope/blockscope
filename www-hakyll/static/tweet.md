@@ -1,8 +1,7 @@
 ---
 title: 'Reflected Tweets'
+subtitle: A small mirror, relfecting a select few twitter interactions.
 ---
-
-A small mirror, relfecting a select few twitter interactions.
 
 #### #daftthunk
 

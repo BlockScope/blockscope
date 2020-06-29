@@ -1,5 +1,6 @@
 ---
-title: '@blockscope'
+title: <pre>@blockscope</pre>
+subtitle: <pre>module BlockScope.Consulting.Services where</pre>
 ---
 
 If you're interested in working together, these are the kinds of services I can

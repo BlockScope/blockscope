@@ -1,5 +1,6 @@
 ---
 title: 'Phil de Joux'
+subtitle: Linking moves, deferring to the compilers.
 ---
 
 <div class="fluid-container">
@@ -18,11 +19,11 @@ simply bad puns. I made up more route names than I ever climbed.  I try to stay
 true to my roots (routes with diversionary and distracting names) so you'll see
 that:
 
-* **"worker threads"** run through the curriculum vitae
-* the side project is a **"labour of love"**
-* little by little, I hope I help others with small **"supporting acts"** of open source
-* **"post it, notes"** are notes posted here
-* **"reflected tweets"** are mirrored twitter interactions
+* "post it, notes" are posted notes
+* "reflected tweets" are mirrored tweets
+* "fly the course" is a flying side project
+* "supporting acts" is a list of open source contributions
+* "worker threads" run through the timeline of my curriculum vitae
 </div>
 
 <div class="col-3 align-self-center">

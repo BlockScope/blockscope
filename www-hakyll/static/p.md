@@ -1,5 +1,6 @@
 ---
-title: '@philderbeast'
+title: <pre>@philderbeast</pre>
+subtitle: I develop software and climb.
 ---
 
 I develop software and climb. Proficient at both, I have some advice that could

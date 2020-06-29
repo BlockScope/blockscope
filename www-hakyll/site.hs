@@ -145,6 +145,7 @@ main = do
                 let ctx =
                         listField "posts" postCtx (return posts)
                         <> constField "title" "Post it, Notes"
+                        <> constField "subtitle" "Power-on, self-test."
                         <> defaultContext
 
                 makeItem ""

@@ -1,8 +1,10 @@
 ---
 title: 'Supporting Acts'
+subtitle: Contributions to projects that I use or want to succeed.
 ---
-
-I contribute to projects that I use or want to succeed.
+My activity on github is nicely summarised by <a
+href="https://ghuser.io/philderbeast"
+target="_blank">ghuser.io/philderbeast</a>.
 
 * `fsprojects`[**/paket**](https://fsprojects.github.io/Paket/)  
 I helped document how to convert an existing solution to use paket,

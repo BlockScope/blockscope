@@ -1,15 +1,10 @@
 ---
-title: 'Labour of Love'
+title: Fly the Course
+subtitle: Sky sailing, a wild and bumpy ride.
 ---
 
-My activity on github is nicely summarised by <a
-href="https://ghuser.io/philderbeast"
-target="_blank">ghuser.io/philderbeast</a>.
-
-### Flying High Score
-
 I've been a competition pilot, racing other hang glider pilots around
-unseen turnpoints in the sky. It's a wild ride.
+unseen turnpoints in the sky.
 
 With data points coming in every second for upwards of a hundred pilots and
 geometry on a sphere or ellipsoid, scoring is a complex task.  FAI-CIVL govern
