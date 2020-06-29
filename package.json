@@ -5,8 +5,8 @@
   "license": "ISC",
   "dependencies": {
     "bootstrap": "^4.1.0",
-    "et-book": "https://github.com/edwardtufte/et-book",
-    "font-awesome": "^4.7.0"
+    "font-awesome": "^4.7.0",
+    "typeface-et-book": "^0.0.2"
   },
   "devDependencies": {
     "css-loader": "^3.2.0",

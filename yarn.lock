@@ -1347,10 +1347,6 @@ estraverse@^4.1.0, estraverse@^4.1.1:
   resolved "https://registry.yarnpkg.com/estraverse/-/estraverse-4.3.0.tgz#398ad3f3c5a24948be7725e83d11a7de28cdbd1d"
   integrity sha512-39nnKffWz8xN1BU/2c79n9nB9HDzo0niYUqx6xyqUnyoAnQyyWpOTdZEeiCch8BBu515t4wp9ZmgVfVhn9EBpw==
 
-"et-book@https://github.com/edwardtufte/et-book":
-  version "0.0.0"
-  resolved "https://github.com/edwardtufte/et-book#24d3a3bbfc880095d3df2b9e9d60d05819138e89"
-
 etag@~1.8.1:
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
@@ -4542,6 +4538,11 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typeface-et-book@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/typeface-et-book/-/typeface-et-book-0.0.2.tgz#650a3b841d7c5a0a467da28d925711e5e4b4cc8f"
+  integrity sha512-toUunQ0XBwmnWkIGXrSmtcDSjZJuXoPiNJrKyoTXjLEQfQm6OBN3rBC/EoGi+xMGPCLpgoVJ5sJbVzFd45QN8A==
 
 union-value@^1.0.0:
   version "1.0.1"
