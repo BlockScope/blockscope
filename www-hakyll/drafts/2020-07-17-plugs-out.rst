@@ -2,7 +2,7 @@
 title: Plugs Out
 subtitle: Type checker plugins without the type checking.
 slug: Type checker plugins without the type checking.
-tags: haskell, type checker plugins
+tags: haskell, tcplugins
 ---
 When getting ready to launch a human-rated spacecraft, one of the steps is
 the plugs-out test. Can the the spacecraft function on its own without power

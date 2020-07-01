@@ -2,7 +2,7 @@
 title: Iffy Defy
 subtitle: Import one module writing type checker plugins
 slug: The iffy challenge of keeping a straight face.
-tags: haskell
+tags: haskell, tcplugins
 ---
 There's a great effort being made to create a language server for Haskell so
 that we might have better editors. Various projects and people are coming
