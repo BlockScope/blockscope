@@ -2,7 +2,6 @@
 
 import Control.Applicative (empty)
 import Data.List (intersperse)
-import Data.Monoid ((<>))
 import Hakyll
     ( (.||.), Context(..), Item(..), Configuration(..)
     , Rules, Pattern, Compiler, Identifier

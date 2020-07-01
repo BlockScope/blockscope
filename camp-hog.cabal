@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b161196956e849571babcddd7760668fefe3bf50fc6c6fce46cd9db6675ebab3
+-- hash: c9c81c9ddc132ce585982522ab2948e7eba06e2235288738b12aa8069e3288dc
 
 name:           camp-hog
 version:        1.0.0
@@ -22,7 +22,6 @@ tested-with:    GHC == 8.2.2
 build-type:     Simple
 extra-source-files:
     package.dhall
-    package.yaml
     changelog.md
     README.md
 

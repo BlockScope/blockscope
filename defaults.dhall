@@ -13,7 +13,7 @@
 , tested-with =
     "GHC == 8.2.2"
 , extra-source-files =
-    [ "package.dhall", "package.yaml", "changelog.md", "README.md" ]
+    [ "package.dhall", "changelog.md", "README.md" ]
 , ghc-options =
     [ "-Wall", "-Werror" ]
 , default-extensions =
