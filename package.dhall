@@ -1,5 +1,7 @@
     let defs = ./defaults.dhall
 
+in  let deps = [ "base", "blaze-html", "filepath", "hakyll", "pandoc >=2.9" ]
+
 in  let exts = ./default-extensions.dhall
 
 in    defs
@@ -21,7 +23,7 @@ in    defs
       , executables =
           { site =
               { dependencies =
-                  [ "base", "blaze-html", "filepath", "hakyll", "pandoc" ]
+                  deps
               , source-dirs =
                   "www-hakyll"
               , main =
@@ -31,7 +33,7 @@ in    defs
       , tests =
           { hlint =
               { dependencies =
-                  [ "base", "hakyll", "pandoc", "blaze-html", "hlint" ]
+                  deps # [ "hlint" ]
               , main =
                   "HLint.hs"
               , source-dirs =

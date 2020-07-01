@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c9c81c9ddc132ce585982522ab2948e7eba06e2235288738b12aa8069e3288dc
+-- hash: 1343dde5b58e7f412780fd2c39989b13eaab3143be1b20a4e04f3e23989df345
 
 name:           camp-hog
 version:        1.0.0
@@ -42,7 +42,7 @@ executable site
     , blaze-html
     , filepath
     , hakyll
-    , pandoc
+    , pandoc >=2.9
   default-language: Haskell2010
 
 test-suite hlint
@@ -58,7 +58,8 @@ test-suite hlint
   build-depends:
       base
     , blaze-html
+    , filepath
     , hakyll
     , hlint
-    , pandoc
+    , pandoc >=2.9
   default-language: Haskell2010
