@@ -138,7 +138,7 @@ The ones without carefree in their name don't. They have the ``a`` from
   So we've seen that a typechecker plugin's solve function may be called but
   its init and stop functions are always called.
 
-.. code-block:: pre
+.. code-block:: ascii
 
   +-------------------------------+------------+
   | Test Suite                    | GHC Panics |
