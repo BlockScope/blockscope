@@ -1,15 +1,30 @@
 ---
-title: Units of Measure
-subtitle: How do they measure up?
-slug: Units of Measure. How do they measure up?
+title: Units
+subtitle: How do we measure up when static typing?
+slug: Units. How do we measure up?
 tags: fsharp, haskell, uom
 ---
-I'm very interested in ways to get compile time checking of application code
-with units of measure. The only language I've used with this capability baked
-in is F# but there's a compiler type checker plugin for Haskell that gives us
-similar capabilities.  The uom-plugin_ works with the compiler, solving unit
-type equalities and conversions that the GHC compiler can't solve without
-outside help.
+I much prefer static type checking and strong types. If a compiler is going to
+catch more of my errors, sign me up. I worked on a crop model where the model
+did its calculating in units customarily used in my home country, close but not
+exactly the same as international units. Results however were stored in SI
+units. For users from any country, we had to be able to display quantities such
+as irrigation, fertilization and yields in all possible unit combinations. One
+user might want to view yield in tons_ or tonnes_ per hectare and another view it
+in hundredweight_ per acre.
+
+I'm disappointed and surprised there's a gaping type hole in most programming
+languages surrounding units of measure. It's a trap to fall in and there's no
+help from the compiler digging ourselves out.  A small oversight of taking
+a quantity in the wrong units or combining quantities of different unit without
+first doing unit conversions and calcualtion results will be off and it may
+well be hard to track down the error without domain knowledge, without already
+knowing what are sensible ranges for values.
+
+The only language I've used with this capability baked in is F# but there's
+a compiler type checker plugin for Haskell that gives us similar capabilities.
+The uom-plugin_ works with the compiler, solving unit type equalities and
+conversions that the GHC compiler can't solve without outside help.
 
 A pair of monomorphic functions for converting between degrees and radians.
 
@@ -50,3 +65,6 @@ SMT solvers is difficult.
 
 .. _uom-plugin: https://github.com/adamgundry/uom-plugin
 .. _thoralf-paper: https://icfp18.sigplan.org/details/haskellsymp-2018-papers/12/The-Thoralf-Plugin-For-Your-Fancy-Type-Needs
+.. _hundredweight: https://en.wikipedia.org/wiki/Hundredweight
+.. _tons: https://en.wikipedia.org/wiki/Ton
+.. _tonnes: https://en.wikipedia.org/wiki/Tonne
