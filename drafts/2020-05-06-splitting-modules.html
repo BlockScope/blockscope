@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Splitting Modules</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">fly</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">donate</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">company</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">self</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">work</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">tweet</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div class="col-9">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Splitting Modules</h1>
+                    
+                    <p class="lead">Worth doing even if the compile times are no better.</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        <a class="badge badge-light" href="../tags/haskell.html">haskell</a> <a class="badge badge-light" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>It is taking what seems a long time to build flare-timing, nearly 9 minutes.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack install</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="ex">-</span> align-time</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="ex">-</span> area-step</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="ex">-</span> build-flare-timing</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="ex">-</span> comp-serve</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="ex">-</span> cross-zone</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="ex">-</span> discard-further</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="ex">-</span> extract-input</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="ex">-</span> fs-arrival</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="ex">-</span> fs-effort</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a><span class="ex">-</span> fs-filter</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="ex">-</span> fs-route</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="ex">-</span> fs-score</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="ex">-</span> gap-point</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="ex">-</span> land-out</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="ex">-</span> mask-track</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a><span class="ex">-</span> peg-frame</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a><span class="ex">-</span> tag-zone</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a><span class="ex">-</span> task-length</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a><span class="ex">-</span> test-fsdb-parser</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a><span class="ex">-</span> test-igc-parser</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a><span class="ex">-</span> test-kml-parser</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a><span class="ex">-</span> unpack-track</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a><span class="ex">Executed</span> in  531.64 secs   fish           external</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true"></a>   <span class="ex">usr</span> time  754.24 secs  125.00 micros  754.24 secs</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true"></a>   <span class="ex">sys</span> time  122.15 secs  744.00 micros  122.15 secs</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack install</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true"></a><span class="ex">Executed</span> in  557.76 secs   fish           external</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true"></a>   <span class="ex">usr</span> time  795.14 secs  105.00 micros  795.14 secs</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true"></a>   <span class="ex">sys</span> time  138.00 secs  557.00 micros  138.00 secs</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true"></a><span class="ex">Executed</span> in  454.11 secs   fish           external</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true"></a>   <span class="ex">usr</span> time  644.16 secs   38.39 millis  644.12 secs</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true"></a>   <span class="ex">sys</span> time  101.74 secs    5.19 millis  101.73 secs</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true"></a><span class="ex">Executed</span> in  587.15 secs   fish           external</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true"></a>   <span class="ex">usr</span> time  874.27 secs  119.00 micros  874.27 secs</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true"></a>   <span class="ex">sys</span> time  142.36 secs  728.00 micros  142.36 secs</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build flare-timing</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true"></a><span class="ex">Executed</span> in  458.09 secs   fish           external</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true"></a>   <span class="ex">usr</span> time  590.11 secs  127.00 micros  590.11 secs</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true"></a>   <span class="ex">sys</span> time   99.45 secs  750.00 micros   99.45 secs</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build app-serve</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true"></a><span class="ex">Executed</span> in  341.31 secs   fish           external</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true"></a>   <span class="ex">usr</span> time  451.67 secs  110.00 micros  451.67 secs</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true"></a>   <span class="ex">sys</span> time   55.36 secs  642.00 micros   55.36 secs</span></code></pre></div>
+<p>I have three small console apps that test the parsers I wrote for <span class="title-ref">*.igc</span>, <span class="title-ref">*.kml</span> and <span class="title-ref">*.fsdb</span> files. They’re occassionally useful but I don’t need them on every build so lets flag those to only be build sometimes.</p>
+<pre class="dhall"><code>{ version =
+    &quot;0.1.0&quot;
+, author =
+    &quot;Phil de Joux&quot;
+, maintainer =
+    &quot;phil.dejoux@blockscope.com&quot;
+, copyright =
+    &quot;\u00A9 2017-2019 Phil de Joux, \u00A9 2017-2019 Block Scope Limited&quot;
+, license =
+    &quot;MPL-2.0&quot;
+, license-file =
+    &quot;LICENSE.md&quot;
+, tested-with =
+    &quot;GHC == 8.2.2&quot;
+, extra-source-files =
+    [ &quot;package.dhall&quot;, &quot;changelog.md&quot;, &quot;README.md&quot; ]
+, ghc-options =
+    [ &quot;-Wall&quot;
+    , &quot;-Werror&quot;
+    , &quot;-Wincomplete-uni-patterns&quot;
+    , &quot;-Wcompat&quot;
+    , &quot;-Widentities&quot;
+    , &quot;-Wredundant-constraints&quot;
+    , &quot;-fhide-source-paths&quot;
+    ]
+, default-extensions =
+    [ &quot;PackageImports&quot; ]
+, dependencies =
+    [ &quot;base &gt;=4.10.1.0 &amp;&amp; &lt;5&quot; ]
+, flags =
+    { suppress-failing-tests =
+        { manual = False, default = True }
+    , suppress-test-parsers =
+        { manual = False, default = True }
+    }
+}</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="ex">Executed</span> in  358.81 secs   fish           external</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>   <span class="ex">usr</span> time  513.48 secs  126.00 micros  513.48 secs</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>   <span class="ex">sys</span> time   79.14 secs  594.00 micros   79.14 secs</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="ex">Executed</span> in  372.52 secs   fish           external</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>   <span class="ex">usr</span> time  539.01 secs   96.00 micros  539.01 secs</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>   <span class="ex">sys</span> time   83.87 secs  463.00 micros   83.87 secs</span></code></pre></div>
+<p>That’s got the time down a bit.</p>
+<p>I had read that one way to speed up the build time is to decrease the size of packages. I have one module <span class="title-ref">flight-gap</span>, core to the whole project and depended on by many, that I could split up. Furthermore, each executable in flare-timing only depends on some subset its features.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-build flare-timing</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="ex">Executed</span> in  283.23 secs   fish           external</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>   <span class="ex">usr</span> time  557.16 secs  126.00 micros  557.16 secs</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>   <span class="ex">sys</span> time  115.67 secs  753.00 micros  115.66 secs</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-build flare-timing</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="ex">Executed</span> in  283.36 secs   fish           external</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a>   <span class="ex">usr</span> time  551.23 secs  122.00 micros  551.23 secs</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>   <span class="ex">sys</span> time  116.59 secs  710.00 micros  116.58 secs</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-build all</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a><span class="ex">Executed</span> in  346.27 secs   fish           external</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a>   <span class="ex">usr</span> time  1010.65 secs  125.00 micros  1010.65 secs</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a>   <span class="ex">sys</span> time  200.69 secs  780.00 micros  200.69 secs</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> cabal v2-build flare-timing</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true"></a><span class="ex">Executed</span> in  294.54 secs   fish           external</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true"></a>   <span class="ex">usr</span> time  574.61 secs  131.00 micros  574.61 secs</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true"></a>   <span class="ex">sys</span> time  124.42 secs  773.00 micros  124.42 secs</span></code></pre></div>
+<p>In <span class="title-ref">flight-gap</span> I’d exposed one main module, <span class="title-ref">Flight.Score</span>. I broke this package up but retained it so that dependent packages did not need to change right away. In directory <span class="title-ref">gap</span> I have retained package <span class="title-ref">flight-gap</span> and added packages for the alloction, effort, leading, point and penalty math, stopped tasks, task validity and weighting between aspects of flights scored, all in packages with a name prefix of <span class="title-ref">flight-gap-</span> in directories with a name prefix of <strong>`gap-`</strong>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ex">.</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>├── <span class="ex">app-serve</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>├── <span class="ex">app-view</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>├── <span class="ex">build</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>├── <span class="ex">clip</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>├── <span class="ex">cmd</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>├── <span class="ex">comp</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>├── <span class="ex">detour-via-sci</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>├── <span class="ex">detour-via-uom</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>├── <span class="ex">earth</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>├── <span class="ex">flare-timing</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>├── <span class="ex">fsdb</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>├── <span class="ex">gap</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>├── <span class="ex">gap-allot</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>├── <span class="ex">gap-effort</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>├── <span class="ex">gap-lead</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>├── <span class="ex">gap-math</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a>├── <span class="ex">gap-stop</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>├── <span class="ex">gap-valid</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>├── <span class="ex">gap-weight</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a>├── <span class="ex">hcoord</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a>├── <span class="ex">igc</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a>├── <span class="ex">kml</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a>├── <span class="ex">latlng</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a>├── <span class="ex">lookup</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>├── <span class="ex">mask</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a>├── <span class="ex">route</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a>├── <span class="ex">scribe</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true"></a>├── <span class="ex">siggy-chardust</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true"></a>├── <span class="ex">span</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true"></a>├── <span class="ex">task</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true"></a>├── <span class="ex">tasty-compare</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true"></a>├── <span class="bu">time</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true"></a>├── <span class="ex">track</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true"></a>├── <span class="ex">units</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true"></a>├── <span class="ex">vernix</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true"></a>└── <span class="ex">zone</span></span></code></pre></div>
+<p>Modules that depended on flight-gap</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>├── <span class="ex">app-serve</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>├── <span class="ex">comp</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>├── <span class="ex">flare-timing</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>├── <span class="ex">fsdb</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>├── <span class="ex">lookup</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>├── <span class="ex">mask</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>├── <span class="ex">scribe</span></span></code></pre></div>
+<p>After making changes so that packages don’t depend on <span class="title-ref">flight-gap</span> but on the finer grained <span class="title-ref">flight-gap-*</span> packages:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">stack</span> clean</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack install</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="ex">Executed</span> in  396.05 secs   fish           external</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>   <span class="ex">usr</span> time  568.94 secs  138.00 micros  568.94 secs</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>   <span class="ex">sys</span> time   90.22 secs  774.00 micros   90.22 secs</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">stack</span> clean</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> stack build</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a><span class="ex">Executed</span> in  384.55 secs   fish           external</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>   <span class="ex">usr</span> time  560.48 secs  128.00 micros  560.47 secs</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true"></a>   <span class="ex">sys</span> time   89.41 secs  672.00 micros   89.41 secs</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-build flare-timing</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true"></a><span class="ex">Executed</span> in  318.86 secs   fish           external</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true"></a>   <span class="ex">usr</span> time  517.85 secs  111.00 micros  517.85 secs</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true"></a>   <span class="ex">sys</span> time  119.29 secs  699.00 micros  119.29 secs</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true"></a></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-build all</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true"></a><span class="ex">Executed</span> in  372.21 secs   fish           external</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true"></a>   <span class="ex">usr</span> time  936.68 secs  116.00 micros  936.68 secs</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true"></a>   <span class="ex">sys</span> time  213.25 secs  690.00 micros  213.25 secs</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">cabal</span> v2-clean</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> cabal v2-build flare-timing</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true"></a><span class="ex">Executed</span> in  345.91 secs   fish           external</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true"></a>   <span class="ex">usr</span> time  684.72 secs  126.00 micros  684.71 secs</span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true"></a>   <span class="ex">sys</span> time  149.00 secs  741.00 micros  149.00 secs</span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true"></a></span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">pier</span> clean-all</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">pier</span> build</span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Downloading lts-11.22.yaml<span class="kw">)</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Downloading stack-setup-2.yaml<span class="kw">)</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Downloading ghc-8.2.2-x86_64-apple-darwin.tar.bz2<span class="kw">)</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Unpacking GHC<span class="kw">)</span></span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Installing GHC locally<span class="kw">)</span></span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Building core package database<span class="kw">)</span></span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: Downloading tasty-hunit-0.10.0.1.tar.gz<span class="kw">)</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flight-time-0.1.0: building library<span class="kw">)</span></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable align-time<span class="kw">)</span></span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable area-step<span class="kw">)</span></span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable cross-zone<span class="kw">)</span></span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable discard-further<span class="kw">)</span></span>
+<span id="cb7-56"><a href="#cb7-56" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable extract-input<span class="kw">)</span></span>
+<span id="cb7-57"><a href="#cb7-57" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable fs-arrival<span class="kw">)</span></span>
+<span id="cb7-58"><a href="#cb7-58" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable fs-effort<span class="kw">)</span></span>
+<span id="cb7-59"><a href="#cb7-59" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable fs-filter<span class="kw">)</span></span>
+<span id="cb7-60"><a href="#cb7-60" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable fs-route<span class="kw">)</span></span>
+<span id="cb7-61"><a href="#cb7-61" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable fs-score<span class="kw">)</span></span>
+<span id="cb7-62"><a href="#cb7-62" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable gap-point<span class="kw">)</span></span>
+<span id="cb7-63"><a href="#cb7-63" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable land-out<span class="kw">)</span></span>
+<span id="cb7-64"><a href="#cb7-64" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable mask-track<span class="kw">)</span></span>
+<span id="cb7-65"><a href="#cb7-65" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable peg-frame<span class="kw">)</span></span>
+<span id="cb7-66"><a href="#cb7-66" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable tag-zone<span class="kw">)</span></span>
+<span id="cb7-67"><a href="#cb7-67" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable task-length<span class="kw">)</span></span>
+<span id="cb7-68"><a href="#cb7-68" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> shared cache: flare-timing-0.1.0: building executable unpack-track<span class="kw">)</span></span>
+<span id="cb7-69"><a href="#cb7-69" aria-hidden="true"></a><span class="ex">Build</span> completed in 0:31m</span>
+<span id="cb7-70"><a href="#cb7-70" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-71"><a href="#cb7-71" aria-hidden="true"></a><span class="ex">Executed</span> in   30.37 secs   fish           external</span>
+<span id="cb7-72"><a href="#cb7-72" aria-hidden="true"></a>   <span class="ex">usr</span> time  123.58 secs  118.00 micros  123.58 secs</span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true"></a>   <span class="ex">sys</span> time   27.54 secs  902.00 micros   27.54 secs</span>
+<span id="cb7-74"><a href="#cb7-74" aria-hidden="true"></a></span>
+<span id="cb7-75"><a href="#cb7-75" aria-hidden="true"></a><span class="op">&gt;</span> <span class="ex">pier</span> clean</span>
+<span id="cb7-76"><a href="#cb7-76" aria-hidden="true"></a><span class="op">&gt;</span> <span class="bu">time</span> pier build --no-shared-cache</span>
+<span id="cb7-77"><a href="#cb7-77" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Downloading lts-11.22.yaml<span class="kw">)</span></span>
+<span id="cb7-78"><a href="#cb7-78" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Downloading stack-setup-2.yaml<span class="kw">)</span></span>
+<span id="cb7-79"><a href="#cb7-79" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Downloading ghc-8.2.2-x86_64-apple-darwin.tar.bz2<span class="kw">)</span></span>
+<span id="cb7-80"><a href="#cb7-80" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Unpacking GHC<span class="kw">)</span></span>
+<span id="cb7-81"><a href="#cb7-81" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Installing GHC locally<span class="kw">)</span></span>
+<span id="cb7-82"><a href="#cb7-82" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Building core package database<span class="kw">)</span></span>
+<span id="cb7-83"><a href="#cb7-83" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Downloading uom-plugin-0.3.0.0.tar.gz<span class="kw">)</span></span>
+<span id="cb7-84"><a href="#cb7-84" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: Downloading QuickCheck-2.10.1.tar.gz<span class="kw">)</span></span>
+<span id="cb7-85"><a href="#cb7-85" aria-hidden="true"></a><span class="ex">...</span></span>
+<span id="cb7-86"><a href="#cb7-86" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: app-serve-0.1.0: building executable comp-serve<span class="kw">)</span></span>
+<span id="cb7-87"><a href="#cb7-87" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flight-time-0.1.0: building library<span class="kw">)</span></span>
+<span id="cb7-88"><a href="#cb7-88" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable align-time<span class="kw">)</span></span>
+<span id="cb7-89"><a href="#cb7-89" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable area-step<span class="kw">)</span></span>
+<span id="cb7-90"><a href="#cb7-90" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable cross-zone<span class="kw">)</span></span>
+<span id="cb7-91"><a href="#cb7-91" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable discard-further<span class="kw">)</span></span>
+<span id="cb7-92"><a href="#cb7-92" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable extract-input<span class="kw">)</span></span>
+<span id="cb7-93"><a href="#cb7-93" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable fs-arrival<span class="kw">)</span></span>
+<span id="cb7-94"><a href="#cb7-94" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable fs-effort<span class="kw">)</span></span>
+<span id="cb7-95"><a href="#cb7-95" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable fs-filter<span class="kw">)</span></span>
+<span id="cb7-96"><a href="#cb7-96" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable fs-route<span class="kw">)</span></span>
+<span id="cb7-97"><a href="#cb7-97" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable fs-score<span class="kw">)</span></span>
+<span id="cb7-98"><a href="#cb7-98" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable gap-point<span class="kw">)</span></span>
+<span id="cb7-99"><a href="#cb7-99" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable land-out<span class="kw">)</span></span>
+<span id="cb7-100"><a href="#cb7-100" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable mask-track<span class="kw">)</span></span>
+<span id="cb7-101"><a href="#cb7-101" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable peg-frame<span class="kw">)</span></span>
+<span id="cb7-102"><a href="#cb7-102" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable tag-zone<span class="kw">)</span></span>
+<span id="cb7-103"><a href="#cb7-103" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable task-length<span class="kw">)</span></span>
+<span id="cb7-104"><a href="#cb7-104" aria-hidden="true"></a><span class="kw">(</span><span class="ex">from</span> cache: flare-timing-0.1.0: building executable unpack-track<span class="kw">)</span></span>
+<span id="cb7-105"><a href="#cb7-105" aria-hidden="true"></a><span class="ex">Build</span> completed in 0:20m</span>
+<span id="cb7-106"><a href="#cb7-106" aria-hidden="true"></a><span class="ex">________________________________________________________</span></span>
+<span id="cb7-107"><a href="#cb7-107" aria-hidden="true"></a><span class="ex">Executed</span> in   19.17 secs   fish           external</span>
+<span id="cb7-108"><a href="#cb7-108" aria-hidden="true"></a>   <span class="ex">usr</span> time   99.04 secs  146.00 micros   99.04 secs</span>
+<span id="cb7-109"><a href="#cb7-109" aria-hidden="true"></a>   <span class="ex">sys</span> time   13.84 secs  888.00 micros   13.84 secs</span></code></pre></div>
+    <div id="copyright">&copy; 2013-2020 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

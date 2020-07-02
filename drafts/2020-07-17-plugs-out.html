@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>Plugs Out</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">fly</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">donate</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">company</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">self</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">work</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">tweet</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div class="col-9">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Plugs Out</h1>
+                    
+                    <p class="lead">Type checker plugins without the type checking.</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        <a class="badge badge-light" href="../tags/haskell.html">haskell</a> <a class="badge badge-light" href="../tags/tcplugins.html">tcplugins</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>When getting ready to launch a human-rated spacecraft, one of the steps is the plugs-out test. Can the the spacecraft function on its own without power or fuel from all cables and umbilicals?</p>
+<p>While debugging plugins, I’ve found out a thing or two along the way by adding tracing and changing how I wire up the plugin. I’ve collected snippets of that work into a package, <a href="https://github.com/BlockScope/ghc-plugs-out">ghc-plugs-out</a>, a kind of plugs-out test for GHC type checker plugins. It is the first multiple library package I’ve put together<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Each test suite in the package demonstrates something I’ve learnt.</p>
+<h1 id="wiring-diagram">Wiring Diagram</h1>
+<p>There’s more than one way to wire up a plugin; with a pragma, with an option or both. If your plugin is impure, it’s going to force an extra recompilation to boot. It is recommended to wire up plugins with pragmas for only the modules that need them. It is probably fine to use options if all your modules need a plugin. If you mix and match both ways of doing the wiring you’ll end up with two instances of the plugin in the compilation.</p>
+<pre class="pre"><code>&gt; cabal build test-wireup-pure-by-pragma
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+
+&gt; cabal build test-wireup-pure-by-option
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+
+&gt; cabal build test-wireup-pure-by-both
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+
+&gt; cabal build test-wireup-impure-by-pragma
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+[1 of 1] Compiling Main [Impure plugin forced recompilation]
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+
+&gt; cabal build test-wireup-impure-by-option
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+[1 of 1] Compiling Main [Impure plugin forced recompilation]
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+
+&gt; cabal build test-wireup-impure-by-both
+[1 of 1] Compiling Main
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+[1 of 1] Compiling Main [Impure plugin forced recompilation]
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)
+&gt;&gt;&gt; GHC-TcPlugin-CallCount (1)</code></pre>
+<h1 id="undefined-is-not-a-function">Undefined is not a Function</h1>
+<p>If your plugin behaves badly it is going to hurt. GHC panics when any one of the functions required of a type checker plugin is implemented undefined.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">plugin ::</span> <span class="dt">Plugin</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>plugin <span class="ot">=</span> mkPureTcPlugin undefSolve</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="ot">undefSolve ::</span> <span class="dt">TcPlugin</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>undefSolve <span class="ot">=</span> noOp { tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">undefined</span> }</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="ot">noOp ::</span> <span class="dt">TcPlugin</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>noOp <span class="ot">=</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>    <span class="dt">TcPlugin</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>        { tcPluginInit <span class="ot">=</span> <span class="fu">return</span> ()</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>        , tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="op">$</span> <span class="dt">TcPluginOk</span> [] []</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>        , tcPluginStop <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>        }</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a><span class="ot">mkPureTcPlugin ::</span> <span class="dt">TcPlugin</span> <span class="ot">-&gt;</span> <span class="dt">Plugin</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>mkPureTcPlugin p <span class="ot">=</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>    defaultPlugin</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>        { tcPlugin <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">Just</span> p</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>        , pluginRecompile <span class="ot">=</span> purePlugin</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>        }</span></code></pre></div>
+<pre class="pre"><code>&gt; cabal build test-undefined-solve
+[1 of 1] Compiling Undefined.Solve.Plugin
+[1 of 1] Compiling Main
+ghc: panic! (the 'impossible' happened)
+Please report this as a GHC bug:  http://www.haskell.org/ghc/reportabug</code></pre>
+<p>I would have liked to use record update syntax for undefSolve as shown above but this is not yet possible<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> with GHC when the data type has an existential qualifier and that is how TcPlugin is defined<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">TcPlugin</span> <span class="ot">=</span> <span class="kw">forall</span> s<span class="op">.</span> <span class="dt">TcPlugin</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>    {<span class="ot"> tcPluginInit  ::</span> <span class="dt">TcPluginM</span> s</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    <span class="co">-- ^ Initialize plugin, when entering type-checker.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>    ,<span class="ot"> tcPluginSolve ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginSolver</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>    <span class="co">-- ^ Solve some constraints.</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>    <span class="co">-- TODO: WRITE MORE DETAILS ON HOW THIS WORKS.</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>    ,<span class="ot"> tcPluginStop  ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> ()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>    <span class="co">-- ^ Clean up after the plugin, when exiting the type-checker.</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a>    }</span></code></pre></div>
+<p>The plugin is of course called on by GHC to resolve constraints. Some functions need solving and others don’t. Getting an <code>a</code> from <code>undefined</code>, it’s needed.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> a</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">undefined</span></span></code></pre></div>
+<p>Going from <code>()</code> to <code>()</code> needs no further resolution. GHC can handle this by itself. The <code>test-undefined-*-carefree</code> test suites have these mains. The ones without carefree in their name don’t. They have the <code>a</code> from <code>undefined</code> mains.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">return</span> ()</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="dt">So</span> we've seen that a typechecker plugin's solve function may be called but</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>its <span class="fu">init</span> <span class="fu">and</span> stop functions are always called<span class="op">.</span></span></code></pre></div>
+<pre class="ascii"><code>+-------------------------------+------------+
+| Test Suite                    | GHC Panics |
++===============================+============+
+| test-undefined-init           |     x      |
++-------------------------------+------------+
+| test-undefined-init-carefree  |     x      |
++-------------------------------+------------+
+| test-undefined-solve          |     x      |
++-------------------------------+------------+
+| test-undefined-solve-carefree |            |
++-------------------------------+------------+
+| test-undefined-stop           |     x      |
++-------------------------------+------------+
+| test-undefined-stop-carefree  |     x      |
++-------------------------------+------------+</code></pre>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Multiple libraries were added to cabal 3.0, see <a href="https://fgaz.me/posts/2019-11-14-cabal-multiple-libraries/">fgaz-GSoC-2018</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The error if you try is “Record update for insufficiently polymorphic field”, see <a href="https://gitlab.haskell.org/ghc/ghc/issues/2595">ghc-2595</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>These field haddock comments are verbatim from the GHC source.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2020 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>
