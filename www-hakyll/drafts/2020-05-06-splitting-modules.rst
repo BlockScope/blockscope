@@ -6,7 +6,7 @@ tags: haskell, build
 ---
 It is taking what seems a long time to build flare-timing, nearly 9 minutes.
 
-.. code-block:: bash
+.. code-block:: pre
 
     > time stack install
     - align-time
@@ -75,7 +75,7 @@ I have three small console apps that test the parsers I wrote for `*.igc`,
 `*.kml` and `*.fsdb` files. They're occassionally useful but I don't need them
 on every build so lets flag those to only be build sometimes.
 
-.. code-block:: dhall
+.. code-block:: json
 
     { version =
         "0.1.0"
@@ -114,7 +114,7 @@ on every build so lets flag those to only be build sometimes.
         }
     }
 
-.. code-block:: bash
+.. code-block:: pre
 
     > time stack build
     ...
@@ -137,7 +137,7 @@ packages. I have one module `flight-gap`, core to the whole project and depended
 that I could split up. Furthermore, each executable in flare-timing only
 depends on some subset its features.
 
-.. code-block:: bash
+.. code-block:: pre
 
     > cabal v2-clean
     > cabal v2-build flare-timing
@@ -181,7 +181,7 @@ stopped tasks, task validity and weighting between aspects of flights scored,
 all in packages with a name prefix of `flight-gap-` in directories with a name
 prefix of **`gap-`**.
 
-.. code-block:: bash
+.. code-block:: pre
 
     .
     ├── app-serve
@@ -224,7 +224,7 @@ prefix of **`gap-`**.
 Modules that depended on flight-gap
 
 
-.. code-block:: bash
+.. code-block:: pre
 
     .
     ├── app-serve
@@ -238,7 +238,7 @@ Modules that depended on flight-gap
 After making changes so that packages don't depend on `flight-gap` but on the
 finer grained `flight-gap-*` packages:
 
-.. code-block:: bash
+.. code-block:: pre
 
     > stack clean
     > time stack install
