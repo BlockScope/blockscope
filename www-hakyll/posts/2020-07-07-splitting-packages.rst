@@ -84,8 +84,8 @@ bothered yet.
 Conclusion
 ----------
 Putting related modules together and keeping unrelated modules apart by using
-finer grained packaging was worth it. The code base is better organised and it
-was easier to reanimate bit-rotten test-suites and have them pass continuous
+finer grained packaging was worth it. The code base is better organised. It was
+easier to reanimate bit-rotten test-suites and have them pass continuous
 integration when the test surface is smaller. The compile times got a little
 better.
 
