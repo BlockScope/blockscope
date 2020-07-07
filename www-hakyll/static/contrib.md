@@ -4,7 +4,9 @@ subtitle: Contributions to projects that I use or want to succeed.
 ---
 My activity on github is nicely summarised by <a
 href="https://ghuser.io/philderbeast"
-target="_blank">ghuser.io/philderbeast</a>.
+target="_blank">ghuser.io/philderbeast</a>. I donate some of my time and am
+setup to [receive donations](https://github.com/sponsors/philderbeast). I'm
+pushing for units of measure and functional programming.
 
 #### Units of Measure
 * `adamgundry`[**/units-parser**](https://github.com/adamgundry/units-parser)  
