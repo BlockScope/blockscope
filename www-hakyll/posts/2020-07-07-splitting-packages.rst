@@ -4,7 +4,8 @@ subtitle: Ease the pain of moving modules around with package imports.
 slug: Splitting packages with package imports.
 tags: haskell, build
 ---
-It takes about 360 seconds to build flare-timing from clean. Could I do better?
+It takes about 360 seconds to build flare-timing_ from clean. Could I do
+better?
 
 The code in package ``gap``[#]_ implements the simpler logic and formulae of
 the GAP_ rules.  Flights are scored for distance, effort, leading, speed and
@@ -93,5 +94,6 @@ integration. The compile times got a little better.
 .. [#] From `Keeping Compilation Fast <https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html>`_ splitting up large modules will help compile times.
 .. [#] On disk I don't bother with adding a ``flight-`` prefix as most packages
    have this.
+.. _flare-timing: https://github.com/BlockScope/flare-timing
 .. _GAP: https://github.com/BlockScope/CIVL-GAP/releases
 .. _PackageImports: https://ghc.readthedocs.io/en/latest/glasgow_exts.html?highlight=packageimports#extension-PackageImports
