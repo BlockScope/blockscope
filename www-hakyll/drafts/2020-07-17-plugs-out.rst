@@ -166,4 +166,3 @@ The ones without carefree in their name don't. They have the ``a`` from
 .. [#] Multiple libraries were added to cabal 3.0, see fgaz-GSoC-2018_.
 .. [#] The error if you try is "Record update for insufficiently polymorphic field", see ghc-2595_.
 .. [#] These field haddock comments are verbatim from the GHC source.
-       
