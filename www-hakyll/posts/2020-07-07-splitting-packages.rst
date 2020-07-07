@@ -94,6 +94,6 @@ integration. The compile times got a little better.
 .. [#] From `Keeping Compilation Fast <https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html>`_ splitting up large modules will help compile times.
 .. [#] On disk I don't bother with adding a ``flight-`` prefix as most packages
    have this.
-.. _flare-timing: https://github.com/BlockScope/flare-timing
+.. _flare-timing: https://github.com/BlockScope/flare-timing#readme
 .. _GAP: https://github.com/BlockScope/CIVL-GAP/releases
 .. _PackageImports: https://ghc.readthedocs.io/en/latest/glasgow_exts.html?highlight=packageimports#extension-PackageImports
