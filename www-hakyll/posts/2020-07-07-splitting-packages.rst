@@ -15,13 +15,13 @@ a competition. Penalties and stopped tasks are also dealt with here.
 
 This is a package with many reverse dependencies.  Smaller modules compile
 faster[#]_. If I broke up this big package would compile times improve? I hoped
-so because not every dependant depended on the same set of imports.
+so because not every dependant depends on the same set of imports.
 
 The package exposes but one mega-module, ``Flight.Score``[#]_.  For the
 breakup, I created new packages but kept ``gap`` around so I could defer
-updating dependencies.  For the moment they could stay the same with their
-imports. Here is how those imports would have looked before the breakup if
-I had been using the PackageImports_ extension.
+updating dependant's dependencies.  For the moment they could stay the same
+with their imports. Here is how those imports would have looked before the
+breakup if I had been using the PackageImports_ extension.
 
 .. code-block:: haskell
 
@@ -41,7 +41,7 @@ I ended up adding seven ``gap-*`` packages[#]_ after regrouping modules.
     ├── gap-valid
     └── gap-weight
 
-The original package imports all the others for re-export.
+The original module imports all the others for re-export.
 
 .. code-block:: haskell
 
@@ -85,13 +85,14 @@ Conclusion
 ----------
 Putting related modules together and keeping unrelated modules apart by using
 finer grained packaging was worth it. The code base is better organised and it
-was easier to reanimate bit-rotted test-suites and have them pass continuous
-integration. The compile times got a little better.
+was easier to reanimate bit-rotten test-suites and have them pass continuous
+integration when the test surface is smaller. The compile times got a little
+better.
 
 .. [#] Most packages in flare-timing have ``flight-`` prefixes to their name.
    I don't show that here.
-.. [#] Actually one other module declaring one data type is exposed.
 .. [#] From `Keeping Compilation Fast <https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html>`_ splitting up large modules will help compile times.
+.. [#] Actually one other module declaring one data type is exposed.
 .. [#] On disk I don't bother with adding a ``flight-`` prefix as most packages
    have this.
 .. _flare-timing: https://github.com/BlockScope/flare-timing#readme
