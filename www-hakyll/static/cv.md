@@ -1,12 +1,9 @@
 ---
 title: Phil de Joux
-subtitle: Developing software since 1995, forever learning and applying.
+subtitle: Potentate of Idempotence
 ---
 
-I could list the tech I've used but the list would be long. Some I really like,
-some I can tolerate to get the job done but a lot of it I'd now shun when there
-are better alternatives around. I'm not going to second guess your choice of
-tech. There are always tradeoffs and constraints to consider.
+I seek balance between learning and practice, stetching but not overextending.
 
 ### Work History
 
