@@ -5,22 +5,60 @@ slug: Type checker plugins without the type checking.
 tags: haskell, tcplugins
 ---
 When getting ready to launch, one of the steps is the plugs-out test. Can the
-the spacecraft function on its own without power or fuel from all cables and
+spacecraft function on its own without power or fuel from all cables and
 umbilicals?
 
-When debugging plugins, I've added tracing and changed the wiring.  Rather than
-throw those edits away, I've collected them in `ghc-plugs-out`_, a package of
-tests that don't supply any power or fuel for typechecking. It is the first
+When debugging GHC plugins, I've added tracing and changed the wiring.  Rather
+than throw those edits away, I've collected them in `ghc-plugs-out`_, a package
+of tests that don't supply any power or fuel for typechecking. It is the first
 multiple library package I've put together[#]_.
 
 Wiring Diagram
 --------------
-There's more than one way to wire up a plugin; with a pragma, with an option
-or both. If your plugin is impure, it's going to force an extra recompilation
-to boot. It is recommended to wire up plugins with pragmas for only the
-modules that need them. It is probably fine to use options if all your
-modules need a plugin. If you mix and match both ways of doing the wiring
-you'll end up with two instances of the plugin in the compilation.
+Here's a type checker plugin that doesn't do any solving but instead writes its
+call count.
+
+.. code-block:: haskell
+
+    {-# LANGUAGE QuasiQuotes, NamedFieldPuns #-}
+
+    module CallCount.TcPlugin (callCount) where
+
+    import Language.Haskell.Printf (s)
+    import Data.IORef (IORef)
+    import IOEnv (newMutVar, readMutVar, writeMutVar)
+    import TcPluginM (tcPluginIO)
+    import TcRnTypes (TcPluginResult(..), TcPlugin(..), unsafeTcPluginTcM)
+
+    newtype State = State { callref :: IORef Int }
+
+    callCount :: TcPlugin
+    callCount =
+        TcPlugin
+            { tcPluginInit = return . State =<< (unsafeTcPluginTcM $ newMutVar 1)
+
+            , tcPluginSolve = \State{callref = c} _ _ _ -> do
+                n <- unsafeTcPluginTcM $ readMutVar c
+                tcPluginIO . putStrLn $ [s|>>> GHC-TcPlugin-CallCount (%d)|] n
+                unsafeTcPluginTcM $ writeMutVar c (n + 1)
+                return $ TcPluginOk [] []
+
+            , tcPluginStop = const $ return ()
+            }
+
+Plugins are flagged for recompilation in their ``pluginRecompile`` field.
+Let's now wire up and test the pure ``CallCount.Pure.Plugin`` and the impure
+``CallCount.Impure.Plugin``. The recommended way to wire up a plugin is with
+a pragma, only in source files that need the plugin.
+
+.. code-block:: haskell
+
+    {-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}
+
+    module Main where
+
+    main :: IO a
+    main = undefined
 
 .. code-block:: pre
 
@@ -28,14 +66,38 @@ you'll end up with two instances of the plugin in the compilation.
   [1 of 1] Compiling Main
   >>> GHC-TcPlugin-CallCount (1)
 
+A plugin can also be wired up with an option, say in a cabal file. This is
+probably fine if all your modules need a plugin.
+
+.. code-block:: yaml
+
+    test-suite test-wireup-pure-by-option
+      import: opts
+      type: exitcode-stdio-1.0
+      main-is: Main.hs
+      hs-source-dirs: test-suites/wireup-pure-by-option
+      ghc-options: -Wall -fplugin CallCount.Pure.Plugin
+      build-depends: base, call-count-plugin
+
+.. code-block:: pre
+
   > cabal build test-wireup-pure-by-option
   [1 of 1] Compiling Main
   >>> GHC-TcPlugin-CallCount (1)
+
+If you mix and match both ways of doing the wiring you'll end up with two
+instances of the plugin in the compilation.
+
+.. code-block:: pre
 
   > cabal build test-wireup-pure-by-both
   [1 of 1] Compiling Main
   >>> GHC-TcPlugin-CallCount (1)
   >>> GHC-TcPlugin-CallCount (1)
+
+If your plugin is impure, it's going to force a recompilation.
+
+.. code-block:: pre
 
   > cabal build test-wireup-impure-by-pragma
   [1 of 1] Compiling Main
