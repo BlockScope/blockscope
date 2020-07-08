@@ -4,15 +4,14 @@ subtitle: Type checker plugins without the type checking.
 slug: Type checker plugins without the type checking.
 tags: haskell, tcplugins
 ---
-When getting ready to launch a human-rated spacecraft, one of the steps is
-the plugs-out test. Can the the spacecraft function on its own without power
-or fuel from all cables and umbilicals?
+When getting ready to launch, one of the steps is the plugs-out test. Can the
+the spacecraft function on its own without power or fuel from all cables and
+umbilicals?
 
-While debugging plugins, I've found out a thing or two along the way by
-adding tracing and changing how I wire up the plugin. I've collected snippets
-of that work into a package, `ghc-plugs-out`_, a kind of plugs-out test for
-GHC type checker plugins. It is the first multiple library package I've put
-together[#]_. Each test suite in the package demonstrates something I've learnt.
+When debugging plugins, I've added tracing and changed the wiring.  Rather than
+throw those edits away, I've collected them in `ghc-plugs-out`_, a package of
+tests that don't supply any power or fuel for typechecking. It is the first
+multiple library package I've put together[#]_.
 
 Wiring Diagram
 --------------
