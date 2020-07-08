@@ -1,12 +1,11 @@
 ---
 title: Phil de Joux
-subtitle: Potentate of Idempotence
+subtitle: Software Developer
 ---
-
-I seek balance between learning and practice, stetching but not overextending.
+With environmental and global positioning data, video and scientific models
+- I have built software.
 
 ### Work History
-
 <div id="timeline" style="height: 536px; width: 100%"></div>
 
 <div id="work-history">
