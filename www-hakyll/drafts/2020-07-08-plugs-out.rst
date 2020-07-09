@@ -39,7 +39,7 @@ call count.
 
             , tcPluginSolve = \State{callref = c} _ _ _ -> do
                 n <- unsafeTcPluginTcM $ readMutVar c
-                tcPluginIO . putStrLn $ [s|>>> GHC-TcPlugin-CallCount (%d)|] n
+                tcPluginIO . putStrLn $ [s|>>> GHC-TcPlugin #%d|] n
                 unsafeTcPluginTcM $ writeMutVar c (n + 1)
                 return $ TcPluginOk [] []
 
@@ -64,7 +64,7 @@ a pragma, only in source files that need the plugin.
 
   > cabal build test-wireup-pure-by-pragma
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
 
 A plugin can also be wired up with an option, say in a cabal file. This is
 probably fine if all your modules need a plugin.
@@ -83,7 +83,7 @@ probably fine if all your modules need a plugin.
 
   > cabal build test-wireup-pure-by-option
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
 
 If you mix and match both ways of doing the wiring you'll end up with two
 instances of the plugin in the compilation.
@@ -92,8 +92,8 @@ instances of the plugin in the compilation.
 
   > cabal build test-wireup-pure-by-both
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
+  >>> GHC-TcPlugin #1
 
 If your plugin is impure, it's going to force a recompilation.
 
@@ -101,23 +101,23 @@ If your plugin is impure, it's going to force a recompilation.
 
   > cabal build test-wireup-impure-by-pragma
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
   [1 of 1] Compiling Main [Impure plugin forced recompilation]
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
 
   > cabal build test-wireup-impure-by-option
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
   [1 of 1] Compiling Main [Impure plugin forced recompilation]
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
 
   > cabal build test-wireup-impure-by-both
   [1 of 1] Compiling Main
-  >>> GHC-TcPlugin-CallCount (1)
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
+  >>> GHC-TcPlugin #1
   [1 of 1] Compiling Main [Impure plugin forced recompilation]
-  >>> GHC-TcPlugin-CallCount (1)
-  >>> GHC-TcPlugin-CallCount (1)
+  >>> GHC-TcPlugin #1
+  >>> GHC-TcPlugin #1
 
 Undefined is not a Function
 ---------------------------
