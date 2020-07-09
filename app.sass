@@ -79,6 +79,9 @@ blockquote footer:before
 #side > .card-body
     padding-top: 0;
 
+#content
+    @extend .col-9;
+
 @media print
     body
         font-size: 1em;
@@ -86,6 +89,13 @@ blockquote footer:before
         margin-right: 2cm;
         margin-bottom: 1.5cm;
         margin-left: 2cm
+
+// WARNING: You may not @extend an outer selector from within @media so I am
+// not doing @extend .col-12 for print.
+@media print
+    #content
+        flex: 0 0 100%;
+        max-width: 100%;
 
 .flaretiming, .sml
     color: #a6cee3;
