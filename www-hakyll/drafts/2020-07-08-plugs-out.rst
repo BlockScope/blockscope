@@ -172,8 +172,12 @@ existential qualifier and that is how TcPlugin is defined [#]_.
         -- ^ Clean up after the plugin, when exiting the type-checker.
         }
 
-The plugin is of course called on by GHC to resolve constraints. Some
-functions need solving and others don't. Getting an ``a`` from ``undefined``, it's needed.
+Care Free
+---------
+
+Type checker plugins are of course called on by GHC to resolve constraints.
+Some need solving and others don't. GHC knows that it can get an ``a`` from
+``undefined`` but maybe a plugin can do better so here we get called.
 
 .. code-block:: haskell
 
@@ -196,8 +200,8 @@ The ones without carefree in their name don't. They have the ``a`` from
     main :: IO ()
     main = return ()
 
-  So we've seen that a typechecker plugin's solve function may be called but
-  its init and stop functions are always called.
+So we've seen that a typechecker plugin's solve function **may** be called but
+its init and stop functions are **always** called.
 
 .. code-block:: ascii
 
@@ -217,6 +221,11 @@ The ones without carefree in their name don't. They have the ``a`` from
   | test-undefined-stop-carefree  |     x      |
   +-------------------------------+------------+
 
+Takeaways
+_________
+We should wire up plugins with pragmas only in modules that need it. Don't
+forget to flag pure plugins as such. If GHC doesn't need help resolving
+constraints then it won't call out to your plugin.
 
 .. _ghc-plugs-out: https://github.com/BlockScope/ghc-plugs-out
 
