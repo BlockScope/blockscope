@@ -132,7 +132,6 @@ functions ``foo`` and ``bar`` are in module ``Main``.
 .. code-block:: haskell
 
     {-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}
-
     module Main where
 
     foo :: IO a
