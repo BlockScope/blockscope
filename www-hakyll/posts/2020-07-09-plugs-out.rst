@@ -251,8 +251,8 @@ The ones without carefree in their name don't. They have the ``a`` from
     main :: IO ()
     main = return ()
 
-So we've seen that a typechecker plugin's solve function **may** be called but
-its init and stop functions are **always** called.
+We see that solve **may** be called but init and stop functions are **always**
+called.
 
 .. code-block:: ascii
 
