@@ -21,7 +21,6 @@ call count.
 .. code-block:: haskell
 
     {-# LANGUAGE QuasiQuotes, NamedFieldPuns #-}
-
     module CallCount.TcPlugin (callCount) where
 
     import Language.Haskell.Printf (s)
@@ -54,7 +53,6 @@ a pragma, only in source files that need the plugin.
 .. code-block:: haskell
 
     {-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}
-
     module Main where
 
     main :: IO a
@@ -174,8 +172,9 @@ Move these functions into separate modules and we count one call for each module
 
 Undefined is not a Function
 ---------------------------
-If your plugin behaves badly it is going to hurt. GHC panics when any one of
-the functions required of a type checker plugin is implemented undefined.
+If your plugin behaves badly it is going to hurt. GHC takes the blame for the
+panic when any one of the functions required of a type checker plugin is
+implemented undefined [#]_.
 
 .. code-block:: haskell
 
@@ -280,12 +279,18 @@ Takeaways
 * If GHC doesn't need help resolving constraints then it won't call out to your plugin.
 * Modules are the units of compilation.
 
-.. _ghc-plugs-out: https://github.com/BlockScope/ghc-plugs-out
+.. _ghc-plugs-out: https://github.com/BlockScope/ghc-plugs-out#readme
 
-.. _ghc-2595: https://gitlab.haskell.org/ghc/ghc/issues/2595
+.. _ghc-2595: https://gitlab.haskell.org/ghc/ghc/-/issues/2595
+
+.. _ghc-15745: https://gitlab.haskell.org/ghc/ghc/-/issues/15745
 
 .. _fgaz-GSoC-2018: https://fgaz.me/posts/2019-11-14-cabal-multiple-libraries/
 
 .. [#] Multiple libraries were added to cabal 3.0, see fgaz-GSoC-2018_.
+
+.. [#] GHC will take the blame for the plugin panicking, see ghc-15745_.
+
 .. [#] The error if you try is "Record update for insufficiently polymorphic field", see ghc-2595_.
+
 .. [#] These field haddock comments are verbatim from the GHC source.
