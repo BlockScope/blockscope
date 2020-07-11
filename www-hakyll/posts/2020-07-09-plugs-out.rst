@@ -10,8 +10,10 @@ umbilicals?
 
 When debugging GHC plugins, I've added tracing and changed the wiring.  Rather
 than throw those edits away, I've collected them in `ghc-plugs-out`_, a package
-of tests that don't supply any power or fuel for typechecking. It is the first
-multiple library package I've put together [#]_.
+of tests that don't supply any power or fuel for typechecking. This lightweight
+multiple library [#]_, multiple test-suite package shows how typechecker
+plugins interact with GHC depending on how they're wired up, their purity and
+whether GHC needs help typechecking.
 
 Wiring Diagram
 --------------
