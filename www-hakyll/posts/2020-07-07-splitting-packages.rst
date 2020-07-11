@@ -4,24 +4,30 @@ subtitle: Ease the pain of moving modules around with package imports.
 slug: Splitting packages with package imports.
 tags: haskell, build
 ---
-It takes about 360 seconds to build flare-timing_ from clean. Could I do
-better?
 
-The code in package ``gap``[#]_ implements the simpler logic and formulae of
-the GAP_ rules.  Flights are scored for distance, effort, leading, speed and
-arrival at goal.  Depending on key factors like how many pilots made goal, the
-weight and allocation of points varies as does the validity of each task in
-a competition. Penalties and stopped tasks are also dealt with here.
+There's this one large haskell project, flare-timing_, that I regularly wait
+around 360 seconds to build from scratch. What am I doing with my time? Could
+splitting the large ``gap``[#]_ package into smaller packages speed up the
+compile?
 
-This is a package with many reverse dependencies.  Smaller modules compile
-faster[#]_. If I broke up this big package would compile times improve? I hoped
-so because not every dependant depends on the same set of imports.
+This package, with many reverse dependencies, implements the simpler parts of
+GAP_, setting down the rules for scoring free flight competitions.  Flights are
+scored for distance, effort, leading, speed and arrival at goal.  Depending on
+key factors like how many pilots made goal, the weight and allocation of points
+varies as does the validity of each task in a competition.  Penalties and
+stopped tasks are also dealt with here. All these aspects of scoring are mostly
+independant of each other so we have an opportunity to break up this package.
 
-The package exposes but one mega-module, ``Flight.Score``[#]_.  For the
-breakup, I created new packages but kept ``gap`` around so I could defer
-updating dependant's dependencies.  For the moment they could stay the same
-with their imports. Here is how those imports would have looked before the
-breakup if I had been using the PackageImports_ extension.
+Smaller modules compile faster[#]_. If I broke up this big package would
+compile times improve? I hoped so because not every one of its dependants
+depends on the same set of imports. For instance one exe only deals with effort
+and another one only deals with leading.
+
+The package exposes one mega-module, ``Flight.Score``[#]_.  For the breakup,
+I created new packages but kept ``gap`` around so I could defer updating
+dependant's dependencies.  For the moment they could stay the same with their
+imports. Here is how those imports would have looked before the breakup if
+I had been using the PackageImports_ extension.
 
 .. code-block:: haskell
 
