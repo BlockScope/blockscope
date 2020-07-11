@@ -77,7 +77,7 @@
         </div>
     
     <p>When getting ready to launch, one of the steps is the plugs-out test. Can the spacecraft function on its own without power or fuel from all cables and umbilicals?</p>
-<p>When debugging GHC plugins, I’ve added tracing and changed the wiring. Rather than throw those edits away, I’ve collected them in <a href="https://github.com/BlockScope/ghc-plugs-out#readme">ghc-plugs-out</a>, a package of tests that don’t supply any power or fuel for typechecking. It is the first multiple library package I’ve put together<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>When debugging GHC plugins, I’ve added tracing and changed the wiring. Rather than throw those edits away, I’ve collected them in <a href="https://github.com/BlockScope/ghc-plugs-out#readme">ghc-plugs-out</a>, a package of tests that don’t supply any power or fuel for typechecking. This lightweight multiple library<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, multiple test-suite package shows how typechecker plugins interact with GHC depending on how they’re wired up, their purity and whether GHC needs help typechecking.</p>
 <h1 id="wiring-diagram">Wiring Diagram</h1>
 <p>Here’s a type checker plugin that doesn’t do any solving but instead writes its call count.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE QuasiQuotes, NamedFieldPuns #-}</span></span>
