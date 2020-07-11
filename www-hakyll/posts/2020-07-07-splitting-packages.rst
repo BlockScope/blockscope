@@ -11,17 +11,17 @@ splitting the large ``gap``[#]_ package into smaller packages speed up the
 compile?
 
 This package, with many reverse dependencies, implements the simpler parts of
-GAP_, setting down the rules for scoring free flight competitions.  Flights are
-scored for distance, effort, leading, speed and arrival at goal.  Depending on
-key factors like how many pilots made goal, the weight and allocation of points
+GAP_, the rules for scoring flying competitions. Flights are scored on measures
+of distance, effort, leading, speed and arrival at goal.  Depending on key
+factors like how many pilots made goal, the weight and allocation of points
 varies as does the validity of each task in a competition.  Penalties and
 stopped tasks are also dealt with here. All these aspects of scoring are mostly
 independant of each other so we have an opportunity to break up this package.
 
 Smaller modules compile faster[#]_. If I broke up this big package would
 compile times improve? I hoped so because not every one of its dependants
-depends on the same set of imports. For instance one exe only deals with effort
-and another one only deals with leading.
+depends on the same set of imports. For instance one exe only deals with
+scoring effort and another one only deals with scoring leading.
 
 The package exposes one mega-module, ``Flight.Score``[#]_.  For the breakup,
 I created new packages but kept ``gap`` around so I could defer updating
@@ -78,7 +78,7 @@ the package name to imports, like with this diff;
     ++ import "flight-gap-allot" Flight.Score (ArrivalFraction(..))
 
 As a finickity last step I could change the exported module names but haven't
-bothered yet.
+got around to this yet.
 
 .. code-block:: diff
 
@@ -87,8 +87,8 @@ bothered yet.
     ++ import qualified Flight.Score.Valid as Gap (ReachToggle(..))
     ++ import Flight.Score.Allot (ArrivalFraction(..))
 
-Conclusion
-----------
+Experience Report
+-----------------
 Putting related modules together and keeping unrelated modules apart by using
 finer grained packaging was worth it. The code base is better organised. It was
 easier to reanimate bit-rotten test-suites and have them pass continuous
