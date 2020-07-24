@@ -20,7 +20,7 @@ simply bad puns. When you see a play on words, it's just play.
 
 <div class="col-3 align-self-center">
 <div class="d-flex justify-content-center">
-<img src="/images/selfie.jpg" class="shadow-lg img-thumbnail" style="width: 14em;" />
+<img alt="selfie" src="/images/selfie.jpg" class="shadow-lg img-thumbnail" style="width: 14em;" />
 </div>
 </div>
 
