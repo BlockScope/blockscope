@@ -7,6 +7,7 @@ $fa-font-path: "~font-awesome/fonts";
 $body-bg: #fffff8;
 @import "~bootstrap/scss/bootstrap";
 @import "~typeface-et-book/et-book/et-book.css";
+@import "~automated-a11y-sass/a11y-color";
 
 body
     font-family: 'B612 Mono', monospace;
@@ -139,3 +140,10 @@ blockquote footer:before
 
 a:target::after
     content: " ☜";
+
+a.nav-link
+    font-size: 1.4rem;
+    font-weight: bold;
+
+a
+    color: a11y-color(#007bff, #fffff8);
