@@ -4,7 +4,7 @@
   "auther": "Phil de Joux",
   "license": "ISC",
   "dependencies": {
-    "automated-a11y-sass": "jhogue/automated-a11y-sass",
+    "automated-a11y-sass": "blockscope/automated-a11y-sass",
     "bootstrap": "^4.1.0",
     "font-awesome": "^4.7.0",
     "typeface-et-book": "^0.0.2"
