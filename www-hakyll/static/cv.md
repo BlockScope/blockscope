@@ -36,7 +36,7 @@ operations.
 [3](https://www.apress.com/us/book/9781430246503) and
 [4](https://www.apress.com/us/book/9781484207413).
 * <span class="travieo">▩</span> `[2011/08 .. 2015/10]` [**Travieo**](http://www.travieo.com) ☞ Develop a travel booking website.
-* <span class="croplogic">▩</span> `[2008/01 .. 2011/08]` *CropLogic* For more potato yield with less water and fertilizer input and less pollutant
+* <span class="croplogic">▩</span> `[2008/01 .. 2011/08]` *CropLogic* ☞ For more potato yield with less water and fertilizer input and less pollutant
 runoff;
     - port, tune and test a discrete event simulation crop model with
       scientists
