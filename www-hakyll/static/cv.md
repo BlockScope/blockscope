@@ -4,10 +4,13 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
     Has built software with environmental and global positioning data, video and scientific models.
 ---
 <div class="work-history">
-      <F#, Elm, Haskell and SQL>
-    ~~~|---GGGG+-------|AAAAAAA+AAAAAAA|AAAAAAA+AFFFFFF|FFFFFFF+FFFFFFF|FFFFFF~+~~~~~~~|~~~
-      2012-PPPPPPPPPP-2014-PPPPPPPPPP-2016            2018            2020            2022
-
+<pre>
+<code>
+  &lt;F#, Elm, Haskell and SQL&gt;
+~~~|---<span class="tagly">GGGG</span>+-------<span class="aqualinc">|AAAAAAA+AAAAAAA|AAAAAAA+A</span><span class="flaretiming">FFFFFF|FFFFFFF+FFFFFFF|FFFFFF</span>~+~~~~~~~|~~~
+  2012<span class="apress">-PPPPPPPPPP-2014-PPPPPPPPPP-2</span>016            2018            2020            2022
+</code>
+</pre>
 * <span class="flaretiming">▩</span> `2017/04—202~/~~` [**Flare
   Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
   paragliding competitions; develop a reference implementation of the GAP
@@ -34,12 +37,14 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   editions [3](https://www.apress.com/us/book/9781430246503) and
   [4](https://www.apress.com/us/book/9781484207413).
 </div>
-
 <div class="work-history">
-      <C# & SQL>               LLLLLLLLLLLLLLLLLLLLLLLLLLLLL       CCCCC
-    ~~~|NNNNNNN+NNNNNNN|NNNNNNN+NN-----|-------+-------|---VVVV+VVVVVVV|VVVVVVV+VVVVVVV|VVVVVV-+~~~
-     -2005-WWWWWWWWWW-2007-W   DDDDDD-2009-DDDDDDDDDD-2011            2013            2015
-
+<pre>
+<code>
+  &lt;C# & SQL&gt;               <span class="croplogic">LLLLLLLLLLLLLLLLLLLLLLLLLLLLL</span>       <span class="cactus">CCCCC</span>
+~~~<span class="nutricentre">|NNNNNNN+NNNNNNN|NNNNNNN+NN</span>-----|-------+-------|---<span class="travieo">VVVV+VVVVVVV|VVVVVVV+VVVVVVV|VVVVVV</span>-+~~~
+ <span class="niwa">-2005-WWWWWWWWWW-2007-W</span>   <span class="waimak">DDDDDD-2009-DDDDDDDDDD-2011</span>            2013            2015
+</code>
+</pre>
 * <span class="cactus">▩</span> `2012/08—2013/02` [**Cactus**
   Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype upgrades to
   a production planning system for factory operations.
@@ -63,12 +68,14 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   [EDENZ](http://edenz.niwa.co.nz) website for publishing environmental time
   series data.
 </div>
-
 <div class="work-history">
-      <C++>
-    ~~~|TTTTTTT+TTTTTTT|TTTTTTT+TTTTTTT|---SSOO+OOOOOOO|O--EEEE+EEEEE--|---NNNNN+NNNNNNN|~~~
-      1995            1997            1999            2001            2003-WWWWWWWWWW-2005-
-
+<pre>
+<code>
+  &lt;C++&gt;
+~~~<span class="trimble">|TTTTTTT+TTTTTTT|TTTTTTT+TTTTTTT|</span>---<span class="sml">SS</span><span class="obvious">OO+OOOOOOO|O</span>--<span class="aspelle">EEEE+EEEEE</span>--|---<span class="nutricentre">NNNNN+NNNNNNN|</span>~~~
+  1995            1997            1999            2001            2003<span class="niwa">-WWWWWWWWWWW-2005-</span>
+</code>
+</pre>
 * <span class="aspelle">▩</span> `2001/08—2002/09` *Aspelle* ☞ Develop
   authentication and authorization parts of a security product.
 * <span class="obvious">▩</span> `1999/10—2001/03` *Obvious Technology*
