@@ -13,14 +13,14 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </pre>
 * <span class="flaretiming">▩</span> `2017/04—202~/~~` [**Flare
   Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
-  paragliding competitions; develop a reference implementation of the GAP
-  scoring rules • convert and mirror the rules document as a set of plain-text
-  LaTeX files • question, discuss and raise issues about the interpretation of
-  the rules • develop a web frontend with rich visualization of the results with
-  tables, maps and plots • rescore past competitions and publish these as static
-  web sites at `*.flaretiming.com` • with visualizations, compare results across
-  scoring implementations, find, raise and fix bugs in the official
-  implementation of the rules.
+  paragliding competitions; [typeset the
+  rules](https://github.com/BlockScope/CIVL-GAP#readme) as LaTeX
+  • [question](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
+  some rules • develop a command line [reference
+  implementation](https://github.com/BlockScope/flare-timing#readme) • develop
+  web visualizations of workings, results and discrepencies across
+  implementations • find, raise and fix bugs in the official implementation,
+  [FS](http://fs.fai.org/) • rescore and publish competitions.
 * <span class="aqualinc">▩</span> `2014/02—2017/04` [**Aqualinc
   Research**](http://www.aqualinc.co.nz) ☞ For monitoring breaches of regulated
   levels of water take and pollutant discharge; design a relational database
