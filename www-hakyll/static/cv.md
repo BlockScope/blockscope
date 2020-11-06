@@ -4,7 +4,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
     Has built software with environmental and global positioning data, video and scientific models.
 ---
 <div class="work-history">
-    <F#, Elm, Haskell and SQL>
+      <F#, Elm, Haskell and SQL>
+    ~~~|---GGGG+-------|AAAAAAA+AAAAAAA|AAAAAAA+AFFFFFF|FFFFFFF+FFFFFFF|FFFFFF~+~~~~~~~|~~~
+      2012-PPPPPPPPPP-2014-PPPPPPPPPP-2016            2018            2020            2022
+
 * <span class="flaretiming">▩</span> `2017/04—202~/~~` [**Flare
   Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
   paragliding competitions; develop a reference implementation of the GAP
@@ -33,7 +36,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </div>
 
 <div class="work-history">
-    <C# and SQL>
+      <C# & SQL>               LLLLLLLLLLLLLLLLLLLLLLLLLLLLL       CCCCC
+    ~~~|NNNNNNN+NNNNNNN|NNNNNNN+NN-----|-------+-------|---VVVV+VVVVVVV|VVVVVVV+VVVVVVV|VVVVVV-+~~~
+     -2005-WWWWWWWWWW-2007-W   DDDDDD-2009-DDDDDDDDDD-2011            2013            2015
+
 * <span class="cactus">▩</span> `2012/08—2013/02` [**Cactus**
   Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype upgrades to
   a production planning system for factory operations.
@@ -59,7 +65,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </div>
 
 <div class="work-history">
-    <C++>
+      <C++>
+    ~~~|TTTTTTT+TTTTTTT|TTTTTTT+TTTTTTT|---SSOO+OOOOOOO|O--EEEE+EEEEE--|---NNNNN+NNNNNNN|~~~
+      1995            1997            1999            2001            2003-WWWWWWWWWW-2005-
+
 * <span class="aspelle">▩</span> `2001/08—2002/09` *Aspelle* ☞ Develop
   authentication and authorization parts of a security product.
 * <span class="obvious">▩</span> `1999/10—2001/03` *Obvious Technology*
