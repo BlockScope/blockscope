@@ -3,7 +3,8 @@ title: Phil de Joux - Software Developer
 subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5 and Medicine 1982/5.<br>
     Has built software with environmental and global positioning data, video and scientific models.
 ---
-<a href="/pdf/cv-phil-de-joux.pdf" role="button">`$> view --format=pdf`</a>
+<a href="/pdf/cv-phil-de-joux.pdf" role="button">`$> view --format=pdf`</a>  
+<a href="/" role="button">`$> exit`</a>  
 <div class="work-history">
 <pre>
 <code>
