@@ -92,7 +92,7 @@ main = do
                     else fromGlob "posts/*"
 
         -- SEE: http://vapaus.org/text/hakyll-configuration.html
-        mapM_ (directory static) ["css", "font", "js", "images"]
+        mapM_ (directory static) ["css", "font", "js", "images", "pdf"]
 
         match "favicon/*.*" $ do
             route $ customRoute ((flip replaceDirectory) "" . toFilePath)
