@@ -3,7 +3,8 @@ title: Phil de Joux - Software Developer
 subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 1993/5 and Medicine 1982/5.<br>
     Has built software with environmental and global positioning data, video and scientific models.
 ---
-<div id="work-history">
+<div class="work-history">
+    <F#, Elm, Haskell and SQL>
 * <span class="flaretiming">▩</span> `[2017/04 .. 202~/~~]` [**Flare
   Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
   paragliding competitions; develop a reference implementation of the GAP
@@ -22,9 +23,6 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   web services over the top of the relational and time series data • develop
   separate web frontends for administrators and farmers • generate annual
   reports by pulling data from web services and typeset with LaTeX.
-* <span class="cactus">▩</span> `[2012/08 .. 2013/02]` [**Cactus**
-  Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype upgrades to
-  a production planning system for factory operations.
 * <span class="tagly">▩</span> `[2012/07 .. 2012/12]`
   [**Tagly**](https://angel.co/company/tagly) ☞ Develop server and browser
   components of a live feed.
@@ -32,6 +30,13 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   [**Apress**](https://www.apress.com) ☞ Technical review of Expert F#,
   editions [3](https://www.apress.com/us/book/9781430246503) and
   [4](https://www.apress.com/us/book/9781484207413).
+</div>
+
+<div class="work-history">
+    <C# and SQL>
+* <span class="cactus">▩</span> `[2012/08 .. 2013/02]` [**Cactus**
+  Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype upgrades to
+  a production planning system for factory operations.
 * <span class="travieo">▩</span> `[2011/08 .. 2015/10]`
   [**Travieo**](http://www.travieo.com) ☞ Develop a travel booking website.
 * <span class="croplogic">▩</span> `[2008/01 .. 2011/08]` *CropLogic* ☞ For
@@ -51,6 +56,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   [**NIWA**](http://www.niwa.co.nz) ☞ Develop tools and the
   [EDENZ](http://edenz.niwa.co.nz) website for publishing environmental time
   series data.
+</div>
+
+<div class="work-history">
+    <C++>
 * <span class="aspelle">▩</span> `[2001/08 .. 2002/09]` *Aspelle* ☞ Develop
   authentication and authorization parts of a security product.
 * <span class="obvious">▩</span> `[1999/10 .. 2001/03]` *Obvious Technology*
