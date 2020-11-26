@@ -13,9 +13,7 @@ I go by two monikers on the interwebs:
 [\@highluxphoto](https://twitter.com/highluxphoto)
 * **[\@blockscope](/b)** is a company I own and work for doing software development
 
-I spent my youth climbing back in the '80s.  With no sponsors to upset, new
-route names were sometimes an irreverent play on words, twisted in bad taste or
-simply bad puns. When you see a play on words, it's just play.
+I enjoy rock climbing, hang gliding, cycling and tramping (hiking).
 </div>
 
 <div class="col-3 align-self-center">
