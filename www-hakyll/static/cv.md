@@ -8,8 +8,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <div class="work-history">
 <pre>
 <code>
-  &lt;F#, Elm, Haskell and SQL&gt;
-~~~|---<span class="tagly">GGGG</span>+-------<span class="aqualinc">|AAAAAAA+AAAAAAA|AAAAAAA+A</span><span class="flaretiming">FFFFFF|FFFFFFF+FFFFFFF|FFFFFF</span>~+~~~~~~~|~~~
+  &lt;F#, Elm, Haskell and SQL&gt;                 <span class="flaretiming">FFFFFFFFFFFFFFFFFFFFFFF</span>  <span class="flaretiming">F...</span>
+~~~|---<span class="tagly">GGGG</span>+-------<span class="aqualinc">|AAAAAAA+AAAAAAA|AAAAAAA+A</span>------|-------+-------|<span class="bracco">BB</span>----~+~~~~~~~|~~~
   2012<span class="apress">-PPPPPPPPPP-2014-PPPPPPPPPP-2</span>016            2018            2020            2022
 </code>
 </pre>
@@ -25,6 +25,13 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   web visualizations of workings, results and discrepencies across
   implementations • find, raise and fix bugs in the official implementation,
   [FS](http://fs.fai.org/) • rescore and publish competitions.
+</li>
+<li>
+  <span class="bracco">`B` `$` ▩ `2020/02—2020/03`</span>
+  [**Bracco**](http://www.bracco.com) ☞ For interpreting dicom images from
+  [contrast enhanced
+  ultrasound](https://www.contrastultrasound-modality.com/index.php); develop
+  a prototype desktop app.
 </li>
 <li>
   <span class="aqualinc">`A` `$` ▩ `2014/02—2017/04`</span>
