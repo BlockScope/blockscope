@@ -100,7 +100,7 @@
 <p>This package, with many reverse dependencies, implements the simpler parts of <a href="https://github.com/BlockScope/CIVL-GAP/releases">GAP</a>, the rules for scoring flying competitions. Flights are scored on measures of distance, effort, leading, speed and arrival at goal. Depending on key factors like how many pilots made goal, the weight and allocation of points varies as does the validity of each task in a competition. Penalties and stopped tasks are also dealt with here. All these aspects of scoring are mostly independant of each other so we have an opportunity to break up this package.</p>
 <p>Smaller modules compile faster<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. If I broke up this big package would compile times improve? I hoped so because not every one of its dependants depends on the same set of imports. For instance one exe only deals with scoring effort and another one only deals with scoring leading.</p>
 <p>The package exposes one mega-module, <code>Flight.Score</code><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. For the breakup, I created new packages but kept <code>gap</code> around so I could defer updating dependant’s dependencies. For the moment they could stay the same with their imports. Here is how those imports would have looked before the breakup if I had been using the <a href="https://ghc.readthedocs.io/en/latest/glasgow_exts.html?highlight=packageimports#extension-PackageImports">PackageImports</a> extension.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap&quot; <span class="dt">Flight.Score</span> (...)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap&quot; <span class="dt">Flight.Score</span> (...)</span></code></pre></div>
 <p>I ended up adding seven <code>gap-*</code> packages<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> after regrouping modules.</p>
 <pre class="pre"><code>.
 ├── gap
@@ -112,28 +112,28 @@
 ├── gap-valid
 └── gap-weight</code></pre>
 <p>The original module imports all the others for re-export.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Flight.Score</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>    ( <span class="co">-- explicit exports go here but are not shown</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>    ) <span class="kw">where</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-allot&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-effort&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-lead&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-math&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-stop&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-valid&quot; <span class="dt">Flight.Score</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="kw">import</span> &quot;flight-gap-weight&quot; <span class="dt">Flight.Score</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Flight.Score</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ( <span class="co">-- explicit exports go here but are not shown</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">where</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-allot&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-effort&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-lead&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-math&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-stop&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-valid&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-weight&quot; <span class="dt">Flight.Score</span></span></code></pre></div>
 <p>After making changes so that packages don’t depend on <code>flight-gap</code> but on the finer grained <code>flight-gap-*</code> packages, the build took 315 seconds, an improvement of 12.5%.</p>
 <p>To change package dependencies, I swapped packages in the cabal file and added the package name to imports, like with this diff;</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="st">-- import qualified Flight.Score as Gap (ReachToggle(..))</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="st">-- import Flight.Score (ArrivalFraction(..))</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="va">++ import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="va">++ import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- import qualified Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">-- import Flight.Score (ArrivalFraction(..))</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">++ import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span></code></pre></div>
 <p>As a finickity last step I could change the exported module names but haven’t got around to this yet.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="st">-- import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="st">-- import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="va">++ import qualified Flight.Score.Valid as Gap (ReachToggle(..))</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="va">++ import Flight.Score.Allot (ArrivalFraction(..))</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">-- import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">++ import qualified Flight.Score.Valid as Gap (ReachToggle(..))</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ import Flight.Score.Allot (ArrivalFraction(..))</span></span></code></pre></div>
 <h1 id="experience-report">Experience Report</h1>
 <p>Putting related modules together and keeping unrelated modules apart by using finer grained packaging was worth it. The code base is better organised. It was easier to reanimate bit-rotten test-suites and have them pass continuous integration when the test surface is smaller. The compile times got a little better.</p>
 <section class="footnotes" role="doc-endnotes">

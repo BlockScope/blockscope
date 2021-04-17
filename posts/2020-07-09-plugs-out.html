@@ -100,36 +100,36 @@
 <p>When debugging GHC plugins, I’ve added tracing and changed the wiring. Rather than throw those edits away, I’ve collected them in <a href="https://github.com/BlockScope/ghc-plugs-out#readme">ghc-plugs-out</a>, a package of tests that don’t supply any power or fuel for typechecking. This lightweight multiple library<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, multiple test-suite package shows how typechecker plugins interact with GHC depending on how they’re wired up, their purity and whether GHC needs help typechecking.</p>
 <h1 id="wiring-diagram">Wiring Diagram</h1>
 <p>Here’s a type checker plugin that doesn’t do any solving but instead writes its call count.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE QuasiQuotes, NamedFieldPuns #-}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">CallCount.TcPlugin</span> (callCount) <span class="kw">where</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.Printf</span> (s)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.IORef</span> (<span class="dt">IORef</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">IOEnv</span> (newMutVar, readMutVar, writeMutVar)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">TcPluginM</span> (tcPluginIO)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">TcRnTypes</span> (<span class="dt">TcPluginResult</span>(..), <span class="dt">TcPlugin</span>(..), unsafeTcPluginTcM)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="kw">newtype</span> <span class="dt">State</span> <span class="ot">=</span> <span class="dt">State</span> {<span class="ot"> callref ::</span> <span class="dt">IORef</span> <span class="dt">Int</span> }</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="ot">callCount ::</span> <span class="dt">TcPlugin</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>callCount <span class="ot">=</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>    <span class="dt">TcPlugin</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a>        { tcPluginInit <span class="ot">=</span> <span class="fu">return</span> <span class="op">.</span> <span class="dt">State</span> <span class="op">=&lt;&lt;</span> (unsafeTcPluginTcM <span class="op">$</span> newMutVar <span class="dv">1</span>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a>        , tcPluginSolve <span class="ot">=</span> \<span class="dt">State</span>{callref <span class="ot">=</span> c} _ _ _ <span class="ot">-&gt;</span> <span class="kw">do</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a>            n <span class="ot">&lt;-</span> unsafeTcPluginTcM <span class="op">$</span> readMutVar c</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a>            tcPluginIO <span class="op">.</span> <span class="fu">putStrLn</span> <span class="op">$</span> [s|&gt;&gt;&gt; GHC-TcPlugin #%d|] n</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a>            unsafeTcPluginTcM <span class="op">$</span> writeMutVar c (n <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a>            <span class="fu">return</span> <span class="op">$</span> <span class="dt">TcPluginOk</span> [] []</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>        , tcPluginStop <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a>        }</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE QuasiQuotes, NamedFieldPuns #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">CallCount.TcPlugin</span> (callCount) <span class="kw">where</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Language.Haskell.Printf</span> (s)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.IORef</span> (<span class="dt">IORef</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">IOEnv</span> (newMutVar, readMutVar, writeMutVar)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">TcPluginM</span> (tcPluginIO)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">TcRnTypes</span> (<span class="dt">TcPluginResult</span>(..), <span class="dt">TcPlugin</span>(..), unsafeTcPluginTcM)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">State</span> <span class="ot">=</span> <span class="dt">State</span> {<span class="ot"> callref ::</span> <span class="dt">IORef</span> <span class="dt">Int</span> }</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ot">callCount ::</span> <span class="dt">TcPlugin</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>callCount <span class="ot">=</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">TcPlugin</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        { tcPluginInit <span class="ot">=</span> <span class="fu">return</span> <span class="op">.</span> <span class="dt">State</span> <span class="op">=&lt;&lt;</span> (unsafeTcPluginTcM <span class="op">$</span> newMutVar <span class="dv">1</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        , tcPluginSolve <span class="ot">=</span> \<span class="dt">State</span>{callref <span class="ot">=</span> c} _ _ _ <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            n <span class="ot">&lt;-</span> unsafeTcPluginTcM <span class="op">$</span> readMutVar c</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            tcPluginIO <span class="op">.</span> <span class="fu">putStrLn</span> <span class="op">$</span> [s|&gt;&gt;&gt; GHC-TcPlugin #%d|] n</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            unsafeTcPluginTcM <span class="op">$</span> writeMutVar c (n <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            <span class="fu">return</span> <span class="op">$</span> <span class="dt">TcPluginOk</span> [] []</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        , tcPluginStop <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
 <p>Plugins are flagged for recompilation in their <code>pluginRecompile</code> field. Let’s now wire up and test the pure <code>CallCount.Pure.Plugin</code> and the impure <code>CallCount.Impure.Plugin</code>. The recommended way to wire up a plugin is with a pragma, only in source files that need the plugin.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> a</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">undefined</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> a</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">undefined</span></span></code></pre></div>
 <p>The call count prints on first build but not when there’s no work to do.</p>
 <pre class="pre"><code>&gt; cabal build test-wireup-pure-by-pragma
 [1 of 1] Compiling Main
@@ -138,13 +138,13 @@
 &gt; cabal build test-wireup-pure-by-pragma
 Up to date</code></pre>
 <p>A plugin can also be wired up with an option, say in a cabal file. This is probably fine if all your modules need a plugin.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="at">test-suite test-wireup-pure-by-option</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="at">  </span><span class="fu">import</span><span class="kw">:</span><span class="at"> opts</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> exitcode-stdio-1.0</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at"> Main.hs</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at"> test-suites/wireup-pure-by-option</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="at">  </span><span class="fu">ghc-options</span><span class="kw">:</span><span class="at"> -Wall -fplugin CallCount.Pure.Plugin</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span><span class="at"> base, call-count-plugin</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="at">test-suite test-wireup-pure-by-option</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">import</span><span class="kw">:</span><span class="at"> opts</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">type</span><span class="kw">:</span><span class="at"> exitcode-stdio-1.0</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">main-is</span><span class="kw">:</span><span class="at"> Main.hs</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">hs-source-dirs</span><span class="kw">:</span><span class="at"> test-suites/wireup-pure-by-option</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">ghc-options</span><span class="kw">:</span><span class="at"> -Wall -fplugin CallCount.Pure.Plugin</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">build-depends</span><span class="kw">:</span><span class="at"> base, call-count-plugin</span></span></code></pre></div>
 <pre class="pre"><code>&gt; cabal build test-wireup-pure-by-option
 [1 of 1] Compiling Main
 &gt;&gt;&gt; GHC-TcPlugin #1</code></pre>
@@ -175,17 +175,17 @@ Up to date</code></pre>
 &gt;&gt;&gt; GHC-TcPlugin #1</code></pre>
 <h1 id="modularity">Modularity</h1>
 <p>GHC compiles modules. We see the counter plugin is called on twice when functions <code>foo</code> and <code>bar</code> are in module <code>Main</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="ot">foo ::</span> <span class="dt">IO</span> a</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>foo <span class="ot">=</span> <span class="fu">undefined</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="ot">bar ::</span> <span class="dt">IO</span> a</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>bar <span class="ot">=</span> <span class="fu">undefined</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">return</span> ()</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fplugin CallCount.Pure.Plugin #-}</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ot">foo ::</span> <span class="dt">IO</span> a</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">=</span> <span class="fu">undefined</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ot">bar ::</span> <span class="dt">IO</span> a</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>bar <span class="ot">=</span> <span class="fu">undefined</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">return</span> ()</span></code></pre></div>
 <pre class="pre"><code>&gt; cabal build test-counter-main
 [1 of 1] Compiling Main
 &gt;&gt;&gt; GHC-TcPlugin #1
@@ -205,54 +205,54 @@ Up to date</code></pre>
 [3 of 3] Compiling Main</code></pre>
 <h1 id="undefined-is-not-a-function">Undefined is not a Function</h1>
 <p>If your plugin behaves badly it is going to hurt. GHC takes the blame for the panic when any one of the functions required of a type checker plugin is implemented undefined<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="ot">plugin ::</span> <span class="dt">Plugin</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>plugin <span class="ot">=</span> mkPureTcPlugin undefSolve</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="ot">undefSolve ::</span> <span class="dt">TcPlugin</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>undefSolve <span class="ot">=</span> noOp { tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">undefined</span> }</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a><span class="ot">noOp ::</span> <span class="dt">TcPlugin</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>noOp <span class="ot">=</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>    <span class="dt">TcPlugin</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>        { tcPluginInit <span class="ot">=</span> <span class="fu">return</span> ()</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>        , tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="op">$</span> <span class="dt">TcPluginOk</span> [] []</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a>        , tcPluginStop <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>        }</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a><span class="ot">mkPureTcPlugin ::</span> <span class="dt">TcPlugin</span> <span class="ot">-&gt;</span> <span class="dt">Plugin</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a>mkPureTcPlugin p <span class="ot">=</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a>    defaultPlugin</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a>        { tcPlugin <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">Just</span> p</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>        , pluginRecompile <span class="ot">=</span> purePlugin</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a>        }</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">plugin ::</span> <span class="dt">Plugin</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">=</span> mkPureTcPlugin undefSolve</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ot">undefSolve ::</span> <span class="dt">TcPlugin</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>undefSolve <span class="ot">=</span> noOp { tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">undefined</span> }</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="ot">noOp ::</span> <span class="dt">TcPlugin</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>noOp <span class="ot">=</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="dt">TcPlugin</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        { tcPluginInit <span class="ot">=</span> <span class="fu">return</span> ()</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        , tcPluginSolve <span class="ot">=</span> \_ _ _ _ <span class="ot">-&gt;</span> <span class="fu">return</span> <span class="op">$</span> <span class="dt">TcPluginOk</span> [] []</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        , tcPluginStop <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="fu">return</span> ()</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ot">mkPureTcPlugin ::</span> <span class="dt">TcPlugin</span> <span class="ot">-&gt;</span> <span class="dt">Plugin</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>mkPureTcPlugin p <span class="ot">=</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    defaultPlugin</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        { tcPlugin <span class="ot">=</span> <span class="fu">const</span> <span class="op">$</span> <span class="dt">Just</span> p</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        , pluginRecompile <span class="ot">=</span> purePlugin</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
 <pre class="pre"><code>&gt; cabal build test-undefined-solve
 [1 of 1] Compiling Undefined.Solve.Plugin
 [1 of 1] Compiling Main
 ghc: panic! (the 'impossible' happened)
 Please report this as a GHC bug:  http://www.haskell.org/ghc/reportabug</code></pre>
 <p>I would have liked to use record update syntax for undefSolve as shown above but this is not yet possible<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> with GHC when the data type has an existential qualifier and that is how TcPlugin is defined<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">TcPlugin</span> <span class="ot">=</span> <span class="kw">forall</span> s<span class="op">.</span> <span class="dt">TcPlugin</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>    {<span class="ot"> tcPluginInit  ::</span> <span class="dt">TcPluginM</span> s</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>    <span class="co">-- ^ Initialize plugin, when entering type-checker.</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>    ,<span class="ot"> tcPluginSolve ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginSolver</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>    <span class="co">-- ^ Solve some constraints.</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>    <span class="co">-- TODO: WRITE MORE DETAILS ON HOW THIS WORKS.</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>    ,<span class="ot"> tcPluginStop  ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> ()</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>    <span class="co">-- ^ Clean up after the plugin, when exiting the type-checker.</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>    }</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">TcPlugin</span> <span class="ot">=</span> <span class="kw">forall</span> s<span class="op">.</span> <span class="dt">TcPlugin</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    {<span class="ot"> tcPluginInit  ::</span> <span class="dt">TcPluginM</span> s</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- ^ Initialize plugin, when entering type-checker.</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> tcPluginSolve ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginSolver</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- ^ Solve some constraints.</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- </span><span class="al">TODO</span><span class="co">: WRITE MORE DETAILS ON HOW THIS WORKS.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> tcPluginStop  ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> ()</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- ^ Clean up after the plugin, when exiting the type-checker.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
 <h1 id="care-free">Care Free</h1>
 <p>Type checker plugins are of course called on by GHC to resolve constraints. Some need solving and others don’t. GHC knows that it can get an <code>a</code> from <code>undefined</code> but maybe a plugin can do better so we get called.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> a</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">undefined</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> a</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">undefined</span></span></code></pre></div>
 <p>Going from <code>()</code> to <code>()</code> needs no further resolution. GHC can handle this by itself. The <code>test-undefined-*-carefree</code> test suites have these mains. The ones without carefree in their name don’t. They have the <code>a</code> from <code>undefined</code> mains.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">return</span> ()</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fplugin Undefined.Solve.Plugin #-}</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">return</span> ()</span></code></pre></div>
 <p>We see that solve <strong>may</strong> be called but init and stop functions are <strong>always</strong> called.</p>
 <pre class="ascii"><code>+-------------------------------+------------+
 | Test Suite                    | GHC Panics |
