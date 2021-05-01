@@ -5,12 +5,9 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 ---
 <a href="/pdf/cv-phil-de-joux.pdf" role="button">`$> view --format=pdf`</a>  
 <a href="/" role="button">`$> exit`</a>  
+<br/>
 <div class="work-history">
-<pre>
-<code>
-  &lt;F#, Elm, Haskell and SQL&gt;
-</code>
-</pre>
+<h2 class="work-section">&lt;F#, Elm, Haskell &amp; SQL&gt;</h2>
 <ul>
 <li>
   <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—202~/~~`</span>
@@ -55,11 +52,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 </div>
 <div class="work-history">
-<pre>
-<code>
-  &lt;C# & SQL&gt;
-</code>
-</pre>
+<h2 class="work-section">&lt;C# & SQL&gt;</h2>
 <ul>
 <li>
   <span class="cactus">`C` `#` ▩ </span><span class="date">`2012/08—2013/02`</span>
@@ -98,11 +91,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </ul>
 </div>
 <div class="work-history">
-<pre>
-<code>
-  &lt;C++&gt;
-</code>
-</pre>
+<h2 class="work-section">&lt;C++&gt;</h2>
 <ul>
 <li>
   <span class="aspelle">`E` `$` ▩ </span><span class="date">`2001/08—2002/09`</span>
