@@ -49,6 +49,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   editions [3](https://www.apress.com/us/book/9781430246503) and
   [4](https://www.apress.com/us/book/9781484207413).
 </li>
+<li>
+  <span class="travieo">`V` `#` ▩ </span><span class="date">`2011/08—2015/10`</span>
+  [**Travieo**](http://www.travieo.com) ☞ Develop a travel booking website.
+</li>
 <ul>
 </div>
 <div class="work-history">
@@ -58,10 +62,6 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   <span class="cactus">`C` `#` ▩ </span><span class="date">`2012/08—2013/02`</span>
   [**Cactus** Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype
   upgrades to a production planning system for factory operations.
-</li>
-<li>
-  <span class="travieo">`V` `#` ▩ </span><span class="date">`2011/08—2015/10`</span>
-  [**Travieo**](http://www.travieo.com) ☞ Develop a travel booking website.
 </li>
 <li>
   <span class="croplogic">`L` `$` ▩ </span><span class="date">`2008/01—2011/08`</span>
