@@ -3,6 +3,7 @@ var path = require('path');
 var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
+    mode: "development",
     entry: {
         app: path.join(__dirname, '.', 'app.js')
     },
@@ -33,9 +34,6 @@ module.exports = {
             use: [
                 {
                     loader: MiniCssExtractPlugin.loader,
-                    options: {
-                        hmr: process.env.NODE_ENV === 'development',
-                    },
                 },
                 'css-loader',
                 'sass-loader',

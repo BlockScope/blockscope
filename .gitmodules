@@ -1,0 +1,3 @@
+[submodule "automated-a11y-sass"]
+	path = automated-a11y-sass
+	url = https://github.com/blockscope/automated-a11y-sass
