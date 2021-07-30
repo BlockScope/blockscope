@@ -2,9 +2,11 @@
   "name": "blockscope",
   "packageManager": "yarn@3.0.0",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
     "automated-a11y-sass": "./automated-a11y-sass",
-    "bootstrap": "^5.0.2",
-    "font-awesome": "^4.7.0",
+    "bootstrap": "^4.1.0",
+    "jquery": "^3.6.0",
+    "popper.js": "^1.14.0",
     "typeface-et-book": "^0.0.2"
   },
   "devDependencies": {
