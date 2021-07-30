@@ -35,3 +35,5 @@ result
 *.log
 **/www-hakyll/css/**
 *.tgz
+
+.yarn
