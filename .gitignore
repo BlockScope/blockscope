@@ -37,3 +37,4 @@ result
 *.tgz
 
 .yarn
+automated-a11y-sass/
