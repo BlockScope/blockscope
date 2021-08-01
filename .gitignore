@@ -46,3 +46,4 @@ result
 **/www-hakyll/css/**
 *.tgz
 .yarn
+.vscode
