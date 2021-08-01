@@ -27,19 +27,35 @@ where the client intends to hire a contractor as an employee in all but name.
 When a client wants to add a contractor to a team of salaried software
 developers, how to convert pay rates and conditions from permanent to contractor?
 
-I got offered a contract out of New York in Haskell at $80/hr where senior
-permanent dev staff get about $150,000 as base salary. The negotiations fell
-through but led me to review rates, especially comparing permanent with
+I got offered a contract out of New York in Haskell at ``$80/hr`` where senior
+permanent dev staff get about ``$150,000/yr`` as base salary. The negotiations
+fell through but led me to review rates, especially comparing permanent with
 contract.
 
-I found an interesting analysis of the true cost of consultants versus
-employees.
+I found an interesting analysis of the `true cost`_ of consultants versus
+employees::
 
-https://www.toptal.com/freelance/don-t-be-fooled-the-real-cost-of-employees-and-consultants
+    +------------+------------+
+    | CONSULTANT |  EMPLOYEE  |
+    +============+============+
+    |      Hourly Rate        |
+    |       $80  |  $72       |
+    +------------+------------+
+    |      Annual Salary      |
+    |  $166,400  |  $150,000  |
+    +------------+------------+
+    |     REAL HOURLY COST    |
+    |       $96  |  $143      |
+    +------------+------------+
+    |     REAL ANNUAL COST    |
+    |  $199,680  |  $298,500  |
+    +------------+------------+
 
 For a long time a rule of thumb I've heard of and used myself is, take an annual
-salary in thousands and use that as hourly rate for contracting, so $100,000/yr
-converts to $100/hr.
+salary in thousands and use that as hourly rate for contracting, so
+``$100,000/yr`` converts to ``$100/hr``.
 
 Do you think this conversion is fair and fits with what you're seeing out in the
 market?
+
+.. _true cost: https://www.toptal.com/freelance/don-t-be-fooled-the-real-cost-of-employees-and-consultants
