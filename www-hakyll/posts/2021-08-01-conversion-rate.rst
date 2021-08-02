@@ -1,7 +1,6 @@
 ---
-title: Conversion Rate
+title: How much for a developer?
 subtitle: How to convert salary to contractor rate?
-slug: How much for a developer?
 tags: rates
 ---
 
