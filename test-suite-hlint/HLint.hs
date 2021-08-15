@@ -5,7 +5,7 @@ import System.Exit (exitFailure, exitSuccess)
 
 arguments :: [String]
 arguments =
-    [ "CampHog"
+    [ "."
     , "test-suite-hlint"
     ]
 

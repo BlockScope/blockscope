@@ -72,7 +72,7 @@ mkStatic path = do
     route
         $ gsubRoute "static/" (const "")
         `composeRoutes`
-        (customRoute $ (</> "index.html") . fst . splitExtension . toFilePath)
+        customRoute ((</> "index.html") . fst . splitExtension . toFilePath)
 
     compile $ do
         pandoc
@@ -95,7 +95,7 @@ main = do
         mapM_ (directory static) ["css", "font", "js", "images", "pdf"]
 
         match "favicon/*.*" $ do
-            route $ customRoute ((flip replaceDirectory) "" . toFilePath)
+            route $ customRoute (flip replaceDirectory "" . toFilePath)
             compile copyFileCompiler
 
         -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
@@ -173,11 +173,11 @@ tagsFieldNonEmpty =
             tags <- getTags identifier
             if null tags then empty else return tags
 
-        simpleRenderLink :: String -> (Maybe FilePath) -> Maybe H.Html
+        simpleRenderLink :: String -> Maybe FilePath -> Maybe H.Html
         simpleRenderLink _ Nothing = Nothing
         simpleRenderLink tag (Just filePath) =
             Just
             $ H.a
                 ! A.class_ "badge badge-light"
                 ! A.href (toValue $ toUrl filePath)
-            $ toHtml (tag)
+            $ toHtml tag
