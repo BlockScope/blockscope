@@ -202,6 +202,9 @@ a bug in float comparison:
 There's no pattern matching or type deconstruction in arguments to
 functions. I have that in Haskell and F# and miss it.
 
+Some of the property tests I'd like to have added were not possible without float
+generators that are not yet included.
+
 I couldn't get the code I wanted to write to compile with the trunk branch and
 ended up using the latest ``release/M2g`` but even there I had to backport an
 interpreter fix to prevent a ``missing integral case`` exception when using
@@ -238,8 +241,8 @@ I really like transcripts.
     💾  Wrote ~/.../flat-earth/Vincenty.output.md
 
 I used transcripts to document what the code does for both the `haversine
-solution`_ and `vincenty solution`_. Shown below is a snippet of the output of
-the transcript for the vincenty solution:
+solution`_ and `vincenty solution`_ to the geodetic inverse problem. Shown below
+is a snippet of the output of the transcript for the vincenty solution:
 
 .. code-block:: pre
 
@@ -257,6 +260,9 @@ the transcript for the vincenty solution:
     2 | > hayford
             ⧩
             Ellipsoid (Radius 6378388.0) 297.0
+
+The code base manager works well as one tool with a command shell, a REPL and
+git.
 
 .. [#] FAI-Airscore implements the Andoyer_ method for solving geodesic distance
     on the ellipsoid but it can get distances by using package haversine_ for the
