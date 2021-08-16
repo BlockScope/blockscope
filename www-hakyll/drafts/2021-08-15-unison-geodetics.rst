@@ -113,17 +113,115 @@ namespace.
         | ForsytheAndoyerLambert
         | FsAndoyer
 
+Problems
+--------
+
+The pretty printing and parsing doesn't roundtrip. Printed constructor
+parentheses were missed and indentation was offside. This was an inconvenience
+but I pretty quickly recognized the edits I'd need to make to dumped definitions
+to get them to compile again.
+
+.. code-block:: diff
+
+    aOfHaversine : LatLng -> LatLng -> Rad
+    aOfHaversine x y =
+        use Float * +
+        use Lat Lat
+        use Lng Lng
+        LatLng (Lat xLatF) (Lng xLngF) = x
+        LatLng (Lat yLatF) (Lng yLngF) = y
+        (dLatF, dLngF) =
+            use Float -
+            (yLatF - xLatF, yLngF - xLngF)
+    --    Rad hLatF = haversine (Rad dLatF)
+    --    Rad hLngF = haversine (Rad dLngF)
+    ++    (Rad hLatF) = haversine (Rad dLatF)
+    ++    (Rad hLngF) = haversine (Rad dLngF)
+        Rad (hLatF + (cos xLatF * cos yLatF * hLngF))
+
+It was easy to make updates that resulted in names coming unstuck from hashes
+especially when renaming things.
+
+Some very ordinary float functions are missing from the base library such as
+``Float.isNaN`` and related predicates for testing infinity. I also encountered
+a bug in float comparison:
+
+.. code-block:: pre
+
+    Now evaluating any watch expressions (lines starting with `>`)... Ctrl+C cancels.
+
+    1 | > 0.0 < 0.0
+        ⧩
+        false
+
+    2 | > 0.0 < 1.0
+        ⧩
+        true
+
+    3 | > 1.0 < 2.0
+        ⧩
+        true
+
+    4 | > +0.0 < +1.0
+        ⧩
+        true
+
+    5 | > +1.0 < +2.0
+        ⧩
+        true
+
+    6 | > -1.0 < 0.0
+        ⧩
+        true
+
+    7 | > -2.0 < -1.0
+        ⧩
+        false
+
+    8 | > -1.0 < -2.0
+        ⧩
+        true
+
+There's no pattern matching or type deconstruction in arguments to
+functions. I have that in Haskell and F# and miss it.
+
+.. code-block:: pre
+
+    .flight.Geodesy> find InverseSolution
+
+    1.  unique type InverseSolution s α
+    2.  InverseSolution.InverseSolution : s -> α -> Optional α -> InverseSolution s α
+    3.  InverseSolution.doc : Doc
+    4.  InverseSolution.s : #7l8qisp5pk s α -> s
+    5.  InverseSolution.s.modify : (i ->{g} o) -> #7l8qisp5pk i α ->{g} #7l8qisp5pk o α
+    6.  InverseSolution.s.set : s1 -> #7l8qisp5pk s α -> #7l8qisp5pk s1 α
+    7.  InverseSolution.α₁ : #7l8qisp5pk s α -> α
+    8.  InverseSolution.α₁.modify : (o ->{g} o) -> #7l8qisp5pk s o ->{g} #7l8qisp5pk s o
+    9.  InverseSolution.α₁.set : α₁1 -> #7l8qisp5pk s α₁1 -> #7l8qisp5pk s α₁1
+    10. InverseSolution.α₂ : #7l8qisp5pk s α -> () α
+    11. InverseSolution.α₂.modify : (() α ->{g} () α) -> #7l8qisp5pk s α ->{g} #7l8qisp5pk s α
+    12. InverseSolution.α₂.set : () α -> #7l8qisp5pk s α -> #7l8qisp5pk s α
+
+I couldn't get the code I wanted to write to compile with the trunk branch and
+ended up using the latest ``release/M2g`` but even there I had to backport an
+interpreter fix to prevent a ``missing integral case`` exception when using
+*less than* when comparing floats.
+
 Overall Impression
 ------------------
 
-The builtin ``find`` command is great but I still think I'd like to be able
-browse a subset of the codebase on disk as files. Once I saw I could dump a lot
-of definitions to the scratch file then move them beneath the fold so that they
-were only visible to me I was happier. We can dump more than one item from a
+Unison is a new language with distinctive and unusal development environment. I
+was able to get what I wanted to do done. I was helped along by good
+documentation, excellent talks and quick feedback in the slack channel.
+
+The builtin ``find`` command and code base browsing web app are great but I
+still think I'd like to be able browse a subset of the codebase on disk as files
+in the appropriate branch of a namespace tree. Once I saw I could dump a lot of
+definitions to the scratch file then move them beneath the fold so that they
+were only visible to me I was happier.  We can dump more than one item from a
 ``find`` command's result list.
 
-I like transcripts and used these to document what the code does for both the
-`haversine solution`_ and `vincenty solution`_:
+I really like transcripts.
 
 .. code-block:: pre
 
@@ -139,7 +237,9 @@ I like transcripts and used these to document what the code does for both the
     ⚙️   Processing stanza 5 of 5.
     💾  Wrote ~/.../flat-earth/Vincenty.output.md
 
-Here's a snippet of the output of the transcript for the vincenty solution:
+I used transcripts to document what the code does for both the `haversine
+solution`_ and `vincenty solution`_. Shown below is a snippet of the output of
+the transcript for the vincenty solution:
 
 .. code-block:: pre
 
@@ -161,54 +261,6 @@ Here's a snippet of the output of the transcript for the vincenty solution:
 .. [#] FAI-Airscore implements the Andoyer_ method for solving geodesic distance
     on the ellipsoid but it can get distances by using package haversine_ for the
     sphere and package geopy_ for the ellipsoid.
-
-Problems
---------
-
-The pretty printing and parsing doesn't roundtrip. This was an inconvenience. I
-pretty quickly recognized the edits I'd need to make to dumped definitions to
-get them to compile again.
-
-.. code-block:: diff
-
-    aOfHaversine : LatLng -> LatLng -> Rad
-    aOfHaversine x y =
-        use Float * +
-        use Lat Lat
-        use Lng Lng
-        LatLng (Lat xLatF) (Lng xLngF) = x
-        LatLng (Lat yLatF) (Lng yLngF) = y
-        (dLatF, dLngF) =
-            use Float -
-            (yLatF - xLatF, yLngF - xLngF)
-    -     Rad hLatF = haversine (Rad dLatF)
-    -     Rad hLngF = haversine (Rad dLngF)
-    +     (Rad hLatF) = haversine (Rad dLatF)
-    +     (Rad hLngF) = haversine (Rad dLngF)
-        Rad (hLatF + (cos xLatF * cos yLatF * hLngF))
-
-It was easy to make updates that resulted in names coming unstuck from hashes.
-
-.. code-block:: pre
-
-    .flight.Geodesy> find InverseSolution
-
-    1.  unique type InverseSolution s α
-    2.  InverseSolution.InverseSolution : s -> α -> Optional α -> InverseSolution s α
-    3.  InverseSolution.doc : Doc
-    4.  InverseSolution.s : #7l8qisp5pk s α -> s
-    5.  InverseSolution.s.modify : (i ->{g} o) -> #7l8qisp5pk i α ->{g} #7l8qisp5pk o α
-    6.  InverseSolution.s.set : s1 -> #7l8qisp5pk s α -> #7l8qisp5pk s1 α
-    7.  InverseSolution.α₁ : #7l8qisp5pk s α -> α
-    8.  InverseSolution.α₁.modify : (o ->{g} o) -> #7l8qisp5pk s o ->{g} #7l8qisp5pk s o
-    9.  InverseSolution.α₁.set : α₁1 -> #7l8qisp5pk s α₁1 -> #7l8qisp5pk s α₁1
-    10. InverseSolution.α₂ : #7l8qisp5pk s α -> () α
-    11. InverseSolution.α₂.modify : (() α ->{g} () α) -> #7l8qisp5pk s α ->{g} #7l8qisp5pk s α
-    12. InverseSolution.α₂.set : () α -> #7l8qisp5pk s α -> #7l8qisp5pk s α
-
-I had to backport an interpreter fix to prevent a ``missing integral case``
-exception when using *less than* when comparing floats.
-
 
 .. _flare-timing: https://github.com/BlockScope/flare-timing#readme
 .. _meridian-arc: https://github.com/BlockScope/meridian-arc#readme
