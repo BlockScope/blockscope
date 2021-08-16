@@ -28,8 +28,8 @@ like code.
 In practice this is no big problem. There are ways to discover and browse the
 code. I'm used to working in a REPL with little more than syntax highlighting as
 a language specific aid in the editor. Unison's code base manager watches for
-changes in a scratch file I'm editing and provides a link where the code base
-can be browsed.
+changes in a scratch file I'm editing and on start up provides a link where the
+code base can be browsed.
 
 .. code-block:: pre
 
@@ -70,7 +70,7 @@ Using commands to navigate namespaces and definitions that have the same names
 as commands we're used to for navigating the file system is great and could be
 taken further. Sadly a ``cd ..`` command doesn't go up the namespace tree.
 
-To work on an existing definition, find it and select it for editing.
+To work on an existing definition, find it and select it for editing:
 
 .. code-block:: pre
 
@@ -206,23 +206,23 @@ Some of the property tests I'd like to have added were not possible without floa
 generators that are not yet included.
 
 I couldn't get the code I wanted to write to compile with the trunk branch and
-ended up using the latest ``release/M2g`` but even there I had to backport an
-interpreter fix to prevent a ``missing integral case`` exception when using
+ended up using the latest ``release/M2g`` branch but even there I had to
+backport an interpreter fix to prevent a ``missing integral case`` exception
+when using
 *less than* when comparing floats.
 
 Overall Impression
 ------------------
 
 Unison is a new language with a distinctive and unusal development environment.
-I was able to get what I wanted to do done. I was helped along by good
-documentation, excellent talks and quick feedback in the slack channel.
+I was able to get what I wanted to do done, helped along by good documentation,
+excellent talks and quick feedback in the slack channel.
 
 The builtin ``find`` command and code base browsing web app are great but I
 still think I'd like to be able browse a subset of the codebase on disk as files
 in the appropriate branch of a namespace tree. Once I saw I could dump a lot of
 definitions to the scratch file then move them beneath the fold so that they
-were only visible to me I was happier.  We can dump more than one item from a
-``find`` command's result list.
+were only visible to me I was happier.
 
 I really like transcripts.
 
@@ -241,8 +241,8 @@ I really like transcripts.
     💾  Wrote ~/.../flat-earth/Vincenty.output.md
 
 I used transcripts to document what the code does for both the `haversine
-solution`_ and `vincenty solution`_ to the geodetic inverse problem. Shown below
-is a snippet of the output of the transcript for the vincenty solution:
+solution`_ and `Vincenty solution`_ to the geodetic inverse problem. Shown below
+is a snippet of the output of the transcript for the Vincenty solution:
 
 .. code-block:: pre
 
@@ -272,9 +272,15 @@ the unison language itself other than it is similar enough to Haskell or F# that
 it felt familiar already except I suspect I don't quite understand when to use
 ``let``.
 
+I enjoyed trying out unison and contributing a package [#]_.
+
 .. [#] FAI-Airscore implements the Andoyer_ method for solving geodesic distance
     on the ellipsoid but it can get distances by using package haversine_ for the
     sphere and package geopy_ for the ellipsoid.
+
+.. [#] The code in the `blockscope/flat-earth`_ repo can be found at
+    ``contrib/pdejoux`` in unison share, the common code base, where we can link
+    directly to definitions such as this one for InverseSolution_.
 
 .. _flare-timing: https://github.com/BlockScope/flare-timing#readme
 .. _meridian-arc: https://github.com/BlockScope/meridian-arc#readme
@@ -283,4 +289,6 @@ it felt familiar already except I suspect I don't quite understand when to use
 .. _geopy: https://geopy.readthedocs.io/
 .. _Andoyer: https://en.wikipedia.org/wiki/Marie_Henri_Andoyer
 .. _haversine solution: https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md
-.. _vincenty solution: https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md
+.. _Vincenty solution: https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md
+.. _InverseSolution: https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0
+.. _blockscope/flat-earth: https://github.com/BlockScope/flat-earth#readme
