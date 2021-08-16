@@ -20,8 +20,8 @@ Unison's Development Environment
 --------------------------------
 
 The development environment is special. The code is stored in a database, parsed
-as an abstract syntax tree with nodes identified by hash. There's metadata that
-attaches names to those hashes. What this means in practice is that neither you
+as an abstract syntax tree with nodes identified by hash and metadata attaching
+names to those hashes. What this means in practice is that neither you
 developing your code or someone browsing your repo will see anything that looks
 like code.
 
@@ -161,8 +161,31 @@ Here's a snippet of the output of the transcript for the vincenty solution:
 .. [#] FAI-Airscore implements the Andoyer_ method for solving geodesic distance
     on the ellipsoid but it can get distances by using package haversine_ for the
     sphere and package geopy_ for the ellipsoid.
+
 Problems
 --------
+
+The pretty printing and parsing doesn't roundtrip. This was an inconvenience. I
+pretty quickly recognized the edits I'd need to make to dumped definitions to
+get them to compile again.
+
+.. code-block:: diff
+
+    aOfHaversine : LatLng -> LatLng -> Rad
+    aOfHaversine x y =
+        use Float * +
+        use Lat Lat
+        use Lng Lng
+        LatLng (Lat xLatF) (Lng xLngF) = x
+        LatLng (Lat yLatF) (Lng yLngF) = y
+        (dLatF, dLngF) =
+            use Float -
+            (yLatF - xLatF, yLngF - xLngF)
+    -     Rad hLatF = haversine (Rad dLatF)
+    -     Rad hLngF = haversine (Rad dLngF)
+    +     (Rad hLatF) = haversine (Rad dLatF)
+    +     (Rad hLngF) = haversine (Rad dLngF)
+        Rad (hLatF + (cos xLatF * cos yLatF * hLngF))
 
 It was easy to make updates that resulted in names coming unstuck from hashes.
 
@@ -183,8 +206,8 @@ It was easy to make updates that resulted in names coming unstuck from hashes.
     11. InverseSolution.α₂.modify : (() α ->{g} () α) -> #7l8qisp5pk s α ->{g} #7l8qisp5pk s α
     12. InverseSolution.α₂.set : () α -> #7l8qisp5pk s α -> #7l8qisp5pk s α
 
-I had to backport an interpreter fix to prevent a `missing integral case`
-exception when using less than for floats.
+I had to backport an interpreter fix to prevent a ``missing integral case``
+exception when using *less than* when comparing floats.
 
 
 .. _flare-timing: https://github.com/BlockScope/flare-timing#readme
