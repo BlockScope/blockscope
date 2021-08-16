@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="With Block Scope, prototype and develop the best functional programs.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="With Block Scope, prototype and develop the best functional programs.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="With Block Scope, prototype and develop the best functional programs.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Unison Geodetics</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../b">consult</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">work</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">contribute</a></li>
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+        </ul>
+        <br />
+        <br />
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../p">introspect</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">fly</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">tweet</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Unison Geodetics</h1>
+                    
+                    <p class="lead">A developer experience report.</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        <a class="badge badge-light" href="../tags/unison.html">unison</a> <a class="badge badge-light" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>Before scoring can start for a flying competition we need to establish some ground rules like what model of the Earth to use, the FAI sphere or the WGS84 ellipsoid? Once that’s decided we can work out the shortest distance around the turnpoint cylinders of the task and distance along the course for each fix of each pilot’s track log.</p>
+<p>The FAI’s official scoring program FS rolls its own geodetics code in C# as does its nominated succesor, <a href="https://github.com/FAI-CIVL/FAI-Airscore">FAI-Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. I’ve written geodetic packages in Haskell and F#, <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a> and <a href="https://github.com/BlockScope/meridian-arc#readme">meridian-arc</a>. What better way to get to try <a href="https://www.unisonweb.org/">unison</a> than have a go at contributing a geodetics package.</p>
+<h1 id="unisons-development-environment">Unison’s Development Environment</h1>
+<p>The development environment is special. The code is stored in a database, parsed as an abstract syntax tree with nodes identified by hash and metadata attaching names to those hashes. What this means in practice is that neither you developing your code or someone browsing your repo will see anything that looks like code.</p>
+<p>In practice this is no big problem. There are ways to discover and browse the code. I’m used to working in a REPL with little more than syntax highlighting as a language specific aid in the editor. Unison’s code base manager watches for changes in a scratch file I’m editing and on start up provides a link where the code base can be browsed.</p>
+<pre class="pre"><code>&gt; unison
+
+The Unison Codebase UI is running at
+http://127.0.0.1:61119/lUbPTPoxXjHHcTWH9MwOoaKzhJiYyQts/ui
+
+Now starting the Unison Codebase Manager...
+Welcome to Unison!
+You are running version: release/M2g
+I'm currently watching for changes to .u files under ~/.../flat-earth
+Type help to get help. 😎</code></pre>
+<p>When code I’m working on in the scratch file compiles I can add it to or update it in the code base. Like git, I can choose to push my changes to a repo with builtin commands. The whole experience is quite sensitive to current namespace selected. We can move around namespaces with the <code>namespace</code> or <code>cd</code> commands and use <code>ls</code> to see what’s there:</p>
+<pre class="pre"><code>&gt; unison
+
+.&gt; cd flight
+.flight&gt; ls
+
+1. Earth/        (46 definitions)
+2. Geodesy/      (69 definitions)
+3. LatLng/       (15 definitions)
+4. Units/        (43 definitions)
+5. Zone/         (3 definitions)
+6. licenseTypes/ (1 definition)
+7. metadata/     (7 definitions)
+8. patch         (patch)</code></pre>
+<p>Using commands to navigate namespaces and definitions that have the same names as commands we’re used to for navigating the file system is great and could be taken further. Sadly a <code>cd ..</code> command doesn’t go up the namespace tree.</p>
+<p>To work on an existing definition, find it and select it for editing:</p>
+<pre class="pre"><code>.&gt; find haversines
+
+1. flight.Geodesy.Math.EarthMath.Haversines : EarthMath
+
+.&gt; edit 1
+☝️
+I added these definitions to the top of ~/.../flat-earth/scratch.u
+
+    unique type flight.Geodesy.Math.EarthMath
+    = Pythagorus
+    | Haversines
+    | Vincenty
+    | AndoyerLambert
+    | ForsytheAndoyerLambert
+    | FsAndoyer
+
+You can edit them there, then do `update` to replace the definitions currently in this
+namespace.</code></pre>
+<p>To edit this definition, I’m better off navigating to its namespace first to avoid long namespace qualified names and to avoid a bug where fully qualified names cannot be added or updated if the current prompt is at <code>.&gt;</code>, the root namespace.</p>
+<pre class="pre"><code>.&gt; cd flight.Geodesy.Math
+.flight.Geodesy.Math&gt; edit EarthMath
+☝️
+I added these definitions to the top of ~/.../flat-earth/scratch.u
+
+    unique type EarthMath
+    = Pythagorus
+    | Haversines
+    | Vincenty
+    | AndoyerLambert
+    | ForsytheAndoyerLambert
+    | FsAndoyer</code></pre>
+<h1 id="teething-problems">Teething Problems</h1>
+<p>The pretty printing and parsing doesn’t roundtrip. Printed constructor parentheses were missed and indentation was offside. This was an inconvenience but I pretty quickly recognized the edits I’d need to make to dumped definitions to get them to compile again.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aOfHaversine : LatLng -&gt; LatLng -&gt; Rad</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aOfHaversine x y =</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    use Float * +</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    use Lat Lat</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    use Lng Lng</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    LatLng (Lat xLatF) (Lng xLngF) = x</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    LatLng (Lat yLatF) (Lng yLngF) = y</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    (dLatF, dLngF) =</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        use Float -</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        (yLatF - xLatF, yLngF - xLngF)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">--  Rad hLatF = haversine (Rad dLatF)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">--  Rad hLngF = haversine (Rad dLngF)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLatF) = haversine (Rad dLatF)</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLngF) = haversine (Rad dLngF)</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    Rad (hLatF + (cos xLatF * cos yLatF * hLngF))</span></code></pre></div>
+<p>It was easy to make updates that resulted in names coming unstuck from hashes especially when renaming things.</p>
+<pre class="pre"><code>.flight.Geodesy&gt; find InverseSolution
+
+1.  unique type InverseSolution s α
+2.  InverseSolution.InverseSolution : s -&gt; α -&gt; Optional α -&gt; InverseSolution s α
+3.  InverseSolution.doc : Doc
+4.  InverseSolution.s : #7l8qisp5pk s α -&gt; s
+5.  InverseSolution.s.modify : (i -&gt;{g} o) -&gt; #7l8qisp5pk i α -&gt;{g} #7l8qisp5pk o α
+6.  InverseSolution.s.set : s1 -&gt; #7l8qisp5pk s α -&gt; #7l8qisp5pk s1 α
+7.  InverseSolution.α₁ : #7l8qisp5pk s α -&gt; α
+8.  InverseSolution.α₁.modify : (o -&gt;{g} o) -&gt; #7l8qisp5pk s o -&gt;{g} #7l8qisp5pk s o
+9.  InverseSolution.α₁.set : α₁1 -&gt; #7l8qisp5pk s α₁1 -&gt; #7l8qisp5pk s α₁1
+10. InverseSolution.α₂ : #7l8qisp5pk s α -&gt; () α
+11. InverseSolution.α₂.modify : (() α -&gt;{g} () α) -&gt; #7l8qisp5pk s α -&gt;{g} #7l8qisp5pk s α
+12. InverseSolution.α₂.set : () α -&gt; #7l8qisp5pk s α -&gt; #7l8qisp5pk s α</code></pre>
+<p>Some very ordinary float functions are missing from the base library such as <code>Float.isNaN</code> and related predicates for testing infinity. I also encountered a bug in float comparison:</p>
+<pre class="pre"><code>Now evaluating any watch expressions (lines starting with `&gt;`)... Ctrl+C cancels.
+
+1 | &gt; 0.0 &lt; 0.0
+    ⧩
+    false
+
+2 | &gt; 0.0 &lt; 1.0
+    ⧩
+    true
+
+3 | &gt; 1.0 &lt; 2.0
+    ⧩
+    true
+
+4 | &gt; +0.0 &lt; +1.0
+    ⧩
+    true
+
+5 | &gt; +1.0 &lt; +2.0
+    ⧩
+    true
+
+6 | &gt; -1.0 &lt; 0.0
+    ⧩
+    true
+
+7 | &gt; -2.0 &lt; -1.0
+    ⧩
+    false
+
+8 | &gt; -1.0 &lt; -2.0
+    ⧩
+    true</code></pre>
+<p>There’s no pattern matching or type deconstruction in arguments to functions. I have that in Haskell and F# and miss it.</p>
+<p>Some of the property tests I’d like to have added were not possible without float generators that are not yet included.</p>
+<p>I couldn’t get the code I wanted to write to compile with the trunk branch and ended up using the latest <code>release/M2g</code> branch but even there I had to backport an interpreter fix to prevent a <code>missing integral case</code> exception when using <em>less than</em> when comparing floats.</p>
+<h1 id="overall-impression">Overall Impression</h1>
+<p>Unison is a new language with a distinctive and unusal development environment yet I was able to get what I wanted to do done, helped along by good documentation, excellent talks and quick feedback in the slack channel.</p>
+<p>The builtin <code>find</code> command and code base browsing web app are great but I still think I’d like to be able browse a subset of the codebase on disk as files in the appropriate branch of a namespace tree. Once I saw I could dump a lot of definitions to the scratch file then move them beneath the fold so that they were only visible to me I was happier.</p>
+<p>I really like transcripts.</p>
+<pre class="pre"><code>&gt; unison transcript.fork Haversine.md
+
+Transcript will be run on a copy of the codebase at:
+    /Users/pdejoux
+Running the provided transcript file...
+⚙️   Processing stanza 3 of 3.
+💾  Wrote ~/.../flat-earth/Haversine.output.md
+
+&gt; unison transcript.fork Vincenty.md
+⚙️   Processing stanza 5 of 5.
+💾  Wrote ~/.../flat-earth/Vincenty.output.md</code></pre>
+<p>I used transcripts to document what the code does for both the <a href="https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md">haversine solution</a> and <a href="https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md">Vincenty solution</a> to the geodetic inverse problem. Shown below is a snippet of the output of the transcript for the Vincenty solution:</p>
+<pre class="pre"><code>✅
+
+ellipsoids.u changed.
+
+Now evaluating any watch expressions (lines starting with
+`&gt;`)... Ctrl+C cancels.
+
+1 | &gt; bessel
+        ⧩
+        Ellipsoid (Radius 6377397.155) 299.1528128
+
+2 | &gt; hayford
+        ⧩
+        Ellipsoid (Radius 6378388.0) 297.0</code></pre>
+<p>The code base manager works well as one tool with a command shell, a REPL and git-like code base actions.</p>
+<p>The cached tests and definitions seem to hold a lot of promise to save developer time. I can’t say I noticed but isn’t that the point!</p>
+<p>The task I was solving didn’t require anything fancy so I can’t say much about the unison language itself other than it is similar enough to Haskell or F# that it felt familiar already except I suspect I don’t quite understand when to use <code>let</code>.</p>
+<p>I enjoyed trying out unison and contributing a package<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>FAI-Airscore implements the <a href="https://en.wikipedia.org/wiki/Marie_Henri_Andoyer">Andoyer</a> method for solving geodesic distance on the ellipsoid but it can get distances by using package <a href="https://github.com/mapado/haversine">haversine</a> for the sphere and package <a href="https://geopy.readthedocs.io/">geopy</a> for the ellipsoid.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>The code in the <a href="https://github.com/BlockScope/flat-earth#readme">blockscope/flat-earth</a> repo can be found at <code>contrib/pdejoux</code> in unison share, the common code base, where we can link directly to definitions such as this one for <a href="https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0">InverseSolution</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2020 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>
