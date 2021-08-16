@@ -142,6 +142,23 @@ to get them to compile again.
 It was easy to make updates that resulted in names coming unstuck from hashes
 especially when renaming things.
 
+.. code-block:: pre
+
+    .flight.Geodesy> find InverseSolution
+
+    1.  unique type InverseSolution s α
+    2.  InverseSolution.InverseSolution : s -> α -> Optional α -> InverseSolution s α
+    3.  InverseSolution.doc : Doc
+    4.  InverseSolution.s : #7l8qisp5pk s α -> s
+    5.  InverseSolution.s.modify : (i ->{g} o) -> #7l8qisp5pk i α ->{g} #7l8qisp5pk o α
+    6.  InverseSolution.s.set : s1 -> #7l8qisp5pk s α -> #7l8qisp5pk s1 α
+    7.  InverseSolution.α₁ : #7l8qisp5pk s α -> α
+    8.  InverseSolution.α₁.modify : (o ->{g} o) -> #7l8qisp5pk s o ->{g} #7l8qisp5pk s o
+    9.  InverseSolution.α₁.set : α₁1 -> #7l8qisp5pk s α₁1 -> #7l8qisp5pk s α₁1
+    10. InverseSolution.α₂ : #7l8qisp5pk s α -> () α
+    11. InverseSolution.α₂.modify : (() α ->{g} () α) -> #7l8qisp5pk s α ->{g} #7l8qisp5pk s α
+    12. InverseSolution.α₂.set : () α -> #7l8qisp5pk s α -> #7l8qisp5pk s α
+
 Some very ordinary float functions are missing from the base library such as
 ``Float.isNaN`` and related predicates for testing infinity. I also encountered
 a bug in float comparison:
@@ -184,23 +201,6 @@ a bug in float comparison:
 
 There's no pattern matching or type deconstruction in arguments to
 functions. I have that in Haskell and F# and miss it.
-
-.. code-block:: pre
-
-    .flight.Geodesy> find InverseSolution
-
-    1.  unique type InverseSolution s α
-    2.  InverseSolution.InverseSolution : s -> α -> Optional α -> InverseSolution s α
-    3.  InverseSolution.doc : Doc
-    4.  InverseSolution.s : #7l8qisp5pk s α -> s
-    5.  InverseSolution.s.modify : (i ->{g} o) -> #7l8qisp5pk i α ->{g} #7l8qisp5pk o α
-    6.  InverseSolution.s.set : s1 -> #7l8qisp5pk s α -> #7l8qisp5pk s1 α
-    7.  InverseSolution.α₁ : #7l8qisp5pk s α -> α
-    8.  InverseSolution.α₁.modify : (o ->{g} o) -> #7l8qisp5pk s o ->{g} #7l8qisp5pk s o
-    9.  InverseSolution.α₁.set : α₁1 -> #7l8qisp5pk s α₁1 -> #7l8qisp5pk s α₁1
-    10. InverseSolution.α₂ : #7l8qisp5pk s α -> () α
-    11. InverseSolution.α₂.modify : (() α ->{g} () α) -> #7l8qisp5pk s α ->{g} #7l8qisp5pk s α
-    12. InverseSolution.α₂.set : () α -> #7l8qisp5pk s α -> #7l8qisp5pk s α
 
 I couldn't get the code I wanted to write to compile with the trunk branch and
 ended up using the latest ``release/M2g`` but even there I had to backport an
