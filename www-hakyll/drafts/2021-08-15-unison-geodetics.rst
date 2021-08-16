@@ -213,8 +213,8 @@ interpreter fix to prevent a ``missing integral case`` exception when using
 Overall Impression
 ------------------
 
-Unison is a new language with distinctive and unusal development environment. I
-was able to get what I wanted to do done. I was helped along by good
+Unison is a new language with a distinctive and unusal development environment.
+I was able to get what I wanted to do done. I was helped along by good
 documentation, excellent talks and quick feedback in the slack channel.
 
 The builtin ``find`` command and code base browsing web app are great but I
@@ -263,6 +263,14 @@ is a snippet of the output of the transcript for the vincenty solution:
 
 The code base manager works well as one tool with a command shell, a REPL and
 git.
+
+The cached tests and definitions seem to hold a lot of promise to save developer
+time. I can't say I noticed but isn't that the point!
+
+The task I was solving didn't require anything fancy so I can't say much about
+the unison language itself other than it is similar enough to Haskell or F# that
+it felt familiar already except I suspect I don't quite understand when to use
+``let``.
 
 .. [#] FAI-Airscore implements the Andoyer_ method for solving geodesic distance
     on the ellipsoid but it can get distances by using package haversine_ for the
