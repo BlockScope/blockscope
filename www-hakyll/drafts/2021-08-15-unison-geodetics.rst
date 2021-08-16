@@ -133,10 +133,10 @@ to get them to compile again.
         (dLatF, dLngF) =
             use Float -
             (yLatF - xLatF, yLngF - xLngF)
-    --    Rad hLatF = haversine (Rad dLatF)
-    --    Rad hLngF = haversine (Rad dLngF)
-    ++    (Rad hLatF) = haversine (Rad dLatF)
-    ++    (Rad hLngF) = haversine (Rad dLngF)
+    --  Rad hLatF = haversine (Rad dLatF)
+    --  Rad hLngF = haversine (Rad dLngF)
+    ++  (Rad hLatF) = haversine (Rad dLatF)
+    ++  (Rad hLngF) = haversine (Rad dLngF)
         Rad (hLatF + (cos xLatF * cos yLatF * hLngF))
 
 It was easy to make updates that resulted in names coming unstuck from hashes
