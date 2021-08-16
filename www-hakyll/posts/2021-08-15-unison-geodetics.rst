@@ -13,8 +13,8 @@ each pilot's track log.
 
 The FAI's official scoring program FS rolls its own geodetics code in C# as does
 its nominated succesor, FAI-Airscore_ [#]_. I've written geodetic packages in
-Haskell and F#, flare-timing_ and meridian-arc_. What better way to get to try unison
-than have a go at contributing a geodetics package.
+Haskell and F#, flare-timing_ and meridian-arc_. What better way to get to try
+unison_ than have a go at contributing a geodetics package.
 
 Unison's Development Environment
 --------------------------------
@@ -113,8 +113,8 @@ namespace.
         | ForsytheAndoyerLambert
         | FsAndoyer
 
-Problems
---------
+Teething Problems
+-----------------
 
 The pretty printing and parsing doesn't roundtrip. Printed constructor
 parentheses were missed and indentation was offside. This was an inconvenience
@@ -214,9 +214,9 @@ when using
 Overall Impression
 ------------------
 
-Unison is a new language with a distinctive and unusal development environment.
-I was able to get what I wanted to do done, helped along by good documentation,
-excellent talks and quick feedback in the slack channel.
+Unison is a new language with a distinctive and unusal development environment
+yet I was able to get what I wanted to do done, helped along by good
+documentation, excellent talks and quick feedback in the slack channel.
 
 The builtin ``find`` command and code base browsing web app are great but I
 still think I'd like to be able browse a subset of the codebase on disk as files
@@ -262,7 +262,7 @@ is a snippet of the output of the transcript for the Vincenty solution:
             Ellipsoid (Radius 6378388.0) 297.0
 
 The code base manager works well as one tool with a command shell, a REPL and
-git.
+git-like code base actions.
 
 The cached tests and definitions seem to hold a lot of promise to save developer
 time. I can't say I noticed but isn't that the point!
@@ -292,3 +292,4 @@ I enjoyed trying out unison and contributing a package [#]_.
 .. _Vincenty solution: https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md
 .. _InverseSolution: https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0
 .. _blockscope/flat-earth: https://github.com/BlockScope/flat-earth#readme
+.. _unison: https://www.unisonweb.org/
