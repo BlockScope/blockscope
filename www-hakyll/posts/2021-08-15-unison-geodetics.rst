@@ -5,16 +5,58 @@ slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-Before scoring can start for a flying competition we need to establish some
-ground rules like what model of the Earth to use, the FAI sphere or the WGS84
-ellipsoid? Once that's decided we can work out the shortest distance around the
-turnpoint cylinders of the task and distance along the course for each fix of
-each pilot's track log.
+After seeing a few talks about Unison I dug in and gave it a go. I've been
+working on a reference implementation for scoring for free flight competitions.
+Intrinsic to this is geodesics. We fly over the Earth after all.
 
-The FAI's official scoring program FS rolls its own geodetics code in C# as does
-its nominated succesor, FAI-Airscore_ [#]_. I've written geodetic packages in
-Haskell and F#, flare-timing_ and meridian-arc_. What better way to get to try
-unison_ than have a go at contributing a geodetics package.
+Flying Geodesics
+----------------
+
+Pilots that fly hang gliding and paragliding competitions all carry instruments
+that log their position. These variometers or varios beep varying tones to let
+the pilot know whether they're going up or down, whether they're climbing or
+sinking. Sound really is the best way of taking in this information as the
+pilot is often too busy in active air to be glancing at or tapping the vario's
+screen. It is great to be climbing but worrying to be sinking and the tones
+emitted by the vario match those moods.
+
+The scorer's job is to collect and push all the tracks logged by the varios
+through a scoring program.
+
+Except for respecting airspace, height is pretty much ignored when scoring. It
+is used for stopped tasks to fairly reward some pilots for being higher than
+others as recognition of their well-earned potential energy, that would have
+been converted to distance if time had allowed for the glide. Scoring is not
+simple but boils down to initially finding out when and where each pilot
+crossed the start, turnpoints and goal of the tasked course for the day and
+from there finding out how far a pilot flew and how much ahead of other pilots
+were they during the race.
+
+A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the
+WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for
+scoring. Given two points, we need to find out the distance between them but
+this will differ slightly depending on the model of the Earth and how we solve
+for distance. Working out this distance and azimuth is solving for the inverse
+problem of geodetics.
+
+For the sphere we'd likely calculate distance using haversines formula and for
+the ellipsoid we might use Vincenty's formula or other faster but less accurate
+solutions. Solutions for the ellipsoid are iterative and do not work near the
+poles, not that we fly competitions in those regions.  It is cold enough at
+cloudbase when scorching hot on the ground.
+
+Familiar Territory
+------------------
+
+FS_ is the official free flight competition scoring program of world governing
+body for air sports (the FAI - Fédération Aéronautique Internationale). It will
+be retired and succeeded by Airscore_ [#]_.  I've helped a little on both
+projects but have spent most of my energy on flare-timing_.
+
+FS is a C# winforms Windows-only desktop app and Airscore is a python flask web
+app.  Both roll some of their own geodetics code.  I did too in Haskell for
+flare-timing. Here I talk about my experience doing it again with Unison for no
+other reason than to learn a new language.
 
 Unison's Development Environment
 --------------------------------
@@ -284,7 +326,8 @@ I enjoyed trying out unison and contributing a package [#]_.
 
 .. _flare-timing: https://github.com/BlockScope/flare-timing#readme
 .. _meridian-arc: https://github.com/BlockScope/meridian-arc#readme
-.. _FAI-Airscore: https://github.com/FAI-CIVL/FAI-Airscore
+.. _FS: http://fs.fai.org
+.. _Airscore: https://github.com/FAI-CIVL/FAI-Airscore
 .. _haversine: https://github.com/mapado/haversine
 .. _geopy: https://geopy.readthedocs.io/
 .. _Andoyer: https://en.wikipedia.org/wiki/Marie_Henri_Andoyer
