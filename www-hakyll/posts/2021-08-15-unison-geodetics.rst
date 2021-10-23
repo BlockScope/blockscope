@@ -5,31 +5,31 @@ slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-Unison_ is interesting. I coded up solutions to the direct and indirect
-problems of geodesy with it. I got to know the language a bit, was able to
+Unison_ is interesting.  I coded up solutions to the direct and indirect
+problems of geodesy with it.  I got to know the language a bit, was able to
 contribute some `bug reports`_ and share my initial impressions of the
 developer experience.
 
 Geodesic Problems
 -----------------
 
-The Direct or Forward Problem
+1. The direct or forward problem:
 
   * ``x`` The departure point on the ellipsoid.
   * ``α₁`` The azimuth from the departure point.
   * ``s `` The distance to the arrival point.
 
-Given the above inputs, find:
+  Given the above inputs, find:
 
   * ``y`` The arrival point.
   * ``α₂`` The azimuth at the arrival point.
 
-The Indirect, Inverse or Reverse Problem
+2. The indirect, inverse or reverse problem:
 
   * ``x`` The departure point.
   * ``y`` The arrival point.
 
-Given the above inputs, find:
+  Given the above inputs, find:
 
   * ``s`` The distance between departure and arrival points.
   * ``α₁`` The azimuth at the departure point.
@@ -37,56 +37,45 @@ Given the above inputs, find:
 
 I've been working on a reference implementation for scoring free flight
 competitions. For this I need to be able to find the distance between two
-points on the Earth.
+points on the Earth, the ``s`` of the indirect solution.
 
 Flying Geodesics
 ----------------
 
 Pilots flying cross country competitions in hang gliders or paragliders carry
-flight computers with sensors for position and air pressure. The beeps of
-varios (variometers_) vary in tone, rapidity and volume as we climb or sink.
-Sound really is the best way of taking in this information as the pilot is
-often too busy in active air to be glancing at or tapping the vario's screen.
-It is great to be climbing but worrying to be sinking and the tones emitted by
-the vario match those moods.
-
-The scorer's job is to collect and push all the tracks of position logged by
-the varios through a scoring program.
+flight computers with sensors for position and air pressure. The vario_ beeps
+vary in tone, rapidity and volume as we climb or sink.  Sound really is the
+best way of taking in this information as the pilot is often too busy in active
+air to be glancing at or tapping a smallish screen.  It is great to be climbing
+but worrying to be sinking and tones emitted by the vario match those moods.
 
 Except for respecting airspace, height is pretty much ignored when scoring. It
-is used for stopped tasks to fairly reward some pilots for being higher than
-others as recognition of their well-earned potential energy, that would have
-been converted to distance if time had allowed for the glide. Scoring is not
-simple but boils down to initially finding out when and where each pilot
-crossed the start, turnpoints and goal of the tasked course for the day and
-from there finding out how far a pilot flew and how much ahead of other pilots
-were they during the race.
+is however used for stopped tasks to fairly reward pilots for being higher than
+others. A pilot that could have converted height to distance if time had
+allowed for the glide will get a bonus distance.  Scoring is not simple but
+boils down to initially finding out when and where each pilot crossed the
+start, turnpoint cylinders and goal of the tasked course for the day and from
+there finding out how far a pilot flew and how much ahead of other pilots were
+they during the race.
 
 A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the
 WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for
-scoring. Given two points, we need to find out the distance between them but
-this will differ slightly depending on the model of the Earth and how we solve
-for distance. Working out this distance and azimuth is solving for the inverse
-problem of geodetics.
-
-For the sphere we'd likely calculate distance using haversines formula and for
-the ellipsoid we might use Vincenty's formula or other faster but less accurate
-solutions. Solutions for the ellipsoid are iterative and do not work near the
-poles, not that we fly competitions in those regions.  It is cold enough at
-cloudbase when scorching hot on the ground.
+scoring. For the sphere we'd likely calculate distance using haversines formula
+and for the ellipsoid we might use Vincenty's formula or other faster but less
+accurate solutions. Solutions for the ellipsoid are iterative and do not work
+near the poles, not that we fly competitions in those regions.  It is cold
+enough at cloudbase when scorching hot on the ground.
 
 Familiar Territory
 ------------------
 
-FS_ is the official free flight competition scoring program of world governing
-body for air sports (the FAI - Fédération Aéronautique Internationale). It will
-be retired and succeeded by Airscore_ [#]_.  I've helped a little on both
-projects but have spent most of my energy on flare-timing_.
-
-FS is a C# winforms Windows-only desktop app and Airscore is a python flask web
-app.  Both roll some of their own geodetics code.  I did too in Haskell for
-flare-timing. Here I talk about my experience doing it again with Unison for no
-other reason than to learn a new language.
+FS_ is the official free flight competition scoring program of the world
+governing body for air sports (the FAI - Fédération Aéronautique
+Internationale). It will likely be retired and succeeded by Airscore_ [#]_.
+I've helped a little on both projects but have spent most of my energy on
+flare-timing_. FS is a C# winforms Windows-only desktop app and Airscore is
+a python flask web app.  Both roll some of their own geodetics code and I have
+too, in Haskell for flare-timing and in F#.
 
 Unison's Development Environment
 --------------------------------
@@ -366,5 +355,5 @@ I enjoyed trying out unison and contributing a package [#]_.
 .. _InverseSolution: https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0
 .. _blockscope/flat-earth: https://github.com/BlockScope/flat-earth#readme
 .. _unison: https://www.unisonweb.org/
-.. _variometers: https://en.wikipedia.org/wiki/Variometer
+.. _vario: https://en.wikipedia.org/wiki/Variometer
 .. _bug reports: https://github.com/unisonweb/unison/issues/created_by/philderbeast
