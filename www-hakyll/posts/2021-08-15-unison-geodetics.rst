@@ -1,12 +1,17 @@
 ---
-title: Unison Geodetics
-subtitle: A developer experience report.
+title: What on Earth is Unison?
+subtitle: A developer experience report
 slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-Unison_ interests me. I have it a go solving the direct and indirect problems
-of geodesy.
+Unison_ is interesting. I coded up solutions to the direct and indirect
+problems of geodesy with it. I got to know the language a bit, was able to
+contribute some `bug reports`_ and share my initial impressions of the
+developer experience.
+
+Geodesic Problems
+-----------------
 
 The Direct or Forward Problem
 
@@ -30,15 +35,15 @@ Given the above inputs, find:
   * ``α₁`` The azimuth at the departure point.
   * ``α₂`` The azimuth at the arrival point.
 
-I've been working on a reference implementation for scoring for free flight
-competitions and for this I need to be able to find the distance between two
+I've been working on a reference implementation for scoring free flight
+competitions. For this I need to be able to find the distance between two
 points on the Earth.
 
 Flying Geodesics
 ----------------
 
-Pilots flying cross country competitions in hang gliders or paragliders all
-carry flight computers with sensors for position and air pressure. The beeps of
+Pilots flying cross country competitions in hang gliders or paragliders carry
+flight computers with sensors for position and air pressure. The beeps of
 varios (variometers_) vary in tone, rapidity and volume as we climb or sink.
 Sound really is the best way of taking in this information as the pilot is
 often too busy in active air to be glancing at or tapping the vario's screen.
@@ -362,3 +367,4 @@ I enjoyed trying out unison and contributing a package [#]_.
 .. _blockscope/flat-earth: https://github.com/BlockScope/flat-earth#readme
 .. _unison: https://www.unisonweb.org/
 .. _variometers: https://en.wikipedia.org/wiki/Variometer
+.. _bug reports: https://github.com/unisonweb/unison/issues/created_by/philderbeast
