@@ -21,7 +21,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   a prototype desktop app.
 </li>
 <li>
-  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2021/01`</span>
+  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
   [**Flare Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
   paragliding competitions; [typeset the
   rules](https://github.com/BlockScope/CIVL-GAP#readme) as LaTeX
@@ -122,8 +122,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <code>
                                                          <span class="cactus">CC</span>
                                            <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
-                              <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>                <span class="bracco">B</span>
-    <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFFF</span>
+                              <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
+    <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span>
  <span class="date">~~~|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+~~~</span>
  <span class="date">  1995           2000           2005           2010           2015           2020</span>
 </code>
