@@ -10,7 +10,18 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <h2 class="work-section">&lt;F#, Elm, Haskell &amp; SQL&gt;</h2>
 <ul>
 <li>
-  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—202~/~~`</span>
+  <span class="cit">`C` `$` ▩ </span><span class="date">`2021/06—2021/10`</span>
+  [**Compositional**](http://www.compositional-it.co.uk) ☞ External review of SAFE
+  Stack training material; slides, demos and labs.</li>
+<li>
+  <span class="bracco">`B` `$` ▩ </span><span class="date">`2021/02—2021/03`</span>
+  [**Bracco**](http://www.bracco.com) ☞ For interpreting dicom images from
+  [contrast enhanced
+  ultrasound](https://www.contrastultrasound-modality.com/index.php); develop
+  a prototype desktop app.
+</li>
+<li>
+  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2021/01`</span>
   [**Flare Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
   paragliding competitions; [typeset the
   rules](https://github.com/BlockScope/CIVL-GAP#readme) as LaTeX
@@ -20,13 +31,6 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   web visualizations of workings, results and discrepencies across
   implementations • find, raise and fix bugs in the official implementation,
   [FS](http://fs.fai.org/) • rescore and publish competitions.
-</li>
-<li>
-  <span class="bracco">`B` `$` ▩ </span><span class="date">`2020/02—2020/03`</span>
-  [**Bracco**](http://www.bracco.com) ☞ For interpreting dicom images from
-  [contrast enhanced
-  ultrasound](https://www.contrastultrasound-modality.com/index.php); develop
-  a prototype desktop app.
 </li>
 <li>
   <span class="aqualinc">`A` `$` ▩ </span><span class="date">`2014/02—2017/04`</span>

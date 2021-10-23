@@ -110,17 +110,20 @@ blockquote footer:before
 
 $date: #808080;
 
-// NOTE: First group of 4.
-// SEE: https://colorbrewer2.org/#type=qualitative&scheme=Set1&n=6
-$bracco: #a6cee3;
-$flaretiming: #1f78b4;
-$aqualinc: #b2df8a;
-$tagly: #33a02c;
-$apress: #fb9a99;
-$travieo: #e31a1c;
+// NOTE: First group of 7.
+// SEE: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
+// ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f']
+$cit: #a6cee3;
+$bracco: #1f78b4;
+$flaretiming: #b2df8a;
+$aqualinc: #33a02c;
+$tagly: #fb9a99;
+$apress: #e31a1c;
+$travieo: #fdbf6f;
 
-// NOTE: Second group of 6.
+// NOTE: Second group of 5.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=5
+// ['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61e']
 $cactus: #1b9e77;
 $croplogic: #7570b3;
 $waimak: #e7298a;
@@ -129,6 +132,7 @@ $niwa: #e6ab02;
 
 // NOTE: Third group of 4.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Set2&n=4
+// ['#66c2a5','#fc8d62','#8da0cb','#e78ac3']
 $obvious: #66c2a5;
 $aspelle: #fc8d62;
 $sml: #8da0cb;
@@ -143,13 +147,17 @@ $skype: #00aff0;
 .date > code
     color: $date;
 
-.bracco,
-.bracco > code
-    color: $bracco;
-
 .flaretiming,
 .flaretiming > code
     color: $flaretiming;
+
+.cit,
+.cit > code
+    color: $cit;
+
+.bracco,
+.bracco > code
+    color: $bracco;
 
 .aqualinc,
 .aqualinc > code
