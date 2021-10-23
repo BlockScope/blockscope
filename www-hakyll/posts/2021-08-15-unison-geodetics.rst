@@ -5,20 +5,45 @@ slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-After seeing a few talks about Unison I dug in and gave it a go. I've been
-working on a reference implementation for scoring for free flight competitions.
-Intrinsic to this is geodesics. We fly over the Earth after all.
+Unison interests me. I gave it a go solving the direct and indirect problems of
+geodesy.
+
+The Direct or Forward Problem
+
+  * ``x`` The departure point on the ellipsoid.
+  * ``α₁`` The azimuth from the departure point.
+  * ``s `` The distance to the arrival point.
+
+Given the above inputs, find:
+
+  * ``y`` The arrival point.
+  * ``α₂`` The azimuth at the arrival point.
+
+The Indirect, Inverse or Reverse Problem
+
+  * ``x`` The departure point.
+  * ``y`` The arrival point.
+
+Given the above inputs, find:
+
+  * ``s`` The distance between departure and arrival points.
+  * ``α₁`` The azimuth at the departure point.
+  * ``α₂`` The azimuth at the arrival point.
+
+I've been working on a reference implementation for scoring for free flight
+competitions and for this I need to be able to find the distance between two
+points on the Earth.
 
 Flying Geodesics
 ----------------
 
-Pilots that fly hang gliding and paragliding competitions all carry instruments
-that log their position. These variometers or varios beep varying tones to let
-the pilot know whether they're going up or down, whether they're climbing or
-sinking. Sound really is the best way of taking in this information as the
-pilot is often too busy in active air to be glancing at or tapping the vario's
-screen. It is great to be climbing but worrying to be sinking and the tones
-emitted by the vario match those moods.
+Pilots flying cross country competitions in hang gliders or paragliders all
+carry instruments that log position. These variometers or varios beep varying
+tones to let the pilot know whether they're going up or down, whether they're
+climbing or sinking. Sound really is the best way of taking in this information
+as the pilot is often too busy in active air to be glancing at or tapping the
+vario's screen. It is great to be climbing but worrying to be sinking and the
+tones emitted by the vario match those moods.
 
 The scorer's job is to collect and push all the tracks logged by the varios
 through a scoring program.
