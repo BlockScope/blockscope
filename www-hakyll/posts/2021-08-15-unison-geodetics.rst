@@ -5,8 +5,8 @@ slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-Unison interests me. I gave it a go solving the direct and indirect problems of
-geodesy.
+Unison_ interests me. I have it a go solving the direct and indirect problems
+of geodesy.
 
 The Direct or Forward Problem
 
@@ -38,15 +38,15 @@ Flying Geodesics
 ----------------
 
 Pilots flying cross country competitions in hang gliders or paragliders all
-carry instruments that log position. These variometers or varios beep varying
-tones to let the pilot know whether they're going up or down, whether they're
-climbing or sinking. Sound really is the best way of taking in this information
-as the pilot is often too busy in active air to be glancing at or tapping the
-vario's screen. It is great to be climbing but worrying to be sinking and the
-tones emitted by the vario match those moods.
+carry flight computers with sensors for position and air pressure. The beeps of
+varios (variometers_) vary in tone, rapidity and volume as we climb or sink.
+Sound really is the best way of taking in this information as the pilot is
+often too busy in active air to be glancing at or tapping the vario's screen.
+It is great to be climbing but worrying to be sinking and the tones emitted by
+the vario match those moods.
 
-The scorer's job is to collect and push all the tracks logged by the varios
-through a scoring program.
+The scorer's job is to collect and push all the tracks of position logged by
+the varios through a scoring program.
 
 Except for respecting airspace, height is pretty much ignored when scoring. It
 is used for stopped tasks to fairly reward some pilots for being higher than
@@ -361,3 +361,4 @@ I enjoyed trying out unison and contributing a package [#]_.
 .. _InverseSolution: https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0
 .. _blockscope/flat-earth: https://github.com/BlockScope/flat-earth#readme
 .. _unison: https://www.unisonweb.org/
+.. _variometers: https://en.wikipedia.org/wiki/Variometer
