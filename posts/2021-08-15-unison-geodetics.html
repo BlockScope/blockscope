@@ -22,7 +22,7 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>Unison Geodetics</title>
+        <title>What on Earth is Unison?</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
@@ -81,9 +81,9 @@
             </td>
             <td>
                 <div>
-                    <h1 class="display-4">Unison Geodetics</h1>
+                    <h1 class="display-4">What on Earth is Unison?</h1>
                     
-                    <p class="lead">A developer experience report.</p>
+                    <p class="lead">A developer experience report</p>
                     
                 </div>
             </td>
@@ -100,8 +100,45 @@
             <br />
         </div>
     
-    <p>Before scoring can start for a flying competition we need to establish some ground rules like what model of the Earth to use, the FAI sphere or the WGS84 ellipsoid? Once that’s decided we can work out the shortest distance around the turnpoint cylinders of the task and distance along the course for each fix of each pilot’s track log.</p>
-<p>The FAI’s official scoring program FS rolls its own geodetics code in C# as does its nominated succesor, <a href="https://github.com/FAI-CIVL/FAI-Airscore">FAI-Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. I’ve written geodetic packages in Haskell and F#, <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a> and <a href="https://github.com/BlockScope/meridian-arc#readme">meridian-arc</a>. What better way to get to try <a href="https://www.unisonweb.org/">unison</a> than have a go at contributing a geodetics package.</p>
+    <p><a href="https://www.unisonweb.org/">Unison</a> is interesting. I coded up solutions to the direct and indirect problems of geodesy with it. I got to know the language a bit, was able to contribute some <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">bug reports</a> and share my initial impressions of the developer experience.</p>
+<h1 id="geodesic-problems">Geodesic Problems</h1>
+<ol type="1">
+<li>The direct or forward problem:</li>
+</ol>
+<blockquote>
+<ul>
+<li><code>x</code> The departure point on the ellipsoid.</li>
+<li><code>α₁</code> The azimuth from the departure point.</li>
+<li><code>s</code> The distance to the arrival point.</li>
+</ul>
+<p>Given the above inputs, find:</p>
+<ul>
+<li><code>y</code> The arrival point.</li>
+<li><code>α₂</code> The azimuth at the arrival point.</li>
+</ul>
+</blockquote>
+<ol start="2" type="1">
+<li>The indirect, inverse or reverse problem:</li>
+</ol>
+<blockquote>
+<ul>
+<li><code>x</code> The departure point.</li>
+<li><code>y</code> The arrival point.</li>
+</ul>
+<p>Given the above inputs, find:</p>
+<ul>
+<li><code>s</code> The distance between departure and arrival points.</li>
+<li><code>α₁</code> The azimuth at the departure point.</li>
+<li><code>α₂</code> The azimuth at the arrival point.</li>
+</ul>
+</blockquote>
+<p>I’ve been working on a reference implementation for scoring free flight competitions. For this I need to be able to find the distance between two points on the Earth, the <code>s</code> of the indirect solution.</p>
+<h1 id="flying-geodesics">Flying Geodesics</h1>
+<p>Pilots flying cross country competitions in hang gliders or paragliders carry flight computers with sensors for position and air pressure. The <a href="https://en.wikipedia.org/wiki/Variometer">vario</a> beeps vary in tone, rapidity and volume as we climb or sink. Sound really is the best way of taking in this information as the pilot is often too busy in active air to be glancing at or tapping a smallish screen. It is great to be climbing but worrying to be sinking and tones emitted by the vario match those moods.</p>
+<p>Except for respecting airspace, height is pretty much ignored when scoring. It is however used for stopped tasks to fairly reward pilots for being higher than others. A pilot that could have converted height to distance if time had allowed for the glide will get a bonus distance. Scoring is not simple but boils down to initially finding out when and where each pilot crossed the start, turnpoint cylinders and goal of the tasked course for the day and from there finding out how far a pilot flew and how much ahead of other pilots were they during the race.</p>
+<p>A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for scoring. For the sphere we’d likely calculate distance using haversines formula and for the ellipsoid we might use Vincenty’s formula or other faster but less accurate solutions. Solutions for the ellipsoid are iterative and do not work near the poles, not that we fly competitions in those regions. It is cold enough at cloudbase when scorching hot on the ground.</p>
+<h1 id="familiar-territory">Familiar Territory</h1>
+<p><a href="http://fs.fai.org">FS</a> is the official free flight competition scoring program of the world governing body for air sports (the FAI - Fédération Aéronautique Internationale). It will likely be retired and succeeded by <a href="https://github.com/FAI-CIVL/FAI-Airscore">Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. I’ve helped a little on both projects but have spent most of my energy on <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>. FS is a C# winforms Windows-only desktop app and Airscore is a python flask web app. Both roll some of their own geodetics code and I have too, in Haskell for flare-timing and in F#.</p>
 <h1 id="unisons-development-environment">Unison’s Development Environment</h1>
 <p>The development environment is special. The code is stored in a database, parsed as an abstract syntax tree with nodes identified by hash and metadata attaching names to those hashes. What this means in practice is that neither you developing your code or someone browsing your repo will see anything that looks like code.</p>
 <p>In practice this is no big problem. There are ways to discover and browse the code. I’m used to working in a REPL with little more than syntax highlighting as a language specific aid in the editor. Unison’s code base manager watches for changes in a scratch file I’m editing and on start up provides a link where the code base can be browsed.</p>
