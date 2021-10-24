@@ -11966,17 +11966,21 @@ blockquote footer:before {
 .date > code {
   color: #808080; }
 
-.bracco,
-.bracco > code {
-  color: #a6cee3; }
-
 .flaretiming,
 .flaretiming > code {
+  color: #b2df8a; }
+
+.cit,
+.cit > code {
+  color: #a6cee3; }
+
+.bracco,
+.bracco > code {
   color: #1f78b4; }
 
 .aqualinc,
 .aqualinc > code {
-  color: #b2df8a; }
+  color: #33a02c; }
 
 .cactus,
 .cactus > code {
@@ -11984,15 +11988,15 @@ blockquote footer:before {
 
 .tagly,
 .tagly > code {
-  color: #33a02c; }
+  color: #fb9a99; }
 
 .apress,
 .apress > code {
-  color: #fb9a99; }
+  color: #e31a1c; }
 
 .travieo,
 .travieo > code {
-  color: #e31a1c; }
+  color: #fdbf6f; }
 
 .croplogic,
 .croplogic > code {
