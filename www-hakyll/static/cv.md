@@ -11,8 +11,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 <li>
   <span class="cit">`C` `$` ▩ </span><span class="date">`2021/06—2021/10`</span>
-  [**Compositional**](http://www.compositional-it.co.uk) ☞ External review of SAFE
-  Stack training material; slides, demos and labs.</li>
+  [**Compositional**](http://www.compositional-it.com) ☞ Review of [SAFE
+  Stack](https://safe-stack.github.io/) training material; slides, demos and labs.</li>
 <li>
   <span class="bracco">`B` `$` ▩ </span><span class="date">`2021/02—2021/03`</span>
   [**Bracco**](http://www.bracco.com) ☞ For interpreting dicom images from
