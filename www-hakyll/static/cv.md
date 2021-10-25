@@ -113,8 +113,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="trimble">`T` `$` ▩ </span><span class="date">`1995/02—1999/01`</span>
-  [**Trimble**](http://www.trimble.com) ☞ Maintain the inhouse computer
-  graphics library, improving clipping and multithreading.  </div>
+  [**Trimble**](http://www.trimble.com) ☞ Maintain computer graphics, improving
+  clipping and multithreading.  </div>
 </li>
 <ul>
 <pre>
