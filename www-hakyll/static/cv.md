@@ -63,8 +63,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 <li>
   <span class="cactus">`C` `#` ▩ </span><span class="date">`2012/08—2013/02`</span>
-  [**Cactus** Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope and prototype
-  upgrades to a production planning system for factory operations.
+  [**Cactus** Outdoor](https://www.cactusoutdoor.co.nz/) ☞ Scope upgrading
+  a production planning system for factory operations.
 </li>
 <li>
   <span class="croplogic">`L` `$` ▩ </span><span class="date">`2008/01—2011/08`</span>
