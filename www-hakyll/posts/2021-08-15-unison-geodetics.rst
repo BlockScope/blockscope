@@ -5,10 +5,11 @@ slug: Scratching the Earth's surface with unison.
 tags: unison, build
 ---
 
-Unison_ is interesting.  I coded up solutions to the direct and indirect
-problems of geodesy with it.  I got to know the language a bit, was able to
-contribute some `bug reports`_ and share my initial impressions of the
-developer experience.
+Unison_ is interesting.  I got to know the language a bit coding up solutions
+to the direct and indirect problems of geodesy with it. It is a new language so
+small annoyances and problems are expected but none of the `bug reports`_
+I made were show stoppers. Here I share my initial impressions of the developer
+experience.
 
 Geodesic Problems
 -----------------
