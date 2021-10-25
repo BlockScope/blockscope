@@ -77,8 +77,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="waimak">`D` `#` ▩ </span><span class="date">`2007/12—2011/04`</span>
-  [**Waimakariri District Council**](http://www.waimakariri.govt.nz) ☞ Develop
-  a website logging public submissions and scheduling hearing time slots.
+  [**WDC**](http://www.waimakariri.govt.nz) ☞ Develop a website logging public
+  submissions and scheduling hearing time slots.
 </li>
 <li>
   <span class="nutricentre">`N` `$` ▩ </span><span class="date">`2003/07—2008/05`</span>
