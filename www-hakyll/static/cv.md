@@ -15,10 +15,9 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   Stack](https://safe-stack.github.io/) training material; slides, demos and labs.</li>
 <li>
   <span class="bracco">`B` `$` ▩ </span><span class="date">`2021/02—2021/03`</span>
-  [**Bracco**](http://www.bracco.com) ☞ For interpreting dicom images from
-  [contrast enhanced
-  ultrasound](https://www.contrastultrasound-modality.com/index.php); develop
-  a prototype desktop app.
+  [**Bracco**](http://www.bracco.com) ☞ Develop a prototype for interpreting
+  [contrast-enhanced
+  ultrasound](https://www.contrastultrasound-modality.com/index.php).
 </li>
 <li>
   <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
@@ -49,7 +48,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="apress">`P` `#` ▩ </span><span class="date">`2012/06—2015/11`</span>
-  [**Apress**](https://www.apress.com) ☞ Technical review of Expert F#,
+  [**Apress**](https://www.apress.com) ☞ Technical review of Expert F# books,
   editions [3](https://www.apress.com/us/book/9781430246503) and
   [4](https://www.apress.com/us/book/9781484207413).
 </li>
