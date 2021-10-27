@@ -101,6 +101,11 @@ how to build Haskell fast with Google Bazel and rules_haskell.
 * `commercialhaskell`[**/stack**](https://docs.haskellstack.org)  
 [Document](https://github.com/commercialhaskell/stack/pull/4392/files) how to
 suppress the ``-nopie`` warnings on macOS.
+* `haskell`[**/cabal**](https://github.com/haskell/cabal)  
+Raised
+[issues](https://github.com/haskell/cabal/issues?q=is%3Aissue+author%3Aphilderbeast)
+and supplied [documentation](https://github.com/haskell/cabal/pull/7000) for
+`cabal install all:exes`.
 * `nmattia`[**/snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
 An incremental build tool for Haskell projects.
 
