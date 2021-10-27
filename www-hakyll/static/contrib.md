@@ -18,6 +18,30 @@ After seeing a presentation on this compiler plugin at the Haskell symposium
 I [fixed](https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast)
 some build warnings and got it compiling with ghc-8.6.1.
 
+#### Compilers
+I've coded up solutions to the direct and indirect problems of geodetics in
+Haskell, F#, Unison and Koka and in so doing have been able to find problems
+with some of these compilers.
+
+* `koka-lang`[**/koka**](http://koka-lang.org/)  
+Found
+[issues](https://github.com/koka-lang/koka/issues/created_by/philderbeast)
+compiling
+`flight-earth`[**/coriolis-effect**](https://github.com/flight-earth/coriolis-effect).
+* `unisonweb`[**/unison**](https://www.unisonweb.org/)  
+Found
+[issues](https://github.com/unisonweb/unison/issues/created_by/philderbeast)
+compiling
+`flat-earth`[**/flat-earth**](https://github.com/flight-earth/flat-earth).
+* `ghc`[**/ghc**](https://www.haskell.org/ghc/)  
+For the newcomer labelled bug
+[12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
+pretty printing [explicit
+quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d).
+I've reported some
+[issues](https://gitlab.haskell.org/ghc/ghc/-/issues?scope=all&state=all&author_username=philderbeast)
+in ghc.
+
 #### Build Tools
 * `BlockScope`[**/hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
 I started contributing and ended up
@@ -53,13 +77,6 @@ stale links to `all-cabal-hashes` and `lts-haskell`.
 * `input-output-hk`[**/stack2nix**](https://github.com/input-output-hk/stack2nix)  
 [Parse](https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55)
 the mac operating system as `osx` or `darwin`.
-
-#### Compilers
-* `ghc`[**/ghc**](https://www.haskell.org/ghc/)  
-For the newcomer labelled bug
-[12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), I provided a fix for
-pretty printing [explicit
-quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d).
 
 #### Backend
 * `fsprojects`[**/FSharp.Linq.ComposableQuery**](http://fsprojects.github.io/FSharp.Linq.ComposableQuery/)  
