@@ -11,35 +11,32 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 <li>
   <span class="cit">`C` `$` ▩ </span><span class="date">`2021/06—2021/10`</span>
-  [**Compositional**](http://www.compositional-it.com) ☞ Review of [SAFE
-  Stack](https://safe-stack.github.io/) training material; slides, demos and labs.</li>
+  [**Compositional**](http://www.compositional-it.com) ☞ Review slides, demos
+  and labs of [SAFE Stack](https://safe-stack.github.io/) training.
+</li>
 <li>
   <span class="bracco">`B` `$` ▩ </span><span class="date">`2021/02—2021/03`</span>
-  [**Bracco**](http://www.bracco.com) ☞ Develop a prototype for interpreting
+  [**Bracco**](http://www.bracco.com) ☞ Prototype an app for interpreting
   [contrast-enhanced
   ultrasound](https://www.contrastultrasound-modality.com/index.php).
 </li>
 <li>
   <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
-  [**Flare Timing**](http://www.flaretiming.com) ☞ For scoring hang gliding and
-  paragliding competitions; [typeset the
-  rules](https://github.com/BlockScope/CIVL-GAP#readme) as LaTeX
-  • [question](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
-  some rules • develop a command line [reference
-  implementation](https://github.com/BlockScope/flare-timing#readme) • develop
-  web visualizations of workings, results and discrepencies across
-  implementations • find, raise and fix bugs in the official implementation,
-  [FS](http://fs.fai.org/) • rescore and publish competitions.
+  [**Flare Timing**](http://www.flaretiming.com) scoring flying competitions
+  ☞ Ask [how](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
+  some [rules](https://github.com/BlockScope/CIVL-GAP#readme) typesetting them
+  in LaTeX.  Develop
+  a [reference](https://github.com/BlockScope/flare-timing#readme)
+  implementation.  Publish comparisons of implementations.
 </li>
 <li>
   <span class="aqualinc">`A` `$` ▩ </span><span class="date">`2014/02—2017/04`</span>
-  [**Aqualinc Research**](http://www.aqualinc.co.nz) ☞ For monitoring breaches of regulated
-  levels of water take and pollutant discharge; design a relational database
-  schema • unmunge munged data, develop system services to pull and cache
-  metadata from [**Hilltop**](http://www.hilltop.co.nz/) web services • expose
-  web services over the top of the relational and time series data • develop
-  separate web frontends for administrators and farmers • generate annual
-  reports by pulling data from web services and typeset with LaTeX.
+  [**Aqualinc Research**](http://www.aqualinc.co.nz) monitoring breaches of
+  regulated levels of water take and pollutant discharge ☞ Design a database
+  schema, unmunging and migrating data. Pull and cache metadata from
+  [**Hilltop**](http://www.hilltop.co.nz/). Expose web services over relational
+  and time series data. Develop web apps for admins and farmers.  Pull data and
+  emit LaTeX to typeset PDF reports.
 </li>
 <li>
   <span class="tagly">`G` `$` ▩ </span><span class="date">`2012/07—2012/12`</span>
@@ -48,7 +45,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="apress">`P` `#` ▩ </span><span class="date">`2012/06—2015/11`</span>
-  [**Apress**](https://www.apress.com) ☞ Technical review of Expert F# books,
+  [**Apress**](https://www.apress.com) Expert F# books ☞ Technical review of
   editions [3](https://www.apress.com/us/book/9781430246503) and
   [4](https://www.apress.com/us/book/9781484207413).
 </li>
@@ -68,12 +65,10 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="croplogic">`L` `$` ▩ </span><span class="date">`2008/01—2011/08`</span>
-  *CropLogic* ☞ For more potato yield with less water and fertilizer input and
-  less pollutant runoff; port, tune and test a discrete event simulation crop
-  model with scientists • pull in field data and external weather data from
-  numerous and disparate sources • develop a website for growers to setup their
-  crops to enter their irrigation and fertilizer applications and to view the
-  model recommended future inputs and expected yields.
+  *CropLogic* ☞ Port, tune and test a discrete event simulation crop model with
+  scientists. Ingest field and weather data.  Develop a website for growers to
+  setup their soil proﬁle, cultivar, irrigation and fertilizer applications,
+  recommend inputs and predict yields from async model runs.
 </li>
 <li>
   <span class="waimak">`D` `#` ▩ </span><span class="date">`2007/12—2011/04`</span>
@@ -87,9 +82,8 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 </li>
 <li>
   <span class="niwa">`W` `#` ▩ </span><span class="date">`2003/06—2007/07`</span>
-  [**NIWA**](http://www.niwa.co.nz) ☞ Develop tools and the
-  [EDENZ](http://edenz.niwa.co.nz) website for publishing environmental time
-  series data.
+  [**NIWA**](http://www.niwa.co.nz) ☞ Develop [EDENZ](http://edenz.niwa.co.nz),
+  a website for publishing environmental time series data.
 </li>
 </ul>
 </div>
