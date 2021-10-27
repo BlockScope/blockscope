@@ -11,7 +11,9 @@ measure and functional programming.
 [Bump](https://github.com/adamgundry/units-parser/commit/9db2652bfbeea5d69f590ce15c171d7b9801bb60)
 expected test output for later ghc versions.
 * `adamgundry`[**/uom-plugin**](http://hackage.haskell.org/package/uom-plugin)  
-A compiler plugin for units of measure.
+A compiler plugin for units of measure that
+I [contribute](https://github.com/adamgundry/uom-plugin/graphs/contributors)
+to and use in flare-timing.
 * `bgamari`[**/the-thoralf-plugin**](https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf)  
 After seeing a presentation on this compiler plugin at the Haskell symposium
 2018,
@@ -40,12 +42,12 @@ some build warnings and got it compiling with ghc-8.6.1.
     in `m` from velocity in `m/s` and time in `s`. The `uom-plugin` has a large
     number of unit tests.
 
-    <h5>**Goals**</h5>
+    <h5>*Goals*</h5>
     * Use the unit quasiquoter with the `thoralf-plugin` and get it to pass all of
       the units tests of the `uom-plugin`.
     * Identify, refactor and extract commonality in both unit plugins.
 
-    <h5 style="margin-top: 1em">**Progress**</h5>
+    <h5 style="margin-top: 1em">*Progress*</h5>
     * Added `ghc-corroborate`, a new package exposing a flattened subset of GHC's
       API needed for typechecking plugins as a single API across multiple GHC
       versions. It uses cabal conditionals and mixins and avoids use of the `CPP`
