@@ -43,9 +43,9 @@ I've reported some
 in ghc.
 
 #### Build Tools
-* `BlockScope`[**/hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
+* `cabalism`[**/hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
 I started contributing and ended up
-[owner and maintainer](https://github.com/BlockScope/hpack-dhall/issues/3) of
+[owner and maintainer](https://github.com/cabalism/hpack-dhall/issues/3) of
 this way to setup Haskell projects.
 * `judah`[**/pier**](https://github.com/judah/pier)  
 I added [test-suite](https://github.com/judah/pier/issues/50) running to this
