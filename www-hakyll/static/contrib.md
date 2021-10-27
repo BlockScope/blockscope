@@ -104,7 +104,7 @@ suppress the ``-nopie`` warnings on macOS.
 * `haskell`[**/cabal**](https://github.com/haskell/cabal)  
 Raised
 [issues](https://github.com/haskell/cabal/issues?q=is%3Aissue+author%3Aphilderbeast)
-and supplied [documentation](https://github.com/haskell/cabal/pull/7000) for
+and supplied [documentation](https://github.com/haskell/cabal/pull/7000/files) for
 `cabal install all:exes`.
 * `nmattia`[**/snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
 An incremental build tool for Haskell projects.
