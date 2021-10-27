@@ -92,17 +92,53 @@
     <p>I donate time to open source and am setup to <a href="https://github.com/sponsors/philderbeast">receive donations</a>. I’m pushing for units of measure and functional programming.</p>
 <h4 id="units-of-measure">Units of Measure</h4>
 <ul>
-<li><code>adamgundry</code><a href="https://github.com/adamgundry/units-parser"><strong>/units-parser</strong></a><br />
-<a href="https://github.com/adamgundry/units-parser/commit/9db2652bfbeea5d69f590ce15c171d7b9801bb60">Bump</a> expected test output for later ghc versions.</li>
-<li><code>adamgundry</code><a href="http://hackage.haskell.org/package/uom-plugin"><strong>/uom-plugin</strong></a><br />
-A compiler plugin for units of measure.</li>
-<li><code>bgamari</code><a href="https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf"><strong>/the-thoralf-plugin</strong></a><br />
-After seeing a presentation on this compiler plugin at the Haskell symposium 2018, I <a href="https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast">fixed</a> some build warnings and got it compiling with ghc-8.6.1.</li>
+<li><p><code>adamgundry</code><a href="https://github.com/adamgundry/units-parser"><strong>/units-parser</strong></a><br />
+<a href="https://github.com/adamgundry/units-parser/commit/9db2652bfbeea5d69f590ce15c171d7b9801bb60">Bump</a> expected test output for later ghc versions.</p></li>
+<li><p><code>adamgundry</code><a href="http://hackage.haskell.org/package/uom-plugin"><strong>/uom-plugin</strong></a><br />
+A compiler plugin for units of measure that I <a href="https://github.com/adamgundry/uom-plugin/graphs/contributors">contribute</a> to and use in flare-timing.</p></li>
+<li><p><code>bgamari</code><a href="https://cs.brynmawr.edu/~rae/papers/2018/thoralf/thoralf.pdf"><strong>/the-thoralf-plugin</strong></a><br />
+After seeing a presentation on this compiler plugin at the Haskell symposium 2018, I <a href="https://github.com/bgamari/the-thoralf-plugin/commits?author=philderbeast">fixed</a> some build warnings and got it compiling with ghc-8.6.1.</p></li>
+<li><p><code>BlockScope</code><a href="https://github.com/BlockScope/plugins-for-blobs"><strong>/plugins-for-blobs</strong></a></p>
+<blockquote>
+<p>1 blob is equal to 1 lbf⋅s2/in, or 12 <a href="https://en.wikipedia.org/wiki/Slug_(unit)">slugs</a>.</p>
+</blockquote>
+<p>This is an attempt to refactor the <a href="https://github.com/bgamari/the-thoralf-plugin">thoralf-plugin</a> and the <a href="https://github.com/adamgundry/uom-plugin">uom-plugin</a>. Under the hood, the <code>thoralf-plugin</code> uses Z3 to solve equational theories. The <code>uom-plugin</code> solves trivial equations, rewrites and simplifies constraints and makes substitutions.</p>
+<p>The <code>uom-plugin</code> depends on <a href="https://github.com/BlockScope/ghc-tcplugins-extra">ghc-tcplugins-extra</a> and <a href="https://github.com/adamgundry/units-parser">units-parser</a>. It defines a quasiquoter for writing units with measures, such as <code>[u| 9.8 m/s^2 |]</code>.</p>
+<p>The <code>thoralf-plugin</code> ships with one small units example, calculating distance in <code>m</code> from velocity in <code>m/s</code> and time in <code>s</code>. The <code>uom-plugin</code> has a large number of unit tests.</p>
+<h5>
+<p><em>Goals</em></p>
+</h5>
+<ul>
+<li>Use the unit quasiquoter with the <code>thoralf-plugin</code> and get it to pass all of the units tests of the <code>uom-plugin</code>.</li>
+<li>Identify, refactor and extract commonality in both unit plugins.</li>
+</ul>
+<h5 style="margin-top: 1em">
+<p><em>Progress</em></p>
+</h5>
+<ul>
+<li>Added <code>ghc-corroborate</code>, a new package exposing a flattened subset of GHC’s API needed for typechecking plugins as a single API across multiple GHC versions. It uses cabal conditionals and mixins and avoids use of the <code>CPP</code> language extension and predefined macros for switching between GHC versions.</li>
+<li>Forked <code>ghc-tcplugins-extra</code> to use <code>ghc-corroborate</code> and to remove its use of <code>CPP</code>.</li>
+<li>Moved the tracing of the <code>thoralf-plugin</code> to <code>ghc-tcplugins-trace</code>.</li>
+<li>Moved the quasiquoter of the <code>uom-plugin</code> to <code>uom-th</code>.</li>
+<li>Moved the units of measure (UoM) theory from the <code>thoralf-plugin</code> and much of the <code>uom-plugin</code> internals to <code>uom-quantity</code>.</li>
+<li>Pulled unit definitions out of <code>uom-plugin</code> and put these into <code>uom-plugin-defs</code>.</li>
+<li>Rearranged the modules of each plugin for similarity between both.</li>
+</ul></li>
+</ul>
+<h4 id="compilers">Compilers</h4>
+<p>I’ve coded up solutions to the direct and indirect problems of geodetics in Haskell, F#, Unison and Koka and in so doing have been able to find problems with some of these compilers.</p>
+<ul>
+<li><code>koka-lang</code><a href="http://koka-lang.org/"><strong>/koka</strong></a><br />
+Found <a href="https://github.com/koka-lang/koka/issues/created_by/philderbeast">issues</a> compiling <code>flight-earth</code><a href="https://github.com/flight-earth/coriolis-effect"><strong>/coriolis-effect</strong></a>.</li>
+<li><code>unisonweb</code><a href="https://www.unisonweb.org/"><strong>/unison</strong></a><br />
+Found <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">issues</a> compiling <code>flat-earth</code><a href="https://github.com/flight-earth/flat-earth"><strong>/flat-earth</strong></a>.</li>
+<li><code>ghc</code><a href="https://www.haskell.org/ghc/"><strong>/ghc</strong></a><br />
+For the newcomer labelled bug <a href="https://gitlab.haskell.org/ghc/ghc/issues/12441">12441</a>, I provided a fix for pretty printing <a href="https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d">explicit quantifiers</a>. I’ve reported some <a href="https://gitlab.haskell.org/ghc/ghc/-/issues?scope=all&amp;state=all&amp;author_username=philderbeast">issues</a> in ghc.</li>
 </ul>
 <h4 id="build-tools">Build Tools</h4>
 <ul>
-<li><code>BlockScope</code><a href="http://hackage.haskell.org/package/hpack-dhall"><strong>/hpack-dhall</strong></a><br />
-I started contributing and ended up <a href="https://github.com/BlockScope/hpack-dhall/issues/3">owner and maintainer</a> of this way to setup Haskell projects.</li>
+<li><code>cabalism</code><a href="http://hackage.haskell.org/package/hpack-dhall"><strong>/hpack-dhall</strong></a><br />
+I started contributing and ended up <a href="https://github.com/cabalism/hpack-dhall/issues/3">owner and maintainer</a> of this way to setup Haskell projects.</li>
 <li><code>judah</code><a href="https://github.com/judah/pier"><strong>/pier</strong></a><br />
 I added <a href="https://github.com/judah/pier/issues/50">test-suite</a> running to this experimental way of building Haskell projects.</li>
 <li><code>tweag</code><a href="https://haskell.build/"><strong>/rules_haskell</strong></a><br />
@@ -122,11 +158,6 @@ I made a <a href="https://github.com/NixOS/cabal2nix/pull/375">pull request</a> 
 <a href="https://github.com/typeable/stackage2nix/commit/9bf94e1ded1d52feddbdbd560ecd4f9a70aa6c34">Redirect</a> stale links to <code>all-cabal-hashes</code> and <code>lts-haskell</code>.</li>
 <li><code>input-output-hk</code><a href="https://github.com/input-output-hk/stack2nix"><strong>/stack2nix</strong></a><br />
 <a href="https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55">Parse</a> the mac operating system as <code>osx</code> or <code>darwin</code>.</li>
-</ul>
-<h4 id="compilers">Compilers</h4>
-<ul>
-<li><code>ghc</code><a href="https://www.haskell.org/ghc/"><strong>/ghc</strong></a><br />
-For the newcomer labelled bug <a href="https://gitlab.haskell.org/ghc/ghc/issues/12441">12441</a>, I provided a fix for pretty printing <a href="https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d">explicit quantifiers</a>.</li>
 </ul>
 <h4 id="backend">Backend</h4>
 <ul>
