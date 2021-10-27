@@ -11947,6 +11947,7 @@ blockquote footer:before {
   border: inherit; }
 
 #side > .card-body {
+  padding-left: 0;
   padding-top: 0; }
 
 @media print {
