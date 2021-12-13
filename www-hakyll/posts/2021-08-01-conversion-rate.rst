@@ -97,6 +97,35 @@ consultant's shareholder salary be?
 So there you have it, the permanent employee gets effectively ``$185,000`` in
 salary and benefits whereas the contractor might get ``$75,000``.
 
+Update for 2021
+---------------
+
+To quote my insurance broker:
+
+  The world of insurance has been rocked since covid19 with skyrocketing premiums
+  in the areas of liability insurances.  For many of our clients we actually
+  cannot get professional indemnity cover at all, e.g. if they are in the
+  financial advice industry or are a manufacturer.  Particularly having cover
+  where claims can originate in the USA is the hardest of the lot.
+
+The cost of worldwide indemnity cover for any territory and jurisdiction has doubled to
+``$4,000/yr``, reducing shareholder salary.
+
+.. code-block:: diff
+
+    --- 2020
+    +++ 2021
+      84,800 - chargeable revenue for time on
+    - 10,000 - business expenses (office, hardware, utilities, insurances)
+    + 12,000 - business expenses (office, hardware, utilities, insurances)
+    --------
+    - 74,800 - shareholder salary (assuming no company profit)
+    + 72,800 - shareholder salary (assuming no company profit)
+
+Excluding USA/Canada from the territories and using New Zealand as jurisdiction
+can get indemnity cover for the rest of the world down to ``$1,200/yr``. A
+litigious society is way more costly.
+
 .. _true cost: https://www.toptal.com/freelance/don-t-be-fooled-the-real-cost-of-employees-and-consultants
 
 .. _city rates: https://www.indeed.com/career/software-engineer/salaries/New-York--NY
