@@ -11906,6 +11906,15 @@ article {
 .sourceCode, .pre {
   font-size: 0.9rem; }
 
+.sourceCode.diff {
+  font-size: 1.05rem; }
+
+.sourceCode.diff span.st {
+  color: #DC322F; }
+
+.sourceCode.diff span.va {
+  color: #2AA198; }
+
 .sourceCode.pre {
   color: #000;
   background-color: transparent; }
