@@ -274,8 +274,8 @@ An example of reacting to GHC's change to a deeper module hierarchy.
 Cabal Mixins
 ------------
 
-With mixins_ we can rename modules [#]_. I've done that to pick names I want to
-use that stay the same even when GHC moves things around.
+With mixins_ we can rename and alias module names [#]_. The ``hiding ()``
+exposes the current names and the ``as`` does the aliasing.
 
 .. code-block:: yaml
 
@@ -286,6 +286,50 @@ use that stay the same even when GHC moves things around.
 
 I could have avoided using mixins like this but it helped insulate me from GHC
 API changes.
+
+.. code-block:: haskell
+
+    module GhcApi.Constraint
+        ( Ct(..)
+        , CtEvidence(..)
+        , CtLoc
+        , ctLoc
+        , ctEvId
+        , mkNonCanonical
+        ) where
+
+    import Constraint (Ct (..), CtEvidence (..), CtLoc, ctLoc, ctEvId, mkNonCanonical)
+
+I can ``import Constraint`` when that module exists in GHC and when it doesn't
+exist.
+
+.. code-block:: pre
+
+    > cabal build all
+    Build profile: -w ghc-8.10.7 -O1
+    [1 of 8] Compiling GhcApi.Constraint
+    [2 of 8] Compiling GhcApi.GhcPlugins
+    [3 of 8] Compiling GhcApi.Predicate
+    [4 of 8] Compiling Internal.Constraint
+    [5 of 8] Compiling Internal.Evidence
+    [6 of 8] Compiling Internal.Type
+    [7 of 8] Compiling Internal
+    [8 of 8] Compiling GHC.TcPluginM.Extra
+
+Without the mixin renaming TcRnTypes to Constraint this module errors.
+
+.. code-block:: pre
+
+    > cabal build all
+    Build profile: -w ghc-8.8.4 -O1
+
+    src-ghc-flat/GhcApi/Constraint.hs:11:1: error:
+        Could not find module ‘Constraint’
+        Perhaps you meant Constants (from ghc-8.8.4)
+        Use -v (or `:set -v` in ghci) to see a list of the files searched for.
+       |
+    11 | import Constraint
+       | ^^^^^^^^^^^^^^^^^...
 
 Simpler with dhall
 ------------------
