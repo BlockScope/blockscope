@@ -306,8 +306,7 @@ as we don't need to touch them with CPP #ifdefs.
 
 .. [#] Except for ``ghc < 8.0`` where I have left the original CPP-heavy module alone untouched.
 .. [#] Mixins are a cabal 2.0 feature and requires ``impl(ghc >= 8.2)``. That's
-        true if I use stack but with cabal-install I can get ``impl(ghc >= 7.10.3) &&
-        impl(ghc < 8.0)`` to compile. Look at the GHC versions in the github
-        actions at ``.github/workflows/cabal.yml`` and ``.github/workflows/stack.yml``.
-        Cabal can do ``[ 7.10.3, 8.0.2, 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1, 9.2.1 ]``
-        but stack can only do ``[ 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1 ]``.
+    true if I use stack but with cabal-install I can get ``impl(ghc >= 7.10.3) &&
+    impl(ghc < 8.0)`` to compile. With the cabal github action in 
+    ``.github/workflows/cabal.yml`` cabal can build against GHC versions ``[ 7.10.3,
+    8.0.2, 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1, 9.2.1 ]``
