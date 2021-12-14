@@ -1,9 +1,8 @@
 ---
-title: <em>Iffy</em> Import Reduction 
+title: Conditional Coding.
 subtitle: >-
-    Use cabal conditionals and mixins and be able to do real file diffs.<br>
-    Who can read interleaved <em>iffy</em> code anyway?
-slug: Import reduction for type checker plugins.
+    Struggle to read C preprocessor interleaved <em>iffy</em> Haskell code?<br>
+    Forget <code>CPP</code>. With cabal conditionals, get to do clean file diffs again!
 tags: haskell, tcplugins
 ---
 
@@ -111,110 +110,186 @@ tags: haskell, tcplugins
     </pre>
     </div>
 
+I have a dependency on ghc-tcplugins-extra_. The panel on the right shows the
+#ifdefs of its one module, ``GHC.TcPluginM.Extra``. I'm happy with this
+package and don't help maintain it so why am I making a pull request that turns
+it inside out?
+
+CPP Hell, No!
+-------------
+
 I don't much like ``CPP`` and find nested conditional blocks hard to
-disentangle.
+disentangle. One or two is fine but when they're nested and the conditions range
+over many GHC versions I find it hard to take in the whole at a glance let alone
+see the difference between one GHC version and the next. What is more #ifdefs
+are noise in the source file.
 
-The uom-plugin_ type checker plugin for units of measure and has a dependency on
-ghc-tcplugins-extra_. The panel on the right shows the
-#ifdefs of its one module, ``GHC.TcPluginM.Extra``.
+We can can stop or reduce ``{-# LANGUAGE CPP #-}`` pragma use even when we need
+to switch code between GHC versions. I'll show you how using ghc-tcplugins-extra
+as an example.
 
-To get the uom-plugin compiling with later versions of GHC we moved GHC imports
-to one place, behind a ``GhcApi`` module hierarchy. Like ghc-tcplugins-extra,
-uom-plugin has a fair bit of CPP, at least where it interacts with GHC.
+One Internal Indirection
+------------------------
 
-.. code-block:: haskell
+I gut ``src/GHC.TcPluginM.Extra``[#]_ and defer to ``import Internal`` for the
+implementation.
 
-    {-# LANGUAGE CPP #-}
-    #if __GLASGOW_HASKELL__ > 710
-    {-# LANGUAGE PatternSynonyms #-}
-    #endif
+.. code-block:: haskell 
 
-    module GhcApi.Shim where
+    module GHC.TcPluginM.Extra
+        ( -- * Create new constraints
+        newWanted
+        , newGiven
+        , newDerived
+        -- * Creating evidence
+        , evByFiat
+        -- * Lookup
+        , lookupModule
+        , lookupName
+        -- * Trace state of the plugin
+        , tracePlugin
+        -- * Substitutions
+        , flattenGivens
+        , mkSubst
+        , mkSubst'
+        , substType
+        , substCt
+        ) where
 
-    import GhcApi
+    import Internal
 
-    #if __GLASGOW_HASKELL__ > 710
-    tyVarsOfType :: Type -> TyCoVarSet
-    tyVarsOfType = tyCoVarsOfType
+I thought this might screw around with the haddocks but they look good, the
+internal module is invisible and the module tree is unchanged.
 
-    tyVarsOfTypes :: [Type] -> TyCoVarSet
-    tyVarsOfTypes = tyCoVarsOfTypes
+.. raw:: html
 
-    promoteTyCon :: TyCon -> TyCon
-    promoteTyCon = id
-    #endif
+    <div id="module-list"><p class="caption">Modules</p><ul><li><span class="module details-toggle-control details-toggle collapser" data-details-id="n.1">GHC</span><details id="n.1" open="open"><summary class="hide-when-js-enabled">Submodules</summary><ul><li><span class="module details-toggle-control details-toggle collapser" data-details-id="n.1.1">TcPluginM</span><details id="n.1.1" open="open"><summary class="hide-when-js-enabled">Submodules</summary><ul><li><span class="module"><span class="noexpander">&nbsp;</span><a href="https://hackage.haskell.org/package/ghc-tcplugins-extra-0.4.2/docs/GHC-TcPluginM-Extra.html">GHC.TcPluginM.Extra</a></span></li></ul></details></li></ul></details></li></ul></div>
 
-    #if __GLASGOW_HASKELL__ >= 800
+In the implementation I have two module hierarchies, ``GhcApi.*`` and
+``Internal.*``.
 
-    #if __GLASGOW_HASKELL__ < 802
-    pattern FunTy :: Type -> Type -> Type
-    pattern FunTy t v = ForAllTy (Anon t) v
-    #endif
+Cabal conditionals
+------------------
 
-    mkEqPred :: Type -> Type -> Type
-    mkEqPred = mkPrimEqPred
+In the cabal file with ``impl(ghc?)`` conditonals we can pick which files to
+compile.
 
-    mkHEqPred :: Type -> Type -> Type
-    mkHEqPred t1 t2 =
-      TyConApp heqTyCon [typeKind t1, typeKind t2, t1, t2]
-    #endif
+.. code-block:: yaml
 
-With something changed with GHC so that The uom-plugin is unable help ``GHC >=
-8.4`` to solve unit equations it was good at before. Using ``git bisect`` I
-found the commit in GHC that broke the plugin but haven't yet figured out the
-problem. 
+    library
+        exposed-modules:
+            GHC.TcPluginM.Extra
+        other-modules:
+            Internal
+        hs-source-dirs:
+            src
+        if impl(ghc >= 9.2) && impl(ghc < 9.4)
+            hs-source-dirs:
+                src-ghc-tree
+                src-ghc-9.2
+        if impl(ghc >= 9.0) && impl(ghc < 9.2)
+            hs-source-dirs:
+                src-ghc-tree
+                src-ghc-9.0
+        if impl(ghc >= 8.10) && impl(ghc < 9.0)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.10
+        if impl(ghc >= 8.8) && impl(ghc < 8.10)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.8
+        if impl(ghc >= 8.6) && impl(ghc < 8.8)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.6
+        if impl(ghc >= 8.4) && impl(ghc < 8.6)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.4
+        if impl(ghc >= 8.2) && impl(ghc < 8.4)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.2
+        if impl(ghc >= 8.0) && impl(ghc < 8.2)
+            hs-source-dirs:
+                src-ghc-flat
+                src-ghc-8.0
+        if impl(ghc >= 7.10) && impl(ghc < 8.0)
+            hs-source-dirs:
+                src-ghc-cpp
 
-    "The GHC API does not make allowances for easy migrations -- it's just too
-    hard. Not sure where it needs to be mentioned. ... But anyone using the GHC
-    API, including plugin authors, should expect breakage at every release."
+When some things stay the same but others change between GHC versions we can
+group modules into different ``hs-source-dirs`` directories.
 
-    .. raw:: html
+When ``8.0 <= ghc < 9.0`` I include modules in ``src-tree-flat`` so named
+because the GHC module hierarchy at this time was flat. With ``ghc >= 9.0``
+GHC's module hierarchy was moved to a deeper tree structure so I include modules
+from ``src-tree-tree`` instead.
 
-        <footer>
-            <a
-                href="https://gitlab.haskell.org/ghc/ghc/-/merge_requests/3583#note_285243"
-                target="_blank">
-                Richard Eisenberg
-            </a>
-        </footer>
+I put modules that change between versions into version-specific directories
+like ``src-ghc-9.0`` and ``src-ghc-9.2``.
 
-The Haskell Language Server is fantastic.  Beneath it all is ghc-lib_, an API
-for GHC decoupled from GHC versions. I thought I could do something similar to
-help with authoring GHC type checker plugins and created ghc-corrobarate_.
+We're trading duplicating modules for ease of diffing. We can now see
+differences between GHC
+*dot-even-numbered* releases and see what needed to change when GHC deepened
+its module hierarchy.
 
-As a first attempt I tried using ghc-lib only to find out that this is not an
-alternative API over the full GHC API. You can compile to it but not run on it.
+File diffing
+------------
 
-    "While ghc-lib provides the full GHC API, it doesn't contain a runtime
-    system, nor does it create a package database. That means you can't run code
-    produced by ghc-lib (no runtime), and compiling off-the-shelf code is very
-    hard (no package database containing the base library)."
+One change between ``src-ghc-9.0`` and ``src-ghc-9.2``.
 
-    .. raw:: html
+.. code-block:: diff
 
-        <footer>
-            <a
-                href="http://neilmitchell.blogspot.com/2019/02/announcing-ghc-lib.html"
-                target="_blank">
-                Neil Mitchell
-            </a>
-        </footer>
+     --- src-ghc-9.0/GhcApi/Constraint.hs
+     +++ src-ghc-9.2/GhcApi/Constraint.hs
+        module GhcApi.Constraint
+            ( Ct(..
+            , CtEvidence(..)
+            , CtLoc
+     +      , CanEqLHS(..)
+            , ctLoc
+            , ctEvId
+            , mkNonCanonical
+            ) where
 
-That effort was a failure but it wasn't wasted. I could reshape another API that
-pulls together the various GHC imports needed for typechecker plugins, by
-importing and re-exporting to flatten the API. I would be able to decouple this
-from GHC versions too and it would be similar to the work I'd previously done
-for the uom-plugin.
+        import GHC.Tc.Types.Constraint
+     -      ( Ct(..), CtEvidence(..), CtLoc
+     +      ( Ct(..), CtEvidence(..), CanEqLHS(..), CtLoc
+            , ctLoc, ctEvId, mkNonCanonical
+            )
 
-With combining mixins_ with conditonals in the cabal file, we can rename modules
-and pick which files to compile. We can the ``CPP`` language pragma,  files.
+An example of reacting to GHC's change to a deeper module hierarchy.
 
-I wrote ghc-corroborate_ as a flatter API into the guts of GHC for those writing
-type checker plugins 
+.. code-block:: diff
 
-.. _ghc-lib: https://hackage.haskell.org/package/ghc-lib
-.. _ghc-corroborate: https://github.com/BlockScope/ghc-corroborate#readme
+     --- src-ghc-flat/GhcApi/Predicate.hs
+     +++ src-ghc-tree/GhcApi/Predicate.hs
+        module GhcApi.Predicate (mkPrimEqPred) where
+
+     -  import Predicate (mkPrimEqPred)
+     +  import GHC.Core.Coercion (mkPrimEqPred)
+
+Backporting changes is simpler because of the diffing but requires more edits.
+If we don't care about backporting then the set of modules for an older GHC
+version can be left alone as we don't need to touch them with CPP #ifdefs.
+
+Cabal Mixins
+------------
+
+With mixins_ we can rename modules and pick a names we want to use that stay the
+same even when GHC moves things around.
+
+.. code-block:: yaml
+
+    mixins:
+        ghc hiding ()
+      , ghc (TcRnTypes as Constraint)
+      , ghc (Type as Predicate)
+
 .. _ghc-tcplugins-extra: https://github.com/clash-lang/ghc-tcplugins-extra#readme
 .. _ghc-tcplugins-extra-undef: https://github.com/BlockScope/ghc-tcplugins-extra-undef#readme
-.. _uom-plugin: https://github.com/adamgundry/uom-plugin#readme
 .. _mixins: https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=mixins#pkg-field-mixins
+
+.. [#] Except for ``ghc < 8.0`` where I have left the original CPP-heavy module alone untouched.
