@@ -1,13 +1,25 @@
 ---
 title: Annoucing GHC Corroborate.
-subtitle: A package deal to imports writing typechecker plugins.
+subtitle: A package for imports when writing typechecker plugins.
 tags: haskell, tcplugins
 ---
 
-With something changed with GHC so that The uom-plugin is unable help ``GHC >=
-8.4`` to solve unit equations it was good at before. Using ``git bisect`` I
-found the commit in GHC that broke the plugin but haven't yet figured out the
-problem. 
+A Few Good Imports
+------------------
+
+It can be hard compiling a plugin when you don't know what imports you need
+across GHC versions. What has been renamed? What has been added? To help with
+the import problem, I wrote ghc-corroborate_ as a simpler, flatter API into the
+guts of GHC for those writing type checker plugins that's stable across GHC
+versions.
+
+Backstory
+---------
+
+The uom-plugin is wonderful but stuck at ``ghc < 8.4``.  Something changed with
+GHC so that this plugin can no longer work with GHC to solve unit equations it
+was good at before. Using ``git bisect`` I found the commit in GHC that broke
+the plugin but haven't yet figured out the problem.
 
     "The GHC API does not make allowances for easy migrations -- it's just too
     hard. Not sure where it needs to be mentioned. ... But anyone using the GHC
@@ -24,11 +36,10 @@ problem.
         </footer>
 
 The Haskell Language Server is fantastic.  Beneath it all is ghc-lib_, an API
-for GHC decoupled from GHC versions. I thought I could do something similar to
-help with authoring GHC type checker plugins and created ghc-corrobarate_.
-
-As a first attempt I tried using ghc-lib only to find out that this is not an
-alternative API over the full GHC API. You can compile to it but not run on it.
+for GHC decoupled from GHC versions. I thought I could do something with
+ghc-corrobarate_.  As a first attempt I tried using ghc-lib only to find out
+that this is not an alternative API over the full GHC API. You can compile to it
+but not run on it. Bummer I can't use ghc-lib to insulate me from GHC changes.
 
     "While ghc-lib provides the full GHC API, it doesn't contain a runtime
     system, nor does it create a package database. That means you can't run code
@@ -45,21 +56,13 @@ alternative API over the full GHC API. You can compile to it but not run on it.
             </a>
         </footer>
 
-That effort was a failure but it wasn't wasted. I could reshape another API that
-pulls together the various GHC imports needed for typechecker plugins, by
-importing and re-exporting to flatten the API. I would be able to decouple this
-from GHC versions too and it would be similar to the work I'd previously done
-for the uom-plugin.
-
-With combining mixins_ with conditonals in the cabal file, we can rename modules
-and pick which files to compile. We can the ``CPP`` language pragma,  files.
-
-I wrote ghc-corroborate_ as a flatter API into the guts of GHC for those writing
-type checker plugins 
+The typechecker plugins I've seen only use a subset of GHC's API so I tried
+reshaping the needed imports, going with a ``GhcApi.*`` module hierarchy stable
+across GHC versions [#]_.
 
 .. _ghc-lib: https://hackage.haskell.org/package/ghc-lib
 .. _ghc-corroborate: https://github.com/BlockScope/ghc-corroborate#readme
-.. _ghc-tcplugins-extra: https://github.com/clash-lang/ghc-tcplugins-extra#readme
-.. _ghc-tcplugins-extra-undef: https://github.com/BlockScope/ghc-tcplugins-extra-undef#readme
 .. _uom-plugin: https://github.com/adamgundry/uom-plugin#readme
-.. _mixins: https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=mixins#pkg-field-mixins
+
+.. [#] Similar to the GHC version decoupling work I'd previously done for the
+    uom-plugin plugin and the ghc-tcplugin-extra library for plugin authors.
