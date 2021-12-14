@@ -1,6 +1,8 @@
 ---
-title: Import Reduction 
-subtitle: 'No more iffy differences, dropping #ifdef for cabal mixins.'
+title: <em>Iffy</em> Import Reduction 
+subtitle: >-
+    Use cabal conditionals and mixins and be able to do real file diffs.<br>
+    Who can read interleaved <em>iffy</em> code anyway?
 slug: Import reduction for type checker plugins.
 tags: haskell, tcplugins
 ---
@@ -110,13 +112,15 @@ tags: haskell, tcplugins
     </div>
 
 I don't much like ``CPP`` and find nested conditional blocks hard to
-disentangle. I use the uom-plugin_ type checker plugin for units of measure and
-it has a dependency on ghc-tcplugins-extra_. The panel on the right shows the
-#ifdefs of module ``GHC.TcPluginM.Extra``.
+disentangle.
 
-A big change I made to the uom-plugin was getting it to compile with later
-versions of GHC. This involved moving GHC imports to one place, behind a
-``GhcApi`` module hierarchy. This involved a fair bit of ``CPP`` and shimming.
+The uom-plugin_ type checker plugin for units of measure and has a dependency on
+ghc-tcplugins-extra_. The panel on the right shows the
+#ifdefs of its one module, ``GHC.TcPluginM.Extra``.
+
+To get the uom-plugin compiling with later versions of GHC we moved GHC imports
+to one place, behind a ``GhcApi`` module hierarchy. Like ghc-tcplugins-extra,
+uom-plugin has a fair bit of CPP, at least where it interacts with GHC.
 
 .. code-block:: haskell
 
@@ -155,9 +159,10 @@ versions of GHC. This involved moving GHC imports to one place, behind a
       TyConApp heqTyCon [typeKind t1, typeKind t2, t1, t2]
     #endif
 
-With ``GHC >= 8.4`` something changed with GHC so that the uom-plugin is unable
-to solve unit equations it was good at before. Using ``git bisect`` I found the
-commmit in GHC that broke the plugin but haven't yet figured out the problem. 
+With something changed with GHC so that The uom-plugin is unable help ``GHC >=
+8.4`` to solve unit equations it was good at before. Using ``git bisect`` I
+found the commit in GHC that broke the plugin but haven't yet figured out the
+problem. 
 
     "The GHC API does not make allowances for easy migrations -- it's just too
     hard. Not sure where it needs to be mentioned. ... But anyone using the GHC
@@ -201,12 +206,15 @@ importing and re-exporting to flatten the API. I would be able to decouple this
 from GHC versions too and it would be similar to the work I'd previously done
 for the uom-plugin.
 
-I saw too that I could use cabal mixins to avoid use of the ``CPP`` pragma to
-create a flatter API into the guts of GHC for those writing type checker plugins
-and created ghc-corroborate_.
+With combining mixins_ with conditonals in the cabal file, we can rename modules
+and pick which files to compile. We can the ``CPP`` language pragma,  files.
+
+I wrote ghc-corroborate_ as a flatter API into the guts of GHC for those writing
+type checker plugins 
 
 .. _ghc-lib: https://hackage.haskell.org/package/ghc-lib
 .. _ghc-corroborate: https://github.com/BlockScope/ghc-corroborate#readme
 .. _ghc-tcplugins-extra: https://github.com/clash-lang/ghc-tcplugins-extra#readme
 .. _ghc-tcplugins-extra-undef: https://github.com/BlockScope/ghc-tcplugins-extra-undef#readme
 .. _uom-plugin: https://github.com/adamgundry/uom-plugin#readme
+.. _mixins: https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=mixins#pkg-field-mixins
