@@ -287,6 +287,26 @@ use that stay the same even when GHC moves things around.
 I could have avoided using mixins like this but it helped insulate me from GHC
 API changes.
 
+Simpler with dhall
+------------------
+
+Tweaking the cabal file with all these conditionals and mixins is a bit too much
+repetitive work but with hpack-dhall_ we can simplify this chore.
+
+.. code-block:: dhall
+
+    λ(low : Text) →
+    λ(high : Text) →
+    λ(srcs : List Text) →
+    λ(ghc : { name : Text, mixin : List Text }) →
+    λ(mods : List Text) →
+      { condition = "impl(ghc >= ${low}) && impl(ghc < ${high})"
+      , source-dirs =
+          Prelude/List/map Text Text (λ(x : Text) → "src-ghc-${x}") srcs
+      , dependencies = [ ghc ⫽ { version = ">=${low} && <${high}" } ]
+      , other-modules = mods
+      }
+
 Why do this?
 ------------
 
@@ -303,6 +323,7 @@ as we don't need to touch them with CPP #ifdefs.
 .. _ghc-tcplugins-extra: https://github.com/clash-lang/ghc-tcplugins-extra#readme
 .. _ghc-tcplugins-extra-undef: https://github.com/BlockScope/ghc-tcplugins-extra-undef#readme
 .. _mixins: https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=mixins#pkg-field-mixins
+.. _hpack-dhall: https://github.com/cabalism/hpack-dhall#readme
 
 .. [#] Except for ``ghc < 8.0`` where I have left the original CPP-heavy module alone untouched.
 .. [#] Mixins are a cabal 2.0 feature and requires ``impl(ghc >= 8.2)``. That's
