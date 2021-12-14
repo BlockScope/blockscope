@@ -313,7 +313,7 @@ Why do this?
 I feel that copying code files this way is better than using CPP. We can single
 thread our thoughts looking at plain Haskell code uninterrupted by C prepocessor
 #ifdefs and deal with only one GHC version at a time when getting the code to
-#compile against a newer GHC version or when debugging a problem.
+compile against a newer GHC version or when debugging a problem.
 
 Backporting changes is simpler too because of the diffing but may require more
 edits if ranging back over multiple GHC versions.  If we don't care about
@@ -327,7 +327,8 @@ as we don't need to touch them with CPP #ifdefs.
 
 .. [#] Except for ``ghc < 8.0`` where I have left the original CPP-heavy module alone untouched.
 .. [#] Mixins are a cabal 2.0 feature and requires ``impl(ghc >= 8.2)``. That's
-    true if I use stack but with cabal-install I can get ``impl(ghc >= 7.10.3) &&
-    impl(ghc < 8.0)`` to compile. With the cabal github action in 
-    ``.github/workflows/cabal.yml`` cabal can build against GHC versions ``[ 7.10.3,
-    8.0.2, 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1, 9.2.1 ]``
+    true if I use stack but with cabal-install I can get ``impl(ghc >= 7.10.3)
+    && impl(ghc < 8.0)`` to compile a package using cabal mixins. With the cabal
+    github action in ``.github/workflows/cabal.yml`` cabal can build against GHC
+    versions ``[ 7.10.3, 8.0.2, 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1, 9.2.1
+    ]``
