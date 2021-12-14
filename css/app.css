@@ -32,7 +32,6 @@
 .sourceCode span.cv { color: #93A1A1; font-weight: normal; font-style: italic; } /* CommentVar */
 .sourceCode span.in { color: #93A1A1; font-weight: normal; font-style: italic; } /* Information */
 
-
 /*!***************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./app.sass ***!
   \***************************************************************************************************/
@@ -11885,7 +11884,7 @@ body#body-cv {
   font-size: 0.8rem;
   font-weight: 300; }
 
-.badge {
+.badge, #copyright {
   font-family: 'B612 Mono', monospace;
   font-size: 0.8rem;
   font-weight: 300; }
@@ -11924,6 +11923,16 @@ article {
   background-color: #000;
   padding: 1em 2em 1em 1em;
   border-radius: 1em; }
+
+#ifdef .pre {
+  color: #000;
+  background-color: transparent;
+  border: solid 1px #000;
+  opacity: 0.5;
+  font-size: 5pt;
+  float: right;
+  position: relative;
+  left: 10px; }
 
 .spacer {
   height: 20px; }
