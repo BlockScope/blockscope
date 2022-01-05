@@ -68,9 +68,9 @@ shorter by including some strictly unnecessary imports.
         • Could not deduce: IsCanonical (Unpack (Base "byte"))
             arising from the superclasses of an instance declaration
         • In the instance declaration for ‘HasCanonicalBaseUnit "byte"’
-    |
+       |
     23 | declareBaseUnit "byte"
-    | ^^^^^^^^^^^^^^^^^^^^^^
+       | ^^^^^^^^^^^^^^^^^^^^^^
 
     test-suite-defs/Defs.hs:23:1: error:
         • Couldn't match type ‘One’ with ‘Base "byte" /: Base "byte"’
@@ -81,9 +81,9 @@ shorter by including some strictly unnecessary imports.
             conversionBase
                 = Data.UnitsOfMeasure.Canonical.$dmconversionBase @("byte")
         In the instance declaration for ‘HasCanonicalBaseUnit "byte"’
-    |
+       |
     23 | declareBaseUnit "byte"
-    | ^^^^^^^^^^^^^^^^^^^^^^
+       | ^^^^^^^^^^^^^^^^^^^^^^
 
 How is the plugin helping GHC to:
 
