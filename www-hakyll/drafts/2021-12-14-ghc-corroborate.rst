@@ -1,6 +1,6 @@
 ---
-title: Annoucing GHC Corroborate.
-subtitle: A package for imports when writing typechecker plugins.
+title: GHC Corroborate.
+subtitle: A package for import aggregation when writing typechecker plugins.
 tags: haskell, tcplugins
 ---
 
@@ -10,8 +10,7 @@ A Few Good Imports
 It can be hard compiling a plugin when you don't know what imports you need
 across GHC versions. What has been renamed? What has been added? To help with
 the import problem, I wrote ghc-corroborate_ as a simpler, flatter API into the
-guts of GHC for those writing type checker plugins that's stable across GHC
-versions.
+guts of GHC for those writing type checker plugins.
 
 Backstory
 ---------
