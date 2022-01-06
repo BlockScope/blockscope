@@ -159,3 +159,10 @@ The state of this plugin is ``UnitDefs``, a record of type families.
                      ] of
                      [d] -> promoteDataCon d
                      _ -> error $ "lookupUnitDefs/getDataCon: missing " ++ s
+
+Debugging Time
+--------------
+
+Tracing added to typechecker plugins will only fire when compilation of a module
+in triggered, for instance when reloading the module in the REPL. Once
+compilation is done, tracing stops. Running the program will be quiet.
