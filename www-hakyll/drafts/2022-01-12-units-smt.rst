@@ -1,0 +1,24 @@
+---
+title: Unit Solving with Z3.
+subtitle: Worked examples with the encoding from the Thoralf plugin.
+tags: haskell, tcplugins
+---
+
+Tracing Plugins
+---------------
+
+To trace a program using the ``uom-plugin`` add the ghc option
+``-ddump-tc-trace``. This will produce very detailed logging of typechecking.
+
+.. code:: pre
+
+    tcPluginSolve start uom-simplify-plugin
+    wanted  = [[WD] hole{aaGE} {2}:: (One :: Unit)
+                                    ~#
+                                    ((Base "s" /: Base "s") :: Unit) (CNonCanonical)]
+    tcPluginSolve ok uom-simplify-plugin
+    solved = [(CO U(plugin:uom-solve, One, Base "s" /: Base "s")_N,
+                [WD] hole{aaGE} {2}:: (One :: Unit)
+                                    ~#
+                                    ((Base "s" /: Base "s") :: Unit) (CNonCanonical))]
+    new    = []
