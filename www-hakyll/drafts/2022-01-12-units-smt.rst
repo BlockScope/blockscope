@@ -235,13 +235,19 @@ when unifying normalized units.
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
 
-Here is the complete set of unit equations the program needs solved.
+Here is the complete set of constraints and unit equations the program needs
+solved in order [#]_. I found this sequence twice in the log, we're typechecking
+the same thing, once for each module we're compiling.
 
 \\[\
 \\begin{align}\
-IsCanonical &(Unpack (Base "s"))\\\\
+IsCanonical(s)\\\\
 1&=\\frac{s}{s}\\\\
-\\frac{kg \\cdot m}{s^2} &= \\frac{m}{s^2} \\cdot kg\
+IsCanonical(kg)\\\\
+1&=\\frac{kg}{kg}\\\\
+IsCanonical(m)\\\\
+1&=\\frac{m}{m}\\\\
+\\frac{kg \\cdot m}{s^2} &= \\frac{m}{s^2} \\cdot kg\\\\
 \\end{align}\
 \\]
 
@@ -250,3 +256,4 @@ IsCanonical &(Unpack (Base "s"))\\\\
     With a regex I grabbed the first word ``s/^(\S+).*$/$1/``, deleted lines with
     leading spaces with ``s/ .*\n/\n/`` and deleted multiple blank lines with
     ``s/\n\n+/\n/``.
+.. [#] Not shown are calls to the plugin want to solve constraints for ``?callStack``.
