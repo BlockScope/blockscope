@@ -235,6 +235,16 @@ when unifying normalized units.
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
 
+Here is the complete set of unit equations the program needs solved.
+
+\\[\
+\\begin{align}\
+IsCanonical &(Unpack (Base "s"))\\\\
+1&=\\frac{s}{s}\\\\
+\\frac{kg \\cdot m}{s^2} &= \\frac{m}{s^2} \\cdot kg\
+\\end{align}\
+\\]
+
 .. [#] I've removed pragmas, most imports and type signatures from the program listing.
 .. [#]
     With a regex I grabbed the first word ``s/^(\S+).*$/$1/``, deleted lines with
