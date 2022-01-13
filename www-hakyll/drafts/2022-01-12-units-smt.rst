@@ -7,18 +7,42 @@ tags: haskell, tcplugins
 Tracing Plugins
 ---------------
 
-To trace a program using the ``uom-plugin`` add the ghc option
-``-ddump-tc-trace``. This will produce very detailed logging of typechecking.
-For the following small program, the log ran to 70,000 lines.
+I'd like to get the test suite ``uom-plugin:force`` [#]_ working in full with
+the ``thoralf-plugin``.
 
-With a regex I grabbed the first word ``s/^(\S+).*$/$1/``, deleted lines with
-leading spaces with ``s/  .*\n/\n/`` and deleted multiple blank lines with
-``s/\n\n+/\n/``. These are the unique leading words of typechecker tracing.
+.. code:: Haskell
+
+    -- test-suite-force/UnitDefs.hs
+    module UnitDefs () where
+
+    [u| m, kg, s |]
+    [u| N = kg m / s^2 |]
+
+    -- test-suite-force/Tests.hs
+    module Main where
+
+    import UnitDefs ()
+
+    myMass = [u| 65 kg |]
+    gravityOnEarth = [u| 9.808 m/(s*s) |]
+    forceOnGround = gravityOnEarth *: myMass
+
+    main = defaultMain tests
+
+    tests = testGroup "uom-plugin:units"
+    [ testGroup "showQuantity"
+        [ testCase "myMass"         $ showQuantity myMass         @?= "65.0 kg"
+        , testCase "gravityOnEarth" $ showQuantity gravityOnEarth @?= "9.808 m / s^2"
+        , testCase "forceOnGround"  $ showQuantity forceOnGround  @?= "637.52 kg m / s^2"
+        ]
+    ]
+
+To help me understand, I'm tracing typechecking by adding the ghc option
+``-ddump-tc-trace``.  Compiling this program logged 70,000 lines of tracing, the
+unique first words [#]_ of which are:
 
 .. code:: pre
 
-    -------- ---------------------------
-    ------------------------------------------------
     About addFamInsts addInertCan addInertEq Adding addLocalFamInst addTcEvBind
     alfi Ambiguity Application applyDefaultingRules Bindings can_eq_nc can_pred
     Can't canClass canEqTyVar canEvNC:cls canEvNC:eq canEvNC:irred canonicalize
@@ -48,17 +72,171 @@ leading spaces with ``s/  .*\n/\n/`` and deleted multiple blank lines with
     Unflattening unifyTyVar unifyUnits uom-solve updSolvedSetTcs: utype_defer
     VTA writeMetaTyVar zonkSimples
 
-From this we can search for ``tcPluginSolve`` to find logging from the plugin.
+To write a plugin we fill in a ``TcPlugin`` with functions.
+
+.. code:: Haskell
+
+    data TcPlugin = forall s. TcPlugin
+        { tcPluginInit :: TcPluginM s
+        , tcPluginSolve :: s -> TcPluginSolver
+        , tcPluginStop :: s -> TcPluginM ()
+        }
+
+Here's where we set this up for the ``uom-plugin`` with tracing.
+
+.. code:: Haskell
+
+    import "ghc-tcplugins-extra" GHC.TcPluginM.Extra (tracePlugin)
+
+    -- | The plugin that GHC will load when this module is used with the
+    -- @-fplugin@ option.
+    plugin :: Plugin
+    plugin =
+        let theory = mkModuleName "Data.Theory.UoM"
+            syntax = mkModuleName "Data.UnitsOfMeasure.Syntax"
+            tc = uomSimplifyPlugin theory syntax (fsLit "uom-quantity")
+        in
+            defaultPlugin
+                { tcPlugin = const . Just $ tracePlugin "uom-simplify-plugin" tc
+                , pluginRecompile = purePlugin
+                }
+
+Calling ``tracePlugin`` wraps the functions we provide with a layer for tracing.
+
+.. code:: Haskell
+
+    -- | Print out extra information about the initialisation, stop, and every run
+    -- of the plugin when @-ddump-tc-trace@ is enabled.
+    tracePlugin :: String -> TcPlugin -> TcPlugin
+    tracePlugin s TcPlugin{..} =
+        TcPlugin
+            { tcPluginInit = traceInit
+            , tcPluginSolve = traceSolve
+            , tcPluginStop = traceStop
+            }
+    where
+        traceInit = tcPluginTrace ("tcPluginInit " ++ s) empty >> tcPluginInit
+        traceStop z = tcPluginTrace ("tcPluginStop " ++ s) empty >> tcPluginStop z
+
+        traceSolve z given derived wanted = do
+            tcPluginTrace
+                ("tcPluginSolve start " ++ s)
+                (text "given =" <+> ppr given
+                $$ text "derived =" <+> ppr derived
+                $$ text "wanted =" <+> ppr wanted)
+
+            r <- tcPluginSolve z given derived wanted
+
+            case r of
+                TcPluginOk solved new ->
+                    tcPluginTrace
+                        ("tcPluginSolve ok " ++ s)
+                        (text "solved =" <+> ppr solved $$ text "new =" <+> ppr new)
+                TcPluginContradiction bad ->
+                    tcPluginTrace
+                        ("tcPluginSolve contradiction " ++ s)
+                        (text "bad =" <+> ppr bad)
+            return r
+
+
+Counting the hits for "tcPluginSolve start uom-simplify-plugin", I see the
+plugin was called on 16 times to help with typechecking this small program.
 
 .. code:: pre
 
     tcPluginSolve start uom-simplify-plugin
-    wanted  = [[WD] hole{aaGE} {2}:: (One :: Unit)
-                                    ~#
-                                    ((Base "s" /: Base "s") :: Unit) (CNonCanonical)]
+    wanted  = [[WD] hole{aaGE} {2}::
+                (One :: Unit) ~# ((Base "s" /: Base "s") :: Unit) (CNonCanonical)]
+
+The uom-plugin and the thoralf-plugin can both solve simple single unit
+equations.
+
+.. code:: pre
+
     tcPluginSolve ok uom-simplify-plugin
     solved = [(CO U(plugin:uom-solve, One, Base "s" /: Base "s")_N,
-                [WD] hole{aaGE} {2}:: (One :: Unit)
-                                    ~#
-                                    ((Base "s" /: Base "s") :: Unit) (CNonCanonical))]
-    new    = []
+                [WD] hole{aaGE} {2}::
+                 (One :: Unit) ~# ((Base "s" /: Base "s") :: Unit) (CNonCanonical))]
+
+.. code:: pre
+
+    tcPluginSolve ok thoralf-uom-plugin
+    solved = [(CO U(plugin:thoralf, One, Base "m" /: Base "m")_N,
+                [WD] hole{aaJY} {2}:: (One :: Unit)
+                                    ~# ((Base "m" /: Base "m") :: Unit) (CNonCanonical))]
+
+A more complex unit equation the program needs solving is showing that:
+
+$$\\frac{kg \\cdot m}{s^2} = \\frac{m}{s^2} \\cdot kg$$
+
+.. code:: pre
+
+    tcPluginSolve start uom-simplify-plugin
+    wanted  = [[WD] irred_acAG {0}:: ((Base "kg" *: Base "m") /: (Base "s" *: Base "s"))
+                                  ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg")
+                                  (CNonCanonical),
+                [WD] $dIP_acB2 {0}:: ?callStack::CallStack (CDictCan),
+                [WD] $dKnownUnit_acB6 {0}::
+                        KnownUnit (Unpack (Base "kg")) (CDictCan),
+                [WD] $dKnownUnit_acBc {0}::
+                        KnownUnit (Unpack (Base "m" /: (Base "s" *: Base "s"))) (CDictCan),
+                [WD] $dKnownUnit_acBf {0}::
+                        KnownUnit (Unpack ((Base "kg" *: Base "m") /: (Base "s" *: Base "s")))
+                        (CDictCan)]
+
+Only the uom-plugin can solve this.
+
+.. code:: pre
+
+    tcPluginSolve ok uom-simplify-plugin
+    solved = [(Eq# @[Unit, Unit,
+                    (Base "kg" *: Base "m") /: (Base "s" *: Base "s"),
+                    (Base "m" /: (Base "s" *: Base "s")) *: Base "kg"]
+                    [CO U(plugin:uom-solve
+                        , (Base "kg" *: Base "m") /: (Base "s" *: Base "s")
+                        , (Base "m" /: (Base "s" *: Base "s")) *: Base "kg")_N]
+                    `cast`
+                        U(plugin:uom-solve
+                        , (((Base "kg" *: Base "m") /: (Base "s" *: Base "s")) :: Unit)
+                       ~~ (((Base "m" /: (Base "s" *: Base "s")) *: Base "kg") :: Unit)
+                        , ((Base "kg" *: Base "m") /: (Base "s" *: Base "s"))
+                       ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg"))_R,
+                [WD] irred_acAG {0}:: ((Base "kg" *: Base "m") /: (Base "s" *: Base "s"))
+                                   ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg")
+                                   (CNonCanonical))]
+
+This plugin also does its own tracing with calls to ``tcPluginTrace`` such as
+when unifying normalized units.
+
+.. code:: Haskell
+
+    -- | An atom in the normal form is either a base unit, a variable or a
+    -- stuck type family application (but not one of the built-in type
+    -- families that correspond to group operations).
+    data Atom = BaseAtom Type | VarAtom TyVar | FamAtom TyCon [Type]
+
+    -- | A unit normal form is a signed multiset of atoms; we maintain the
+    -- invariant that the map does not contain any zero values.
+    newtype NormUnit = NormUnit{_NormUnit :: Map.Map Atom Integer} deriving Eq
+
+    data UnitEquality = UnitEquality Ct NormUnit NormUnit
+
+    -- | Attempt to unify two normalised units to produce a unifying
+    -- substitution.  The 'Ct' is the equality between the non-normalised (and
+    -- perhaps less substituted) unit type expressions.
+    unifyUnits :: UnitDefs -> UnitEquality -> TcPluginM UnifyResult
+    unifyUnits uds (UnitEquality ct u0 v0) = do
+        tcPluginTrace "unifyUnits" (ppr u0 $$ ppr v0)
+        unifyOne uds ct [] [] [] (u0 /: v0)
+
+.. code:: pre
+
+    unifyUnits
+        [("kg", [1]), ("m", [1]), ("s", [-, 2])]
+        [("kg", [1]), ("m", [1]), ("s", [-, 2])]
+
+.. [#] I've removed pragmas, most imports and type signatures from the program listing.
+.. [#]
+    With a regex I grabbed the first word ``s/^(\S+).*$/$1/``, deleted lines with
+    leading spaces with ``s/ .*\n/\n/`` and deleted multiple blank lines with
+    ``s/\n\n+/\n/``.
