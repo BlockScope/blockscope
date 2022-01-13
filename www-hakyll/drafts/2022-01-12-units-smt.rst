@@ -141,6 +141,21 @@ Calling ``tracePlugin`` wraps the functions we provide with a layer for tracing.
 
 Counting the hits for "tcPluginSolve start uom-simplify-plugin", I see the
 plugin was called on 16 times to help with typechecking this small program.
+Here is the complete set of constraints and unit equations the program needs
+solved in order [#]_. I found this sequence twice in the log, we're typechecking
+the same thing, once for each module we're compiling.
+
+\\[\
+\\begin{align}\
+IsCanonical(s)\\\\
+1&=\\frac{s}{s}\\\\
+IsCanonical(kg)\\\\
+1&=\\frac{kg}{kg}\\\\
+IsCanonical(m)\\\\
+1&=\\frac{m}{m}\\\\
+\\frac{kg \\cdot m}{s^2} &= \\frac{m}{s^2} \\cdot kg\\\\
+\\end{align}\
+\\]
 
 .. code:: pre
 
@@ -165,7 +180,7 @@ equations.
                 [WD] hole{aaJY} {2}:: (One :: Unit)
                                     ~# ((Base "m" /: Base "m") :: Unit) (CNonCanonical))]
 
-A more complex unit equation the program needs solving is showing that:
+A harder unit equation the program needs to typecheck is showing that:
 
 $$\\frac{kg \\cdot m}{s^2} = \\frac{m}{s^2} \\cdot kg$$
 
@@ -205,6 +220,67 @@ Only the uom-plugin can solve this.
                                    ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg")
                                    (CNonCanonical))]
 
+The solved output is cryptic but there are only a few key strings to lookup in
+GHC source to find out what's being pretty printed; ``~~``, ``Eq#``, ``_N``,
+``_R``, ``CO``, ``U``, ``irred`` and ``cast``.
+
+.. code:: Haskell
+
+    -- TysWiredIn.hs
+    heqTyConName =
+        mkWiredInTyConName UserSyntax gHC_TYPES (fsLit "~~") heqTyConKey heqTyCon
+
+    heqDataConName =
+        mkWiredInDataConName UserSyntax gHC_TYPES (fsLit "Eq#") heqDataConKey heqDataCon
+
+    -- TcEvidence.hs
+    instance Outputable EvTerm where
+        ppr (EvCast v co) = ppr v <+> (text "`cast`") <+> pprParendCo co
+        ppr (EvCoercion co) = text "CO" <+> ppr co
+
+    -- TcMType.hs
+    predTypeOccName :: PredType -> OccName
+    predTypeOccName ty = case classifyPredType ty of
+        ClassPred cls _ -> mkDictOcc (getOccName cls)
+        EqPred _ _ _ -> mkVarOccFS (fsLit "cobox")
+        IrredPred _ -> mkVarOccFS (fsLit "irred")
+
+    -- TcRnTypes.hs
+    instance Outputable Ct where
+        ppr ct = ppr (cc_ev ct) <+> parens pp_sort
+            where
+            pp_sort = case ct of
+                CTyEqCan{} -> text "CTyEqCan"
+                CFunEqCan{} -> text "CFunEqCan"
+                CNonCanonical{} -> text "CNonCanonical"
+                CDictCan{cc_pend_sc = pend_sc}
+                    | pend_sc -> text "CDictCan(psc)"
+                    | otherwise -> text "CDictCan"
+                CIrredEvCan{} -> text "CIrredEvCan"
+                CHoleCan{cc_hole = hole} -> text "CHoleCan:" <+> ppr (holeOcc hole)
+
+    instance Outputable CtFlavour where
+        ppr Given = text "[G]"
+        ppr (Wanted WDeriv) = text "[WD]"
+        ppr (Wanted WOnly) = text "[W]"
+        ppr Derived = text "[D]"
+
+    instance Outputable TcEvDest where
+        ppr (HoleDest h)   = text "hole" <> ppr h
+        ppr (EvVarDest ev) = ppr ev
+
+    instance Outputable CtEvidence where
+        ppr ev = ppr (ctEvFlavour ev)
+                <+> pp_ev
+                <+> braces (ppr (ctl_depth (ctEvLoc ev))) <> dcolon
+                        -- Show the sub-goal depth too
+                <+> ppr (ctEvPred ev)
+            where
+            pp_ev = case ev of
+                    CtGiven { ctev_evar = v } -> ppr v
+                    CtWanted {ctev_dest = d } -> ppr d
+                    CtDerived {}              -> text "_"
+
 This plugin also does its own tracing with calls to ``tcPluginTrace`` such as
 when unifying normalized units.
 
@@ -234,22 +310,6 @@ when unifying normalized units.
     unifyUnits
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
         [("kg", [1]), ("m", [1]), ("s", [-, 2])]
-
-Here is the complete set of constraints and unit equations the program needs
-solved in order [#]_. I found this sequence twice in the log, we're typechecking
-the same thing, once for each module we're compiling.
-
-\\[\
-\\begin{align}\
-IsCanonical(s)\\\\
-1&=\\frac{s}{s}\\\\
-IsCanonical(kg)\\\\
-1&=\\frac{kg}{kg}\\\\
-IsCanonical(m)\\\\
-1&=\\frac{m}{m}\\\\
-\\frac{kg \\cdot m}{s^2} &= \\frac{m}{s^2} \\cdot kg\\\\
-\\end{align}\
-\\]
 
 .. [#] I've removed pragmas, most imports and type signatures from the program listing.
 .. [#]
