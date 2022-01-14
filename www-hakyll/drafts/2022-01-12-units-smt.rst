@@ -37,6 +37,9 @@ the ``thoralf-plugin``.
         ]
     ]
 
+Option Tracing
+--------------
+
 To help me understand, I'm tracing typechecking by adding the ghc option
 ``-ddump-tc-trace``.  Compiling this program logged 70,000 lines of tracing, the
 unique first words [#]_ of which are:
@@ -71,6 +74,9 @@ unique first words [#]_ of which are:
     txExtendKindEnvList type u_tys Unfilled unflatten_eq unflattenFmv
     Unflattening unifyTyVar unifyUnits uom-solve updSolvedSetTcs: utype_defer
     VTA writeMetaTyVar zonkSimples
+
+Wrapped Tracing
+---------------
 
 To write a plugin we fill in a ``TcPlugin`` with functions.
 
@@ -138,6 +144,8 @@ Calling ``tracePlugin`` wraps the functions we provide with a layer for tracing.
                         (text "bad =" <+> ppr bad)
             return r
 
+Unit Equations to Solve
+-----------------------
 
 Counting the hits for "tcPluginSolve start uom-simplify-plugin", I see the
 plugin was called on 16 times to help with typechecking this small program.
@@ -219,6 +227,9 @@ Only the uom-plugin can solve this.
                 [WD] irred_acAG {0}:: ((Base "kg" *: Base "m") /: (Base "s" *: Base "s"))
                                    ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg")
                                    (CNonCanonical))]
+
+Abbreviations
+-------------
 
 The solved output is cryptic but there are only a few key strings like ``CO`` to
 lookup in GHC source to find out what's being pretty printed.
@@ -318,8 +329,22 @@ So we can say that:
 ``CNonCanonical``
     is a non-canonical constraint.
 
+``{_}::``
+    the sub-goal depth to prevent constraint solver looping.
+
 I'm pretty sure that the ``_N`` and ``_R`` indicate equivalence as nominal or
 representational. A ``$d`` prefix, like ``$dKnownUnit``, is a type class.
+Re-reading the first simple wanted; it is a wanted and derived type hole, the
+subgoal depth is 2 and we're seeking a non-canonical constraint equating
+primitives.
+
+.. code:: pre
+
+    wanted  = [[WD] hole{aaGE} {2}::
+                (One :: Unit) ~# ((Base "s" /: Base "s") :: Unit) (CNonCanonical)]
+
+Unwrapped Tracing
+-----------------
 
 This plugin also does its own tracing with calls to ``tcPluginTrace`` such as
 when it is unifying normalized units.
