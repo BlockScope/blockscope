@@ -220,11 +220,17 @@ Only the uom-plugin can solve this.
                                    ~~ ((Base "m" /: (Base "s" *: Base "s")) *: Base "kg")
                                    (CNonCanonical))]
 
-The solved output is cryptic but there are only a few key strings to lookup in
-GHC source to find out what's being pretty printed; ``~~``, ``Eq#``, ``_N``,
-``_R``, ``CO``, ``U``, ``irred`` and ``cast``.
+The solved output is cryptic but there are only a few key strings like ``CO`` to
+lookup in GHC source to find out what's being pretty printed.
 
 .. code:: Haskell
+
+    -- OccName.hs
+    -- These derived variables have a prefix that no Haskell value could have
+    mkDictOcc = mk_simple_deriv varName "$d"
+
+    -- TysPrim.hs
+    eqPrimTyConName = mkPrimTc (fsLit "~#") eqPrimTyConKey eqPrimTyCon
 
     -- TysWiredIn.hs
     heqTyConName =
@@ -271,18 +277,52 @@ GHC source to find out what's being pretty printed; ``~~``, ``Eq#``, ``_N``,
 
     instance Outputable CtEvidence where
         ppr ev = ppr (ctEvFlavour ev)
-                <+> pp_ev
-                <+> braces (ppr (ctl_depth (ctEvLoc ev))) <> dcolon
-                        -- Show the sub-goal depth too
-                <+> ppr (ctEvPred ev)
+            <+> pp_ev
+            <+> braces (ppr (ctl_depth (ctEvLoc ev))) <> dcolon
+            <+> ppr (ctEvPred ev)
             where
             pp_ev = case ev of
-                    CtGiven { ctev_evar = v } -> ppr v
-                    CtWanted {ctev_dest = d } -> ppr d
-                    CtDerived {}              -> text "_"
+                CtGiven{ctev_evar = v} -> ppr v
+                CtWanted{ctev_dest = d} -> ppr d
+                CtDerived{} -> text "_"
+
+So we can say that:
+
+``CO``
+    is evidence of coercion.
+
+``~#``
+    is primitive type constructor equality.
+
+``Eq#``
+    is data constructor equality.
+
+``~~``
+    is type constructor equality.
+
+``cast``
+    is evidence of a cast.
+
+``[WD]``
+    are wanted and derived constraints.
+
+``cobox``
+    is an equality predicate.
+
+``irred``
+    is an irreducible predicate.
+
+``CDictCan``
+    is a typeclass canonical constraint.
+
+``CNonCanonical``
+    is a non-canonical constraint.
+
+I'm pretty sure that the ``_N`` and ``_R`` indicate equivalence as nominal or
+representational. A ``$d`` prefix, like ``$dKnownUnit``, is a type class.
 
 This plugin also does its own tracing with calls to ``tcPluginTrace`` such as
-when unifying normalized units.
+when it is unifying normalized units.
 
 .. code:: Haskell
 
