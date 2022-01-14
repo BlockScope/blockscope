@@ -68,7 +68,7 @@ unique first words [#]_ of which are:
     Tc11 Tc2 Tc3 Tc3b Tc3c Tc4 Tc4a Tc5 Tc6 Tc7 Tc7a Tc9 tcAddImplicits tcBody
     tcCheckId tcDeriving tcExtendIdBndrs tcFamInstDecl tcFamTyPats tcImplicitTKBndrs
     tcInferId tcInstDecl2 tcInstMeth tcLocalInstDecl tcMatchesFun tcMethodBody
-    tcPluginInit tcPluginSolve tcPluginStop tcPolyCheck tcPolyExpr tcPolyExprNC
+    <code>tcPluginInit tcPluginSolve tcPluginStop</code> tcPolyCheck tcPolyExpr tcPolyExprNC
     tcSemigroupWarnings tcSkolemise tcSpecPrags tcSubType_NC tcSubTypeDS_O tcTyAndCl
     tcTyFamInstEqn tcTyVar2a tcTyVar2b tcWrapResult try_fundeps txExtendKindEnv
     txExtendKindEnvList type u_tys Unfilled unflatten_eq unflattenFmv Unflattening
