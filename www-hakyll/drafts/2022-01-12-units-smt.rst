@@ -412,6 +412,491 @@ conversation.
             -- ^ Trace the conversation with the SMT solver
             }
 
+With these flags we get to see typechecking from the plugin's point of view. We can:
+
+* Trace call count
+
+    .. code:: pre
+
+        [ghc-tcplugin]
+            call = 1
+        [ghc-tcplugin]
+            call = 2
+        [ghc-tcplugin]
+            call = 3
+        ...
+        [ghc-tcplugin]
+            call = 63
+
+* Trace constraints
+
+    .. code:: pre
+
+        [constraints]
+            given = [
+            [G] $dNum_a9vZ {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9vN {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9wR {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9wT {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9wW {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9wS {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9wU {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9wX {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9wV {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9wY {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9x1 {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9wZ {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9x2 {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9vJ:s],fsk;a9ws:s)
+            , (Unpack [v;a9vK:s],fsk;a9wB:s)
+            , (Pack [fsk;a9ws:s],fsk;a9wu:s)
+            , (Pack [fsk;a9wB:s],fsk;a9wD:s)
+            , (HasCanonical [fsk;a9ws:s],fsk;a9wz:s)
+            , (HasCanonical [fsk;a9wB:s],fsk;a9wF:s)
+            , (ToCBU [fsk;a9wB:s],fsk;a9wM:s)
+            , (ToCBU [fsk;a9ws:s],fsk;a9wK:s)
+            , (fsk;a9wD:s,v;a9vK:s)
+            , (fsk;a9wu:s,u;a9vJ:s)
+            , (fsk;a9wK:s,fsk;a9wM:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $dNum_a9xH {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9xy {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9yg {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9yi {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9yl {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9yh {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9yj {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9ym {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9yk {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9yn {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9yq {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9yo {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9yr {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9xw:s],fsk;a9xX:s)
+            , (Unpack [v;a9xx:s],fsk;a9y3:s)
+            , (Pack [fsk;a9xX:s],fsk;a9xZ:s)
+            , (Pack [fsk;a9y3:s],fsk;a9y5:s)
+            , (HasCanonical [fsk;a9xX:s],fsk;a9y1:s)
+            , (HasCanonical [fsk;a9y3:s],fsk;a9y7:s)
+            , (ToCBU [fsk;a9y3:s],fsk;a9yb:s)
+            , (ToCBU [fsk;a9xX:s],fsk;a9y9:s)
+            , (fsk;a9y5:s,v;a9xx:s)
+            , (fsk;a9xZ:s,u;a9xw:s)
+            , (fsk;a9y9:s,fsk;a9yb:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [ (AllHasCanonical [xs;a9yX:s],fsk;a9z7:s) ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [ (HasCanonical [u;a9zo:s],fsk;a9zv:s) ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%,,%)_a9A5 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d~_a9A6 {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9A7 {0}:: u ~ u (CDictCan)
+            , [G] $dKnownUnit_a9A8 {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9zL:s],fsk;a9zY:s)
+            , (Pack [fsk;a9zY:s],fsk;a9A0:s)
+            , (HasCanonical [fsk;a9zY:s],fsk;a9A2:s)
+            , (fsk;a9A0:s,u;a9zL:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [ (AllHasCanonical [xs;a9Ab:s],fsk;a9IF:s) ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%%)_a9IL {0}:: () :: Constraint (CDictCan)
+            , (xs;a9Ab:s,[] [Symbol []])
+            , (fsk;a9IF:s,(%%) [])
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%%)_a9IL {0}:: () :: Constraint (CDictCan)
+            , (xs;a9Ab:s,[] [Symbol []])
+            , (fsk;a9IF:s,(%%) [])
+            ]
+            derived = []
+            wanted = [ (/: [One [],One []],One []) ]
+        [constraints]
+            given = [
+            [G] $d(%,%)_a9JF {0}:: (HasCanonicalBaseUnit x, fsk0) (CDictCan)
+            , [G] $dHasCanonicalBaseUnit_a9JG {0}:: HasCanonicalBaseUnit
+                                                x (CDictCan)
+            , [G] $dKnownSymbol_a9E7 {0}:: KnownSymbol x (CDictCan)
+            , (AllHasCanonical [xs1;a9E5:s],fsk;a9JD:s)
+            , (CanonicalBaseUnit [x;a9E3:s],fsk;a9JO:s)
+            , (Unpack [fsk;a9JO:s],fsk;a9JQ:s)
+            , (IsCanonical [fsk;a9JQ:s],fsk;a9JS:s)
+            , (xs;a9Ab:s,: [Symbol [],x;a9E3:s,xs1;a9E5:s])
+            , (fsk;a9IF:s,(%,%) [HasCanonicalBaseUnit [x;a9E3:s],fsk;a9JD:s])
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%,%)_a9JF {0}:: (HasCanonicalBaseUnit x, fsk0) (CDictCan)
+            , [G] $dHasCanonicalBaseUnit_a9JG {0}:: HasCanonicalBaseUnit
+                                                x (CDictCan)
+            , [G] $dKnownSymbol_a9E7 {0}:: KnownSymbol x (CDictCan)
+            , (AllHasCanonical [xs1;a9E5:s],fsk;a9JD:s)
+            , (CanonicalBaseUnit [x;a9E3:s],fsk;a9JO:s)
+            , (Unpack [fsk;a9JO:s],fsk;a9JQ:s)
+            , (IsCanonical [fsk;a9JQ:s],fsk;a9JS:s)
+            , (xs;a9Ab:s,: [Symbol [],x;a9E3:s,xs1;a9E5:s])
+            , (fsk;a9IF:s,(%,%) [HasCanonicalBaseUnit [x;a9E3:s],fsk;a9JD:s])
+            ]
+            derived = []
+            wanted = [ [WD] irred_a9Kj {0}:: ((Base x *: Prod xs1)
+                            /: (CanonicalBaseUnit x *: ListToCBU xs1))
+                            ~~ ((Base x /: CanonicalBaseUnit x)
+                                *: (Prod xs1 /: ListToCBU xs1)) (CNonCanonical) ]
+        [constraints]
+            given = [ (HasCanonical [u;a9ED:s],fsk;a9Kl:s) ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%,%)_a9Kt {0}:: (fsk0, fsk1) (CDictCan)
+            , (AllHasCanonical [xs;a9EI:s],fsk;a9Kp:s)
+            , (AllHasCanonical [ys;a9EJ:s],fsk;a9Kr:s)
+            , (u;a9ED:s,:/ [Symbol [],xs;a9EI:s,ys;a9EJ:s])
+            , (fsk;a9Kl:s,(%,%) [fsk;a9Kp:s,fsk;a9Kr:s])
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $d(%,%)_a9Kt {0}:: (fsk0, fsk1) (CDictCan)
+            , (AllHasCanonical [xs;a9EI:s],fsk;a9Kp:s)
+            , (AllHasCanonical [ys;a9EJ:s],fsk;a9Kr:s)
+            , (u;a9ED:s,:/ [Symbol [],xs;a9EI:s,ys;a9EJ:s])
+            , (fsk;a9Kl:s,(%,%) [fsk;a9Kp:s,fsk;a9Kr:s])
+            ]
+            derived = []
+            wanted = [ [WD] irred_a9KX {0}:: ((Prod xs /: Prod ys)
+                            /: (ListToCBU xs /: ListToCBU ys))
+                            ~~ ((Prod xs /: ListToCBU xs)
+                                /: (Prod ys /: ListToCBU ys)) (CNonCanonical) ]
+        [constraints]
+            given = [
+            [G] $d(%,,%)_a9Lc {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d~_a9Ld {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9Le {0}:: u ~ u (CDictCan)
+            , [G] $dKnownUnit_a9Lf {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9F6:s],fsk;a9L5:s)
+            , (Pack [fsk;a9L5:s],fsk;a9L7:s)
+            , (HasCanonical [fsk;a9L5:s],fsk;a9L9:s)
+            , (fsk;a9L7:s,u;a9F6:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+            , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+            , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+            , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+            , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+            , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+            , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+            , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+            , (fsk;a9LR:s,v;a9Fm:s)
+            , (fsk;a9LL:s,u;a9Fl:s)
+            , (fsk;a9LV:s,fsk;a9LX:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+            , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+            , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+            , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+            , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+            , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+            , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+            , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+            , (fsk;a9LR:s,v;a9Fm:s)
+            , (fsk;a9LL:s,u;a9Fl:s)
+            , (fsk;a9LV:s,fsk;a9LX:s)
+            ]
+            derived = []
+            wanted = [
+            [WD] irred_a9Mu {0}:: (u /: v)
+                            ~~ ((u /: ToCBU (Unpack v))
+                                /: (v /: ToCBU (Unpack v))) (CNonCanonical)
+            , [WD] $dIP_a9ME {0}:: ?callStack::CallStack (CDictCan)
+            ]
+        [constraints]
+            given = [
+            [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+            , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+            , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+            , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+            , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+            , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+            , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+            , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+            , (fsk;a9LR:s,v;a9Fm:s)
+            , (fsk;a9LL:s,u;a9Fl:s)
+            , (fsk;a9LV:s,fsk;a9LX:s)
+            ]
+            derived = []
+            wanted = [ [WD] $dIP_a9ME {0}:: ?callStack::CallStack (CDictCan) ]
+        [constraints]
+            given = [
+            [G] $dNum_a9MF {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9HC:s],fsk;a9MV:s)
+            , (Unpack [v;a9HD:s],fsk;a9N1:s)
+            , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+            , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+            , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+            , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+            , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+            , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+            , (fsk;a9N3:s,v;a9HD:s)
+            , (fsk;a9MX:s,u;a9HC:s)
+            , (fsk;a9N7:s,fsk;a9N9:s)
+            ]
+            derived = []
+            wanted = []
+        [constraints]
+            given = [
+            [G] $dNum_a9MF {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9HC:s],fsk;a9MV:s)
+            , (Unpack [v;a9HD:s],fsk;a9N1:s)
+            , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+            , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+            , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+            , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+            , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+            , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+            , (fsk;a9N3:s,v;a9HD:s)
+            , (fsk;a9MX:s,u;a9HC:s)
+            , (fsk;a9N7:s,fsk;a9N9:s)
+            ]
+            derived = []
+            wanted = [ [WD] irred_a9NU {0}:: v ~~ ((v /: u) *: u) (CNonCanonical) ]
+        [constraints]
+            given = [
+            [G] $dNum_a9MF {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9HC:s],fsk;a9MV:s)
+            , (Unpack [v;a9HD:s],fsk;a9N1:s)
+            , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+            , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+            , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+            , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+            , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+            , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+            , (fsk;a9N3:s,v;a9HD:s)
+            , (fsk;a9MX:s,u;a9HC:s)
+            , (fsk;a9N7:s,fsk;a9N9:s)
+            ]
+            derived = []
+            wanted = [ [WD] $dIP_a9NW {0}:: ?callStack::CallStack (CDictCan) ]
+        [constraints]
+            given = [
+            [G] $dNum_a9MF {0}:: Num a (CDictCan)
+            , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+            , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+            , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+            , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+            , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+            , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+            , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                        (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+            , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+            , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+            , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+            , (Unpack [u;a9HC:s],fsk;a9MV:s)
+            , (Unpack [v;a9HD:s],fsk;a9N1:s)
+            , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+            , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+            , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+            , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+            , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+            , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+            , (fsk;a9N3:s,v;a9HD:s)
+            , (fsk;a9MX:s,u;a9HC:s)
+            , (fsk;a9N7:s,fsk;a9N9:s)
+            ]
+            derived = []
+            wanted = [ [WD] $dIP_a9NX {0}:: ?callStack::CallStack (CDictCan) ]
+
+* Trace solutions
+
+    .. code:: pre
+
+        [solve]
+            solution =
+                [ (CO U(plugin:uom-solve
+                , One /: One, One)_N,(/: [One [],One []],One []))
+                ]
+            new-wanted = []
+        [solve]
+            solution = [ (Eq# @[Unit, Unit,
+            (Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1),
+            (Base x /: CanonicalBaseUnit x) *: (Prod xs1 /: ListToCBU xs1)]
+            [CO U(plugin:uom-solve
+                , (Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1)
+                , (Base x /: CanonicalBaseUnit x)
+                  *: (Prod xs1 /: ListToCBU xs1))_N]
+                `cast`
+                U(plugin:uom-solve
+                , ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+                ~ ((Base x /: CanonicalBaseUnit x) *: (Prod xs1 /: ListToCBU xs1))
+                , ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+                ~~ ((Base x /: CanonicalBaseUnit x)
+                    *: (Prod xs1 /: ListToCBU xs1)))_R
+                ,[WD] irred_a9Kj {0}::
+                    ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+                    ~~ ((Base x /: CanonicalBaseUnit x)
+                        *: (Prod xs1 /: ListToCBU xs1))
+                    (CNonCanonical)) ]
+            new-wanted = []
+        [solve]
+            solution = [ (Eq# @[Unit, Unit,
+            (Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys),
+            (Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys)]
+            [CO U(plugin:uom-solve
+                , (Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys)
+                , (Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))_N]
+                `cast`
+                U(plugin:uom-Solve
+                , ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+                ~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))
+                , ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+                ~~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys)))_R
+                ,[WD] irred_a9KX {0}::
+                    ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+                    ~~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))
+                    (CNonCanonical)) ]
+            new-wanted = []
+        [solve]
+            solution = [ (Eq# @[Unit, Unit, u /: v,
+            (u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v))]
+            [CO U(plugin:uom-solve
+            , u /: v
+            , (u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))_N]
+            `cast`
+            U(plugin:uom-solve
+            , (u /: v) ~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))
+            , (u /: v) ~~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v))))_R
+            ,[WD] irred_a9Mu {0}::
+                (u /: v) ~~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))
+                (CNonCanonical)) ]
+            new-wanted = []
+        [solve]
+            solution = [ (Eq# @[Unit, Unit, v, (v /: u) *: u]
+            [CO U(plugin:uom-solve
+            , v
+            , (v /: u) *: u)_N]
+            `cast`
+            U(plugin:uom-solve
+            , v ~ ((v /: u) *: u)
+            , v ~~ ((v /: u) *: u))_R
+            ,[WD] irred_a9NU {0}:: v ~~ ((v /: u) *: u) (CNonCanonical)) ]
+            new-wanted = []
+
 .. [#] I've removed pragmas, most imports and type signatures from the program listing.
 .. [#]
     With a regex I grabbed the first word ``s/^(\S+).*$/$1/``, deleted lines with
