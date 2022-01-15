@@ -400,19 +400,6 @@ for doing this, `ghc-tcplugins-trace`_.
             -- ^ Trace the solution, the @TcPluginResult@.
             }
 
-I'm using this with both plugins and have another for tracing SMT conversion and
-conversation.
-
-.. code:: Haskell
-
-    data DebugSmt =
-        DebugSmt
-            { traceConvertCtsToSmt :: TraceConvertCtsToSmt
-            -- ^ Trace conversions to SMT notation
-            , traceSmtConversation :: TraceSmtConversation
-            -- ^ Trace the conversation with the SMT solver
-            }
-
 With these flags we get to see typechecking from the plugin's point of view. We can:
 
 * Trace call count
@@ -897,6 +884,47 @@ With these flags we get to see typechecking from the plugin's point of view. We 
             , v ~~ ((v /: u) *: u))_R
             ,[WD] irred_a9NU {0}:: v ~~ ((v /: u) *: u) (CNonCanonical)) ]
             new-wanted = []
+
+I'm using this with both plugins and have another for tracing SMT conversion and
+conversation.
+
+.. code:: Haskell
+
+    data DebugSmt =
+        DebugSmt
+            { traceConvertCtsToSmt :: TraceConvertCtsToSmt
+            -- ^ Trace conversions to SMT notation
+            , traceSmtConversation :: TraceSmtConversation
+            -- ^ Trace the conversation with the SMT solver
+            }
+
+After commenting out the parts of the program that don't compile with the
+``thoralf-plugin`` let's see how it traces SMT:
+
+* Converting constraints to SMT
+
+.. code:: pre
+
+    [smt-step]
+      smt-wanted = [
+        (assert
+          (or
+            false
+            (not
+              (=
+                ((as const (Array String Int)) 0)
+                (
+                  (_ map (- (Int Int) Int))
+                  (store base "s" n1)
+                  (store base "s" n1))))))
+      ]
+
+* Listening in on the conversation with the solver
+
+.. code:: pre
+
+    [send->] (declare-const base (Array String Int))
+    [<-recv] success
 
 .. [#] I've removed pragmas, most imports and type signatures from the program listing.
 .. [#]
