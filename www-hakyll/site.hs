@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Control.Applicative (empty)
+import qualified Data.Map as Map
 import Data.List (intersperse)
 import Hakyll
     ( (.||.), Context(..), Item(..), Configuration(..)
@@ -38,22 +39,34 @@ import Hakyll
     , composeRoutes
     )
 import Hakyll.Web.Tags (Tags, buildTags, tagsRules, getTags)
-import Text.Pandoc.Options
-    (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
+import Text.Pandoc.Options (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
+import Skylighting (Syntax, parseSyntaxDefinition)
 import Text.Blaze.Html ((!), toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import System.FilePath
 import System.Environment (getArgs)
 
-pandocReaderOptions :: ReaderOptions
-pandocReaderOptions = defaultHakyllReaderOptions
+pandocReaderOptions :: Maybe Syntax -> ReaderOptions
+pandocReaderOptions Nothing = defaultHakyllReaderOptions
+pandocReaderOptions (Just _) =
+        defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2"] }
 
-pandocWriterOptions :: WriterOptions
-pandocWriterOptions = defaultHakyllWriterOptions { writerHTMLMathMethod = MathJax "" }
+pandocWriterOptions :: Maybe Syntax -> WriterOptions
+pandocWriterOptions Nothing = defaultHakyllWriterOptions { writerHTMLMathMethod = MathJax "" }
+pandocWriterOptions (Just syntax) =
+        defaultHakyllWriterOptions
+            { writerHTMLMathMethod = MathJax ""
+            , writerSyntaxMap = syntaxMap
+            }
+        where
+            syntaxMap =
+                Map.insert "smt2" syntax
+                $ writerSyntaxMap defaultHakyllWriterOptions
 
-pandoc :: Compiler (Item String)
-pandoc = pandocCompilerWith pandocReaderOptions pandocWriterOptions
+pandoc :: Maybe Syntax -> Compiler (Item String)
+pandoc syntax =
+    pandocCompilerWith (pandocReaderOptions syntax) (pandocWriterOptions syntax)
 
 static :: Pattern -> Rules ()
 static f = match f $ do
@@ -75,13 +88,18 @@ mkStatic path = do
         customRoute ((</> "index.html") . fst . splitExtension . toFilePath)
 
     compile $ do
-        pandoc
+        pandoc Nothing
             >>= loadAndApplyTemplate "templates/about.html" postCtx
             >>= loadAndApplyTemplate (fromFilePath $ "templates" </> path <.> ".html") postCtx
             >>= relativizeUrls
 
 main :: IO ()
 main = do
+    -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
+    syntax <-
+        either (error . show) return
+        =<< parseSyntaxDefinition "syntax/smt2.xml"
+
     args <- getArgs
     hakyllWith config $ do
 
@@ -115,7 +133,7 @@ main = do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
 
-                pandoc
+                pandoc (Just syntax)
                     >>= loadAndApplyTemplate "templates/post.html" ctx
                     >>= loadAndApplyTemplate "templates/default.html" ctx
                     >>= relativizeUrls
@@ -154,7 +172,7 @@ main = do
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
             compile $ do
-                pandoc
+                pandoc Nothing
                     >>= loadAndApplyTemplate "templates/index.html" postCtx
                     >>= loadAndApplyTemplate "templates/default.html" postCtx
                     >>= relativizeUrls

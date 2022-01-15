@@ -1,10 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.dhall by hpack version 0.34.4.
+-- This file has been generated from package.dhall by hpack version 0.34.6.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 677c1ec9bb36af69c8b995f396808b103fe442810f7fa40e725fa7984a986d5a
+-- hash: bd193797123a451f4a35c5bedc571143f73b889f652bde502d838bdb1090007f
 
 name:           camp-hog
 version:        1.0.0
@@ -72,9 +72,12 @@ executable site
   build-depends:
       base
     , blaze-html
+    , containers
     , filepath
     , hakyll
     , pandoc >=2.9
+    , skylighting
+    , skylighting-core
   default-language: Haskell2010
 
 test-suite hlint
@@ -121,8 +124,11 @@ test-suite hlint
   build-depends:
       base
     , blaze-html
+    , containers
     , filepath
     , hakyll
     , hlint
     , pandoc >=2.9
+    , skylighting
+    , skylighting-core
   default-language: Haskell2010
