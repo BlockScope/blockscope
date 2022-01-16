@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<language version="10" kateversion="5.0" name="smt2" section="Sources" extensions="*.smt2" mimetype="" author="Phil de Joux" license="MPL-2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="language.xsd">
+  <highlighting>
+    <list name="symbols">
+      <item>&lt;</item>
+      <item>&lt;=</item>
+      <item>=</item>
+      <item>&gt;</item>
+      <item>&gt;=</item>
+      <item>-</item>
+      <item>/</item>
+      <item>/=</item>
+      <item>*</item>
+      <item>+</item>
+      <item>_</item>
+      <item>!</item>
+      <item>as</item>
+      <item>let</item>
+      <item>forall</item>
+      <item>exists</item>
+      <item>par</item>
+    </list>
+    <list name="declare">
+      <item>declare-fun</item>
+      <item>declare-sort</item>
+      <item>declare-datatypes</item>
+      <item>declare-const</item>
+    </list>
+    <list name="commands">
+      <item>set-logic</item>
+      <item>define-fun</item>
+      <item>define-funs-rec</item>
+      <item>define-sort</item>
+      <item>assert</item>
+      <item>get-assertions</item>
+      <item>check-sat</item>
+      <item>get-proof</item>
+      <item>get-unsat-core</item>
+      <item>get-value</item>
+      <item>get-assignment</item>
+      <item>push</item>
+      <item>pop</item>
+      <item>get-option</item>
+      <item>set-option</item>
+      <item>get-info</item>
+      <item>set-info</item>
+      <item>exit</item>
+    </list>
+    <list name="other">
+      <item>array</item>
+      <item>string</item>
+      <item>help</item>
+      <item>simplify</item>
+      <item>distinct</item>
+      <item>display</item>
+      <item>match</item>
+    </list>
+    <list name="sorts">
+      <item>Int</item>
+      <item>Real</item>
+      <item>Bool</item>
+      <item>Array</item>
+      <item>List</item>
+      <item>Set</item>
+      <item>BitVec</item>
+      <item>FixedSizedList</item>
+      <item>String</item>
+    </list>
+    <list name="sats">
+      <item>sat</item>
+      <item>unsat</item>
+    </list>
+    <list name="constants">
+      <item>true</item>
+      <item>false</item>
+    </list>
+    <list name="functions">
+      <item>not</item>
+      <item>and</item>
+      <item>or</item>
+      <item>xor</item>
+      <item>=</item>
+      <item>distinct</item>
+      <item>ite</item>
+      <item>=&gt;</item>
+      <item>store</item>
+      <item>select</item>
+    </list>
+
+    <contexts>
+      <context name="Normal" attribute="Normal" lineEndContext="#stay">
+        <DetectChar attribute="Comment" context="Comment" char=";" />
+        <AnyChar attribute="Brackets" context="#stay" String="()" />
+        <keyword attribute="Keyword" context="#stay" String="commands" />
+        <keyword attribute="Operator" context="#stay" String="symbols" />
+        <keyword attribute="Function" context="#stay" String="other" />
+        <RegExpr attribute="Attribute" context="#stay" String=":(\w|-)+" />
+        <keyword attribute="Constant" context="#stay" String="constants" />
+        <keyword attribute="Constant" context="#stay" String="sats" />
+        <keyword attribute="Function" context="#stay" String="functions" />
+        <keyword attribute="Declare" context="#stay" String="declare" />
+        <keyword attribute="Sort" context="#stay" String="sorts" />
+        <RegExpr attribute="Char" context="#stay" String="#\\." />
+        <DetectChar attribute="String" context="String" char="&quot;" />
+        <Detect2Chars attribute="Decimal" context="#stay" char="#" char1="t" />
+        <Detect2Chars attribute="Decimal" context="#stay" char="#" char1="f" />
+        <RegExpr attribute="Char" context="SpecialNumber" String="#[bodxei]" />
+        <Float attribute="Float" context="#stay" />
+        <Int attribute="Decimal" context="#stay" />
+        <DetectIdentifier attribute="Variable" context="#stay" />
+      </context>
+      <context name="SpecialNumber" attribute="Normal" lineEndContext="#pop">
+        <Float attribute="Float" context="#pop" />
+        <Int attribute="Decimal" context="#pop" />
+        <HlCOct attribute="BaseN" context="#pop" />
+        <HlCHex attribute="Float" context="#pop" />
+      </context>
+      <context name="String" attribute="String" lineEndContext="#stay">
+        <RegExpr attribute="Char" context="#stay" String="#\\." />
+        <HlCStringChar attribute="String Char" context="#stay" />
+        <DetectChar attribute="String" context="#pop" char="&quot;" />
+      </context>
+      <context name="Comment" attribute="Comment" lineEndContext="#pop">
+        <IncludeRules context="##Comments" />
+      </context>
+    </contexts>
+    <itemDatas>
+      <itemData name="Normal" defStyleNum="dsNormal" />
+      <itemData name="Keyword" defStyleNum="dsKeyword" />
+      <itemData name="Operator" defStyleNum="dsOperator" />
+      <itemData name="Sort" defStyleNum="dsDataType" />
+      <itemData name="Declare" defStyleNum="dsNormal" />
+      <itemData name="Attribute" defStyleNum="dsError" />
+      <itemData name="Function" defStyleNum="dsFunction" />
+      <itemData name="Variable" defStyleNum="dsVariable" />
+      <itemData name="Decimal" defStyleNum="dsDecVal" />
+      <itemData name="Constant" defStyleNum="dsDecVal" />
+      <itemData name="BaseN" defStyleNum="dsBaseN" />
+      <itemData name="Float" defStyleNum="dsFloat" />
+      <itemData name="Char" defStyleNum="dsChar" />
+      <itemData name="String" defStyleNum="dsString" />
+      <itemData name="String Char" defStyleNum="dsSpecialChar" />
+      <itemData name="Comment" defStyleNum="dsComment" />
+      <itemData name="Brackets" defStyleNum="dsNormal" />
+    </itemDatas>
+  </highlighting>
+  <general>
+    <keywords casesensitive="1" weakDeliminator="-+*?!&lt;&gt;=/:#\" />
+    <comments>
+      <comment name="singleLine" start=";;" />
+      <comment name="multiLine" start="#|" end="|#" region="BlockComment" />
+    </comments>
+  </general>
+</language>
