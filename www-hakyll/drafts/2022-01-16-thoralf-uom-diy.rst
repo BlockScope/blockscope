@@ -95,6 +95,18 @@ Translated to SMT2
     (declare-const base (Array String Int))
     (declare-const enc (Array String Int))
 
+    ; given constraints
+    ; [G] $d~_a1BE {0}:: mps ~ mps (CDictCan)
+    ; [G] $d~~_a1BF {0}:: mps ~ mps (CDictCan)
+    ; (One [],a1Bq)
+    ; (Base ["m"],a1Bo)
+    ; (Base ["s"],a1Bu)
+    ; (*: [a1Bo,a1Bq],a1Bs)
+    ; (*: [a1Bu,a1Bq],a1Bw)
+    ; (/: [a1Bs,a1Bw],a1By)
+    ; (a1By,a1tT)
+
+    ; declarations
     (declare-const a1tT (Array String Int))
     (declare-const a1Bo (Array String Int))
     (declare-const a1Bq (Array String Int))
@@ -103,6 +115,7 @@ Translated to SMT2
     (declare-const a1Bw (Array String Int))
     (declare-const a1By (Array String Int))
 
+    ; givens
     (assert (= ((as const (Array String Int)) 0) a1Bq))
     (assert (= (store base "m" n1) a1Bo))
     (assert (= (store base "s" n1) a1Bu))
@@ -111,31 +124,81 @@ Translated to SMT2
     (assert (= ((_ map (- (Int Int) Int)) a1Bs a1Bw) a1By))
     (assert (= a1By a1tT))
 
+    ; given constraints
+    ; [G] $d~_a1Ct {0}:: c ~ c (CDictCan)
+    ; [G] $d~~_a1Cu {0}:: c ~ c (CDictCan)
+    ; (/: [a1Cd,a1Ce],a1Cn)
+    ; (a1Cn,a1Cf)
+
+    ; declarations
     (declare-const a1Cd (Array String Int))
     (declare-const a1Ce (Array String Int))
     (declare-const a1Cf (Array String Int))
     (declare-const a1Cn (Array String Int))
 
+    ; givens
     (assert (= ((_ map (- (Int Int) Int)) a1Cd a1Ce) a1Cn))
     (assert (= a1Cn a1Cf))
 
+    ; given constraints
+    ; [G] $d~_a1D6 {0}:: c ~ c (CDictCan)
+    ; [G] $d~~_a1D7 {0}:: c ~ c (CDictCan)
+    ; (*: [a1CM,a1CN],a1D0)
+    ; (a1D0,a1CO)
+
+    ; declarations
     (declare-const a1CM (Array String Int))
     (declare-const a1CN (Array String Int))
     (declare-const a1CO (Array String Int))
     (declare-const a1D0 (Array String Int))
 
+    ; givens
     (assert (= ((_ map (+ (Int Int) Int)) a1CM a1CN) a1D0))
     (assert (= a1D0 a1CO))
 
+    ; given constraints
+    ; [G] $d~_a1Eh {0}:: b ~ b (CDictCan)
+    ; [G] $d~~_a1Ei {0}:: b ~ b (CDictCan)
+    ; (Enc [a1DX,a1DY],a1Eb)
+    ; (a1Eb,a1DZ)
+
+    ; declarations
     (declare-const a1DX String)
     (declare-const a1DY Int)
     (declare-const a1DZ (Array String Int))
     (declare-const a1Eb (Array String Int))
     (assert (<= 0 a1DY))
 
+    ; givens
     (assert (= (store enc a1DX a1DY) a1Eb))
     (assert (= a1Eb a1DZ))
 
+    ; wanted constraints
+    ; [
+    ;   ( *:
+    ;       [ Base ["m"]
+    ;       , One []
+    ;       ]
+    ;   , *:
+    ;       [ /:
+    ;           [ *:
+    ;               [ Base ["m"]
+    ;               , One []
+    ;               ]
+    ;           , *:
+    ;               [ Base ["s"]
+    ;               , One []
+    ;               ]
+    ;           ]
+    ;       , *:
+    ;            [ Base ["s"]
+    ;            , One []
+    ;            ]
+    ;       ]
+    ;   )
+    ; ]
+
+    ; wanteds
     (assert
         (or
             false
@@ -156,22 +219,66 @@ Translated to SMT2
                             (store base "s" n1)
                             ((as const (Array String Int)) 0)))))))
 
+    ; given constraints
+    ; [G] $d~_a1GM {0}:: c ~ c (CDictCan)
+    ; [G] $d~~_a1GN {0}:: c ~ c (CDictCan)
+    ; (/: [a1Et,a1Eu],a1GG)
+    ; (a1GG,a1Ev)
+
+    ; declarations
     (declare-const a1Et (Array String Int))
     (declare-const a1Eu (Array String Int))
     (declare-const a1Ev (Array String Int))
     (declare-const a1GG (Array String Int))
 
+    ; givens
     (assert (= ((_ map (- (Int Int) Int)) a1Et a1Eu) a1GG))
     (assert (= a1GG a1Ev))
 
+    ; given constraints
+    ; [G] $d~_a1GV {0}:: c ~ c (CDictCan)
+    ; [G] $d~~_a1GW {0}:: c ~ c (CDictCan)
+    ; (*: [a1EJ,a1EK],a1GP)
+    ; (a1GP,a1EL)
+
+    ; declarations
     (declare-const a1EJ (Array String Int))
     (declare-const a1EK (Array String Int))
     (declare-const a1EL (Array String Int))
     (declare-const a1GP (Array String Int))
 
+    ; givens
     (assert (= ((_ map (+ (Int Int) Int)) a1EJ a1EK) a1GP))
     (assert (= a1GP a1EL))
 
+    ; given constraints
+    ; [G] $d~_a1He {0}:: mps ~ mps (CDictCan)
+    ; [G] $d~~_a1Hf {0}:: mps ~ mps (CDictCan)
+    ; (One [],a1H0)
+    ; (Base ["m"],a1GY)
+    ; (Base ["s"],a1H4)
+    ; (*: [a1GY,a1H0],a1H2)
+    ; (*: [a1H4,a1H0],a1H6)
+    ; (/: [a1H2,a1H6],a1H8)
+    ; (a1H8,a1Fa)
+
+    ; wanted constraints
+    ; [
+    ;   ( *:
+    ;       [ a1Fa
+    ;       , *:
+    ;           [ Base ["s"]
+    ;           , One []
+    ;           ]
+    ;       ]
+    ;   , *:
+    ;       [ Base ["m"]
+    ;       , One []
+    ;       ]
+    ;   )
+    ; ]
+
+    ; declarations
     (declare-const a1Fa (Array String Int))
     (declare-const a1GY (Array String Int))
     (declare-const a1H0 (Array String Int))
@@ -180,6 +287,7 @@ Translated to SMT2
     (declare-const a1H6 (Array String Int))
     (declare-const a1H8 (Array String Int))
 
+    ; givens
     (assert (= ((as const (Array String Int)) 0) a1H0))
     (assert (= (store base "m" n1) a1GY))
     (assert (= (store base "s" n1) a1H4))
@@ -188,6 +296,7 @@ Translated to SMT2
     (assert (= ((_ map (- (Int Int) Int)) a1H2 a1H6) a1H8))
     (assert (= a1H8 a1Fa))
 
+    ; wanteds
     (assert
         (or
             false
@@ -202,12 +311,20 @@ Translated to SMT2
                         (store base "m" n1)
                         ((as const (Array String Int)) 0))))))
 
+    ; given constraints
+    ; [G] $d~_a1Hv {0}:: b ~ b (CDictCan)
+    ; [G] $d~~_a1Hw {0}:: b ~ b (CDictCan)
+    ; (Enc [a1Fw,a1Fx],a1Hp)
+    ; (a1Hp,a1Fy)
+    
+    ; declarations
     (declare-const a1Fw String)
     (declare-const a1Fx Int)
     (declare-const a1Fy (Array String Int))
     (declare-const a1Hp (Array String Int))
     (assert (<= 0 a1Fx))
 
+    ; givens
     (assert (= (store enc a1Fw a1Fx) a1Hp))
     (assert (= a1Hp a1Fy))
 
