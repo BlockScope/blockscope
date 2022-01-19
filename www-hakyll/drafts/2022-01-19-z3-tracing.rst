@@ -57,3 +57,70 @@ This the fix for that.
 
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
+
+Functions in simple-smt for showing s-expressions are ``showsSExpr`` and
+``ppSExpr``.
+
+.. code:: haskell
+
+    -- | Show an s-expression.
+    --
+    -- >>> let Just (e, _) = readSExpr "(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))"
+    -- >>> putStrLn $ showsSExpr e ""
+    -- (assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))
+    showsSExpr :: SExpr -> ShowS
+
+    -- | Show an s-expression in a somewhat readable fashion.
+    --
+    -- >>> let Just (e, _) = readSExpr "(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))"
+    -- >>> putStrLn $ ppSExpr e ""
+    -- (assert
+    --    (=
+    --       (
+    --         (_
+    --            map
+    --            (-
+    --               (Int Int)
+    --               Int))
+    --         a1Cl
+    --         a1Cm)
+    --       a1Cv))
+    ppSExpr :: SExpr -> ShowS
+
+I want to use the pretty printer ``ppSExpr`` but simple-smt itself uses the
+all-in-one-line printer ``showsSExpr`` and that is how the comms with Z3 are
+showing up while I'm tracing. To work on this I added simple-smt as a submodule
+after first forking it to the *BlockScope* organization on github.
+
+.. code:: pre
+
+    > git submodule add https://github.com/BlockScope/simple-smt
+    > cd simple-smt
+    > git checkout -b wip/plugins-for-blobs
+
+I need to add an entry to ``cabal.project`` to pick up this dependency locally
+rather than from hackage, all without changing any of the ``*.cabal`` files that
+mention ``simple-smt`` as a dependency.
+
+.. code:: haskell
+
+    -- cabal.project
+    packages:
+        simple-smt
+        thoralf-plugin
+
+By passing an ``SExpr -> ShowsS`` printer in as a parameter when setting up the
+solver and using this instead of ``showsSExpr`` I'm now getting nicely formatted
+and much easier to follow tracing. As a bonus, lines are all short enough so hat
+they won't need scrolling when viewed in a narrow frame so as when showing up as
+code snippets on this blog.
+
+.. code:: haskell
+
+    -- | Start a new solver process.
+    newSolver
+        :: String -- ^ Executable
+        -> [String] -- ^ Arguments
+        -> (SExpr -> ShowS) -- ^ Function for showing s-expressions
+        -> Maybe Logger -- ^ Optional logging here
+        -> IO Solver
