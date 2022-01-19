@@ -1,0 +1,59 @@
+---
+title: Z3 Tracing
+subtitle: Improving tracing of the Thoralf
+tags: haskell, tcplugins, z3
+---
+
+Simple SMT
+----------
+
+The thoralf plugin is using simple-smt_ to talk with Z3 to solve typechecking
+constraints. The communication format are smt-lib_ s-expressions. This package
+is able to read and show these without needing to know much about them. It does
+recognize a few of these s-expressions from the smt-lib standard. The recursive
+data representation of these is simple, hence the name I guess.
+
+.. code:: haskell
+
+    data SExpr = Atom String | List [SExpr]
+
+I've been doing a lot of tracing and noticed extra spaces in the s-expressions.
+
+.. code:: pre
+
+    > cabal build thoralf-plugin-uom:uom-diy > thoralf-uom-diy.txt
+
+.. code:: smt2
+
+    ; thoralf-uom-diy.txt
+    (assert (= a1Cv a1Cn ) )
+    (check-sat )
+
+I'd like to have the s-expressions show up in the trace without those extra
+spaces, like this:
+
+.. code:: smt2
+
+    (assert (= a1Cv a1Cn))
+    (check-sat)
+
+This the fix for that.
+
+.. code:: diff
+
+     --- SimpleSMT.hs
+     +++ SimpleSMT.hs
+        showsSExpr :: SExpr -> ShowS
+        showsSExpr ex =
+          case ex of
+            Atom x  -> showString x
+    -       List es -> showChar '(' .
+    -                   foldr (\e m -> showsSExpr e . showChar ' ' . m)
+    -                   (showChar ')') es
+    +       List [] -> showString "()"
+    +       List (e0 : es) -> showChar '(' . showsSExpr e0 .
+    +                          foldr (\e m -> showChar ' ' . showsSExpr e . m)
+    +                          (showChar ')') es
+
+.. _simple-smt: https://hackage.haskell.org/package/simple-smt
+.. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
