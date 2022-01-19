@@ -1,11 +1,8 @@
 ---
 title: Z3 Tracing
-subtitle: Improving tracing of the Thoralf
-tags: haskell, tcplugins, z3
+subtitle: Improving tracing of the Thoralf plugin.
+tags: haskell, tcplugins, z3, tracing
 ---
-
-Simple SMT
-----------
 
 The thoralf plugin is using simple-smt_ to talk with Z3 to solve typechecking
 constraints. The communication format are smt-lib_ s-expressions. This package
@@ -16,6 +13,9 @@ data representation of these is simple, hence the name I guess.
 .. code:: haskell
 
     data SExpr = Atom String | List [SExpr]
+
+Removing Extra Spaces
+---------------------
 
 I've been doing a lot of tracing and noticed extra spaces in the s-expressions.
 
@@ -55,8 +55,8 @@ This the fix for that.
     +                          foldr (\e m -> showChar ' ' . showsSExpr e . m)
     +                          (showChar ')') es
 
-.. _simple-smt: https://hackage.haskell.org/package/simple-smt
-.. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
+Choosing a S-Expression Printer
+-------------------------------
 
 Functions in simple-smt for showing s-expressions are ``showsSExpr`` and
 ``ppSExpr``.
@@ -124,3 +124,6 @@ code snippets on this blog.
         -> (SExpr -> ShowS) -- ^ Function for showing s-expressions
         -> Maybe Logger -- ^ Optional logging here
         -> IO Solver
+
+.. _simple-smt: https://hackage.haskell.org/package/simple-smt
+.. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
