@@ -55,8 +55,8 @@ This the fix for that.
     +                          foldr (\e m -> showChar ' ' . showsSExpr e . m)
     +                          (showChar ')') es
 
-Choosing a S-Expression Printer
--------------------------------
+Choosing an S-Expression Printer
+--------------------------------
 
 Functions in simple-smt for showing s-expressions are ``showsSExpr`` and
 ``ppSExpr``.
@@ -250,8 +250,8 @@ that it can offload solving to Z3. When tracing I'd like to see the constraints
 passed in to the plugin by GHC. I've found two ways of showing these, printed
 with GHC's own pretty printing and with printing included with the plugin
 itself. I've gone through the following trace output and added ``:named``
-assertions. To help me work in interactive mode with z3, I've added a lot of
-options and commented out push, pop and exit commands.
+assertions and echos. To help me work in interactive mode with z3, I've added a
+lot of options and commented out push, pop and exit commands.
 
 .. code:: smt2
 
@@ -341,10 +341,35 @@ options and commented out push, pop and exit commands.
             a1BA
             a1BE) a1BG) :named a1BG=a1BA/a1BE))
     (assert
-    (= a1BG a1u1))
+        (! (= a1BG a1u1) :named a1u1=a1BG))
     (echo "checkpoint #1")
     (check-sat)
     ; sat
+
+Unexploded Atoms
+----------------
+
+To help get pretty printing going I replaced each call to ``Atom`` with a call
+to ``justReadSExpr``, avoiding lists masquerading as atoms.
+
+.. code:: haskell
+
+    {-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}
+
+    justReadSExpr :: String -> SExpr
+    justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
+
+This is dangerous but something I can live with while this project is a work in
+progress and I want to get on with tracing rather than yak shaving.
+
+.. code:: pre
+
+    src/ThoralfPlugin/Convert.hs: warning: [-Wincomplete-uni-patterns]
+        Pattern match(es) are non-exhaustive
+        In a pattern binding: Patterns not matched: Nothing
+        |
+    ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
+        |
 
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
