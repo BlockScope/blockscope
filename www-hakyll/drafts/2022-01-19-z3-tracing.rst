@@ -242,5 +242,109 @@ prefixes.
 What's left to do for roundtripping is prefix any output that I don't want as
 input with ``;`` to make it a comment.
 
+Constraints Encoding
+--------------------
+
+The whole point of the thoralf plugin is to encode a theory as s-expressions so
+that it can offload solving to Z3. When tracing I'd like to see the constraints
+passed in to the plugin by GHC. I've found two ways of showing these, printed
+with GHC's own pretty printing and with printing included with the plugin
+itself. I've gone through the following trace output and added ``:named``
+assertions. To help me work in interactive mode with z3, I've added a lot of
+options and commented out push, pop and exit commands.
+
+.. code:: smt2
+
+    (set-option :global-declarations true)
+    (set-option :interactive-mode true)
+    (set-option :print-success true)
+    (set-option :produce-assertions true)
+    (set-option :produce-assignments true)
+    (set-option :produce-models true)
+    (set-option :produce-proofs true)
+    (set-option :produce-unsat-assumptions true)
+    (set-option :produce-unsat-cores true)
+    ; (push 1)
+    ; (exit)
+    (declare-datatypes () ((Type (apply (fst Type) (snd Type)) (lit (getstr String)))))
+    (declare-const one Int)
+    (assert (! (= one 1) :named one=1))
+    (declare-const base (Array String Int))
+    (declare-const enc (Array String Int))
+    (declare-const exp (Array String Int))
+    (assert (! (= enc base) :named enc=base))
+    ; (push 1)
+
+    ; GIVENS (GHC style)
+    ; [G] cobox_a1Bz {3}:: One ~ fsk0 (CFunEqCan)
+    ; [G] cobox_a1Bx {2}:: Base "m" ~ fsk0 (CFunEqCan)
+    ; [G] cobox_a1BD {2}:: Base "s" ~ fsk0 (CFunEqCan)
+    ; [G] cobox_a1BB {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)
+    ; [G] cobox_a1BF {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)
+    ; [G] cobox_a1BH {1}:: (fsk0 /: fsk1) ~ fsk2 (CFunEqCan)
+    ; [G] cobox_a1BL {1}:: fsk0 ~ mps (CTyEqCan)
+
+    ; WANTEDS (GHC style)
+    ; []
+
+    ; GIVENS (Thoralf style)
+    ; (One [],a1By)
+    ; (Base ["m"],a1Bw)
+    ; (Base ["s"],a1BC)
+    ; (*: [a1Bw,a1By],a1BA)
+    ; (*: [a1BC,a1By],a1BE)
+    ; (/: [a1BA,a1BE],a1BG)
+    ; (a1BG,a1u1)
+
+    ; WANTEDS (Thoralf style)
+    ; []
+
+    ; (push 1)
+    (declare-const a1u1 (Array String Int))
+    (declare-const a1Bw (Array String Int))
+    (declare-const a1By (Array String Int))
+    (declare-const a1BA (Array String Int))
+    (declare-const a1BC (Array String Int))
+    (declare-const a1BE (Array String Int))
+    (declare-const a1BG (Array String Int))
+    (assert
+        (! (= ((as const (Array String Int)) 0) a1By) :named a1By=1))
+    (assert
+        (! (= (store base "m" one) a1Bw) :named a1Bw=m))
+    (assert
+        (! (= (store base "s" one) a1BC) :named a1BC=s))
+    (assert
+        (! (= (
+            (_
+                map
+                (+
+                    (Int Int)
+                    Int))
+            a1Bw
+            a1By) a1BA) :named a1BA=a1Bw*a1By))
+    (assert
+        (! (= (
+            (_
+                map
+                (+
+                    (Int Int)
+                    Int))
+            a1BC
+            a1By) a1BE) :named a1BE=a1BC*a1By))
+    (assert
+        (! (= (
+            (_
+                map
+                (-
+                    (Int Int)
+                    Int))
+            a1BA
+            a1BE) a1BG) :named a1BG=a1BA/a1BE))
+    (assert
+    (= a1BG a1u1))
+    (echo "checkpoint #1")
+    (check-sat)
+    ; sat
+
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
