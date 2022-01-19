@@ -125,5 +125,122 @@ code snippets on this blog.
         -> Maybe Logger -- ^ Optional logging here
         -> IO Solver
 
+Roundtripping
+-------------
+
+I'd like to be able to take the output of tracing compilation of a package with
+modules using the thoralf plugin and then to take that output and use it as
+input to the Z3 solver as-is.
+
+The logging of simple-smt prefixes comms with ``[send->]`` and ``[<-recv]``. I'm
+able to filter that out before tracing by updating the logger to strip out those
+prefixes.
+
+.. code:: haskell
+
+    data DebugSmtTalk =
+        DebugSmtTalk
+            { traceSend :: Bool
+            , traceRecv :: DebugSmtRecv
+            , traceErr :: Bool
+            , traceOther :: Bool
+            , traceArrow :: Bool
+            , traceCtsComments :: Bool
+            }
+
+    data DebugSmtRecv
+        = DebugSmtRecvAll Bool
+        | DebugSmtRecvSome
+            { traceSuccess :: Bool
+            , traceCheckSat :: Bool
+            }
+        deriving Eq
+
+    -- | Flag for controlling the two-way conversation with the SMT solver.
+    newtype TraceSmtTalk = TraceSmtTalk DebugSmtTalk
+
+    -- TODO: Contribute upstream to SimpleSMT to avoid matching on string prefixes.
+    solverWithLevel :: TraceSmtTalk -> IO SMT.Solver
+    solverWithLevel (TraceSmtTalk dbg)
+        | isSilencedTalk dbg = grabSMTsolver Nothing
+        | otherwise = do
+            logger@Logger{logMessage = logMsg} <- SMT.newLogger 0
+            let logger' = logger{logMessage = \s -> do
+                let sends = split (dropBlanks $ onSublist "[send->] ") s
+                let recvs = split (dropBlanks $ onSublist "[<-recv] ") s
+                let errs = split (dropBlanks $ onSublist "[stderr] ") s
+
+                let dbgArrow = traceArrow dbg
+                let dbgSend = traceSend dbg
+
+                let dbgRecvCheckSat =
+                        case traceRecv dbg of
+                            DebugSmtRecvSome{traceCheckSat = b} -> b
+                            _ -> False
+
+                let dbgRecvSuccess =
+                        case traceRecv dbg of
+                            DebugSmtRecvSome{traceSuccess = b} -> b
+                            _ -> False
+
+                let dbgRecvAll = DebugSmtRecvAll True == traceRecv dbg
+
+                case (recvs, sends, errs) of
+                    (_, "[send->] " : [msg], _) ->
+                        if | dbgSend && dbgArrow -> logMsg s
+                           | dbgSend -> logMsg msg
+                           | otherwise -> return ()
+
+                    -- NOTE: :print-success can print success | unsupported | error _.
+                    ("[<-recv] " : msgContent, _, _) ->
+                        case msgContent of
+                            [msg@"sat"] ->
+                                if | dbgRecvCheckSat && dbgArrow -> logMsg s
+                                   | dbgRecvCheckSat -> logMsg msg
+                                   | otherwise -> return ()
+
+                            [msg@"unsat"] ->
+                                if | dbgRecvCheckSat && dbgArrow -> logMsg s
+                                   | dbgRecvCheckSat -> logMsg msg
+                                   | otherwise -> return ()
+
+                            [msg@"success"] ->
+                                if | dbgRecvSuccess && dbgArrow -> logMsg s
+                                   | dbgRecvSuccess -> logMsg msg
+                                   | otherwise -> return ()
+
+                            [msg@"unsupported"] ->
+                                if | dbgRecvSuccess && dbgArrow -> logMsg s
+                                   | dbgRecvSuccess -> logMsg msg
+                                   | otherwise -> return ()
+
+                            "error" : _ ->
+                                if | dbgRecvSuccess && dbgArrow -> logMsg s
+                                   | dbgRecvSuccess -> logMsg $ drop (length "[<-recv] error ") s
+                                   | otherwise -> return ()
+
+                            _msgs ->
+                                if | dbgRecvAll && dbgArrow -> logMsg s
+                                   | dbgRecvAll -> logMsg s
+                                   | otherwise -> return ()
+
+                    (_, _, "[stderr] " : _) ->
+                        when (traceErr dbg) $ logMsg s
+
+                    (_, _, _) ->
+                        when (traceOther dbg) $ logMsg s
+                }
+
+            grabSMTsolver (Just logger')
+
+    grabSMTsolver :: Maybe SMT.Logger -> IO SMT.Solver
+    grabSMTsolver =
+        -- NOTE: If you don't want the s-expressions pretty printed then substitute
+        -- SMT.showsSExpr for SMT.ppSExpr.
+        SMT.newSolver "z3" ["-smt2", "-in"] SMT.ppSExpr
+
+What's left to do for roundtripping is prefix any output that I don't want as
+input with ``;`` to make it a comment.
+
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
