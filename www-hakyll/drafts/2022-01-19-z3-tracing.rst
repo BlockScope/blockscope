@@ -360,7 +360,7 @@ to ``justReadSExpr``, avoiding lists masquerading as atoms.
     justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 
 This is dangerous but something I can live with while this project is a work in
-progress and I want to get on with tracing rather than yak shaving.
+progress and I want to get on with tracing rather than yak-shaving [#]_.
 
 .. code:: pre
 
@@ -373,3 +373,5 @@ progress and I want to get on with tracing rather than yak shaving.
 
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
+.. [#] I've done a little yak-shaving, writing a Kate Highlighting XML file so
+    that smt2 files show with highlighting on this blog.
