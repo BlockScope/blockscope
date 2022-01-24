@@ -350,7 +350,8 @@ Unexploded Atoms
 ----------------
 
 To help get pretty printing going I replaced each call to ``Atom`` with a call
-to ``justReadSExpr``, avoiding lists masquerading as atoms.
+to ``justReadSExpr``, avoiding lists masquerading as atoms when the string
+within the atom is itself an s-expression.
 
 .. code:: haskell
 
