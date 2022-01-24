@@ -764,6 +764,37 @@ progress and I want to get on with tracing rather than yak-shaving [#]_.
     ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
         |
 
+No Wanted Constraints
+---------------------
+
+With detailed tracing I noticed that there were some annoying wanteds in the
+trace.
+
+.. code:: smt2
+
+    (assert
+        (! false :named wanted-1))
+    (check-sat)
+    ; unsat
+
+This is the assertion we construct when there are zero wanteds.
+
+.. code:: haskell
+
+    -- TcPlugin.hs
+
+    let name = "wanted-" ++ cycle 
+    SMT.assert smtSolver $ SMT.named name (smtWanted wExprs)
+    c <- SMT.check smtSolver
+
+    smtWanted :: [ConvEq] -> SMT.SExpr
+    smtWanted ws = foldl' SMT.or (SMT.Atom "false") (map (SMT.not . eqSExpr) ws)
+
+With no wanted constraints there's no useful work to do. Checking the
+consistency of the givens without wanteds is not useful. I added a pattern match
+for empty list of wanteds and threw the problem back to GHC in that case. The
+tracing logs drastically reduced in size with this change.
+
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
 .. [#] I've done a little yak-shaving, writing a Kate Highlighting XML file so
