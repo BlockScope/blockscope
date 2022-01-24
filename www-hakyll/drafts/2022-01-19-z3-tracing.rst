@@ -793,7 +793,23 @@ This is the assertion we construct when there are zero wanteds.
 With no wanted constraints there's no useful work to do. Checking the
 consistency of the givens without wanteds is not useful. I added a pattern match
 for empty list of wanteds and threw the problem back to GHC in that case. The
-tracing logs drastically reduced in size with this change.
+tracing logs drastically reduced in size with this change::
+
+    +--------------+--------+--------+
+    | TEST SUITE   | BEFORE |  AFTER |
+    +==============+========+========+
+    | uom-diy      |  1,742 |    733 |
+    +--------------+--------+--------+
+    | uom-quantity |  1,693 |    872 |
+    +--------------+--------+--------+
+    | defs         |    255 |    175 |
+    +--------------+--------+--------+
+    | force        |  1,222 |    822 |
+    +--------------+--------+--------+
+    | units        | 22,026 | 14,118 |
+    +--------------+--------+--------+
+    | rows         | 26,322 | 12,915 |
+    +--------------+--------+--------+
 
 .. _simple-smt: https://hackage.haskell.org/package/simple-smt
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
