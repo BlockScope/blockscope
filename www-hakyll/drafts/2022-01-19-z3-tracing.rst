@@ -260,7 +260,7 @@ To help me work through solving, I traced output to a file that I then used as a
 scratch file for input to z3. Eventually I got to the point where I could use
 the trace output as input without any edits. Here are the changes I made:
 
-* Don't refresh (stop and restart) the solver
+* Don't refresh (stop and restart) the solver.
 
 .. code:: diff
 
@@ -585,6 +585,158 @@ the trace output as input without any edits. Here are the changes I made:
     ;    given-9.4
     ;    given-9.2
     ;    wanted-9)
+
+Re-running a Trace
+------------------
+
+It used to be the trace was quite uninformative.
+
+.. code:: pre
+
+    > z3 smt2/thoralf-plugin-uom-diy.smt2
+    success
+    success
+    success
+    success
+
+With the tracing additions we can follow along. With the echoed cycles and the
+named assertions, cross-referencing back into the trace is straight forward.
+
+.. code:: pre
+
+    > z3 smt2/thoralf-plugin-uom-diy.smt2
+    ...
+    givens-start-cycle-9
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    success
+    sat
+    givens-finish-cycle-9
+    wanteds-start-cycle-9
+    success
+    unsat
+    wanteds-finish-cycle-9
+    ((= one 1)
+    (= enc base)
+    (!
+        (=
+            (
+            (as
+                const
+                (Array String Int))
+            0)
+            a1H8)
+        :named
+        given-9.1)
+    (!
+        (=
+            (store base "m" one)
+            a1H6)
+        :named
+        given-9.2)
+    (!
+        (=
+            (store base "s" one)
+            a1Hc)
+        :named
+        given-9.3)
+    (!
+        (=
+            (
+            (_
+                map
+                (+
+                    (Int Int)
+                    Int))
+            a1H6
+            a1H8)
+            a1Ha)
+        :named
+        given-9.4)
+    (!
+        (=
+            (
+            (_
+                map
+                (+
+                    (Int Int)
+                    Int))
+            a1Hc
+            a1H8)
+            a1He)
+        :named
+        given-9.5)
+    (!
+        (=
+            (
+            (_
+                map
+                (-
+                    (Int Int)
+                    Int))
+            a1Ha
+            a1He)
+            a1Hg)
+        :named
+        given-9.6)
+    (!
+        (= a1Hg a1Fi)
+        :named
+        given-9.7)
+    (!
+        (or
+            false
+            (not
+                (=
+                (
+                    (_
+                        map
+                        (+
+                        (Int Int)
+                        Int))
+                    a1Fi
+                    (
+                    (_
+                        map
+                        (+
+                            (Int Int)
+                            Int))
+                    (store base "s" one)
+                    (
+                        (as
+                            const
+                            (Array String Int))
+                        0)))
+                (
+                    (_
+                        map
+                        (+
+                        (Int Int)
+                        Int))
+                    (store base "m" one)
+                    (
+                    (as
+                        const
+                        (Array String Int))
+                    0)))))
+        :named
+        wanted-9))
+    (given-9.6 given-9.5 given-9.3 given-9.7 given-9.1 given-9.4 given-9.2 wanted-9)
+    success
+    solver-finish-cycle-9
+
     
 Unexploded Atoms
 ----------------
