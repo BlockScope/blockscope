@@ -198,33 +198,33 @@ prefixes.
                         case msgContent of
                             [msg@"sat"] ->
                                 if | dbgRecvCheckSat && dbgArrow -> logMsg s
-                                   | dbgRecvCheckSat -> logMsg msg
-                                   | otherwise -> return ()
+                                | dbgRecvCheckSat -> logMsg $ "; " ++ msg
+                                | otherwise -> return ()
 
                             [msg@"unsat"] ->
                                 if | dbgRecvCheckSat && dbgArrow -> logMsg s
-                                   | dbgRecvCheckSat -> logMsg msg
-                                   | otherwise -> return ()
+                                | dbgRecvCheckSat -> logMsg $ "; " ++ msg
+                                | otherwise -> return ()
 
                             [msg@"success"] ->
                                 if | dbgRecvSuccess && dbgArrow -> logMsg s
-                                   | dbgRecvSuccess -> logMsg msg
-                                   | otherwise -> return ()
+                                | dbgRecvSuccess -> logMsg msg
+                                | otherwise -> return ()
 
                             [msg@"unsupported"] ->
                                 if | dbgRecvSuccess && dbgArrow -> logMsg s
-                                   | dbgRecvSuccess -> logMsg msg
-                                   | otherwise -> return ()
+                                | dbgRecvSuccess -> logMsg msg
+                                | otherwise -> return ()
 
                             "error" : _ ->
                                 if | dbgRecvSuccess && dbgArrow -> logMsg s
-                                   | dbgRecvSuccess -> logMsg $ drop (length "[<-recv] error ") s
-                                   | otherwise -> return ()
+                                | dbgRecvSuccess -> logMsg $ drop (length "[<-recv] error ") s
+                                | otherwise -> return ()
 
                             _msgs ->
                                 if | dbgRecvAll && dbgArrow -> logMsg s
-                                   | dbgRecvAll -> logMsg s
-                                   | otherwise -> return ()
+                                | dbgRecvAll -> logMsg s
+                                | otherwise -> return ()
 
                     (_, _, "[stderr] " : _) ->
                         when (traceErr dbg) $ logMsg s
@@ -241,8 +241,11 @@ prefixes.
         -- SMT.showsSExpr for SMT.ppSExpr.
         SMT.newSolver "z3" ["-smt2", "-in"] SMT.ppSExpr
 
-What's left to do for roundtripping is prefix any output that I don't want as
-input with ``;`` to make it a comment.
+
+
+What's left to do for roundtripping is to prefix ``"; "`` before any tracing
+output that I don't want left alive as input, to make it a comment, to deaden
+it.
 
 Constraints Encoding
 --------------------
