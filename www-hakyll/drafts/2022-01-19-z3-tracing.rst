@@ -252,33 +252,52 @@ Constraints Encoding
 
 The whole point of the thoralf plugin is to encode a theory as s-expressions so
 that it can offload solving to Z3. When tracing I'd like to see the constraints
-passed in to the plugin by GHC. I've found two ways of showing these, printed
-with GHC's own pretty printing and with printing included with the plugin
-itself. I've gone through the following trace output and added ``:named``
-assertions and echos. To help me work in interactive mode with z3, I've added a
-lot of options and commented out push, pop and exit commands.
+passed in to the plugin by GHC. The uom-plugin is showing these, printed with
+GHC's own pretty printing, but the thoralf-plugin is rolling its own printing.
+I've pulled that out and put it into its own package, ``ghc-tcplugins-trace``.
+
+To help me work through solving, I traced output to a file that I then used as a
+scratch file for input to z3. Eventually I got to the point where I could use
+the trace output as input without any edits. Here are the changes I made:
+
+* Don't refresh (stop and restart) the solver
+
+.. code:: diff
+
+     --- smt2/thoralf-plugin-uom.smt2
+     +++ smt2/thoralf-plugin-uom.smt2
+        (set-option :print-success true)
+        (set-option :produce-models true)
+        (set-option :interactive-mode true)
+        (set-option :produce-assertions true)
+        (set-option :produce-models true)
+        (set-option :produce-assignments true)
+        (set-option :produce-proofs true)
+        (set-option :produce-unsat-assumptions true)
+        (set-option :produce-unsat-cores true)
+    -   (push 1)
+    -   (exit)
+    -   (set-option :print-success true)
+    -   (set-option :produce-models true)
+
+* Echo the cycles of typechecking so that these will show up again when the log
+  is rerun.
 
 .. code:: smt2
 
-    (set-option :global-declarations true)
-    (set-option :interactive-mode true)
-    (set-option :print-success true)
-    (set-option :produce-assertions true)
-    (set-option :produce-assignments true)
-    (set-option :produce-models true)
-    (set-option :produce-proofs true)
-    (set-option :produce-unsat-assumptions true)
-    (set-option :produce-unsat-cores true)
-    ; (push 1)
-    ; (exit)
-    (declare-datatypes () ((Type (apply (fst Type) (snd Type)) (lit (getstr String)))))
-    (declare-const one Int)
-    (assert (! (= one 1) :named one=1))
-    (declare-const base (Array String Int))
-    (declare-const enc (Array String Int))
-    (declare-const exp (Array String Int))
-    (assert (! (= enc base) :named enc=base))
-    ; (push 1)
+    (echo "solver-start-cycle-1")
+    (echo "givens-start-cycle-1")
+    (echo "givens-finish-cycle-1")
+    (echo "wanteds-start-cycle-1")
+    (echo "wanteds-finish-cycle-1")
+    (echo "solver-finish-cycle-1")
+    (echo "solver-start-cycle-2")
+    ; ...
+    (echo "solver-finish-cycle-10")
+
+* Print the given and wanted constraints.
+
+.. code:: smt2
 
     ; GIVENS (GHC style)
     ; [G] cobox_a1Bz {3}:: One ~ fsk0 (CFunEqCan)
@@ -304,53 +323,269 @@ lot of options and commented out push, pop and exit commands.
     ; WANTEDS (Thoralf style)
     ; []
 
-    ; (push 1)
-    (declare-const a1u1 (Array String Int))
-    (declare-const a1Bw (Array String Int))
-    (declare-const a1By (Array String Int))
-    (declare-const a1BA (Array String Int))
-    (declare-const a1BC (Array String Int))
-    (declare-const a1BE (Array String Int))
-    (declare-const a1BG (Array String Int))
-    (assert
-        (! (= ((as const (Array String Int)) 0) a1By) :named a1By=1))
-    (assert
-        (! (= (store base "m" one) a1Bw) :named a1Bw=m))
-    (assert
-        (! (= (store base "s" one) a1BC) :named a1BC=s))
-    (assert
-        (! (= (
-            (_
-                map
-                (+
-                    (Int Int)
-                    Int))
-            a1Bw
-            a1By) a1BA) :named a1BA=a1Bw*a1By))
-    (assert
-        (! (= (
-            (_
-                map
-                (+
-                    (Int Int)
-                    Int))
-            a1BC
-            a1By) a1BE) :named a1BE=a1BC*a1By))
-    (assert
-        (! (= (
-            (_
-                map
-                (-
-                    (Int Int)
-                    Int))
-            a1BA
-            a1BE) a1BG) :named a1BG=a1BA/a1BE))
-    (assert
-        (! (= a1BG a1u1) :named a1u1=a1BG))
-    (echo "checkpoint #1")
-    (check-sat)
-    ; sat
+* Print the source of the encoded names (they're using uniques. [#]_).
 
+.. code:: smt2
+
+    ; GIVENS (conversions)
+    ; GIVENS (names)
+    ;  a1u1  <=  mps
+    ;  a1Bw  <=  fsk_a1Bw
+    ;  a1By  <=  fsk_a1By
+    ;  a1BA  <=  fsk_a1BA
+    ;  a1BC  <=  fsk_a1BC
+    ;  a1BE  <=  fsk_a1BE
+    ;  a1BG  <=  fsk_a1BG
+
+* Even though the thoralf-plugin is using the push/pop stack mode of incremental
+  solving, I'd still like to know what declarations were previous seen so I show
+  those too. Could be useful if we switch to using assumptions_ instead.
+
+.. code:: smt2
+
+    ; DECS1 (seen) 
+    ; DECS1 (unseen) 
+    ; (declare-const a1BA (Array String Int))
+    ; (declare-const a1BC (Array String Int))
+    ; (declare-const a1BE (Array String Int))
+    ; (declare-const a1BG (Array String Int))
+    ; (declare-const a1Bw (Array String Int))
+    ; (declare-const a1By (Array String Int))
+    ; (declare-const a1u1 (Array String Int))
+
+* Pretty print the declarations.
+
+.. code:: smt2
+
+    (declare-const
+        a1u1
+        (Array String Int))
+    (declare-const
+        a1Bw
+        (Array String Int))
+    (declare-const
+        a1By
+        (Array String Int))
+    (declare-const
+        a1BA
+        (Array String Int))
+    (declare-const
+        a1BC
+        (Array String Int))
+    (declare-const
+        a1BE
+        (Array String Int))
+    (declare-const
+        a1BG
+        (Array String Int))
+
+* Pretty print and name the assertions.
+
+.. code:: smt2
+
+    (assert
+        (!
+            (=
+                (
+                (as
+                    const
+                    (Array String Int))
+                0)
+                a1By)
+            :named
+            given-1.1))
+    (assert
+        (!
+            (=
+                (store base "m" one)
+                a1Bw)
+            :named
+            given-1.2))
+    (assert
+        (!
+            (=
+                (store base "s" one)
+                a1BC)
+            :named
+            given-1.3))
+    (assert
+        (!
+            (=
+                (
+                (_
+                    map
+                    (+
+                        (Int Int)
+                        Int))
+                a1Bw
+                a1By)
+                a1BA)
+            :named
+            given-1.4))
+    (assert
+        (!
+            (=
+                (
+                (_
+                    map
+                    (+
+                        (Int Int)
+                        Int))
+                a1BC
+                a1By)
+                a1BE)
+            :named
+            given-1.5))
+    (assert
+        (!
+            (=
+                (
+                (_
+                    map
+                    (-
+                        (Int Int)
+                        Int))
+                a1BA
+                a1BE)
+                a1BG)
+            :named
+            given-1.6))
+    (assert
+        (!
+            (= a1BG a1u1)
+            :named
+            given-1.7))
+
+* Show the check sat result as a comment.
+
+.. code:: smt2
+
+    (check-sat)
+    ; unsat
+
+* For ``unsat`` get the assertions and the unsat core.
+
+.. code:: smt2
+
+    (check-sat)
+    ; unsat
+    (get-assertions)
+    ; (
+    ;   (= one 1)
+    ;   (= enc base)
+    ;   (!
+    ;      (=
+    ;         (
+    ;           (as
+    ;              const
+    ;              (Array String Int))
+    ;           0)
+    ;         a1H8)
+    ;      :named
+    ;      given-9.1)
+    ;   (!
+    ;      (=
+    ;         (store base "m" one)
+    ;         a1H6)
+    ;      :named
+    ;      given-9.2)
+    ;   (!
+    ;      (=
+    ;         (store base "s" one)
+    ;         a1Hc)
+    ;      :named
+    ;      given-9.3)
+    ;   (!
+    ;      (=
+    ;         (
+    ;           (_
+    ;              map
+    ;              (+
+    ;                 (Int Int)
+    ;                 Int))
+    ;           a1H6
+    ;           a1H8)
+    ;         a1Ha)
+    ;      :named
+    ;      given-9.4)
+    ;   (!
+    ;      (=
+    ;         (
+    ;           (_
+    ;              map
+    ;              (+
+    ;                 (Int Int)
+    ;                 Int))
+    ;           a1Hc
+    ;           a1H8)
+    ;         a1He)
+    ;      :named
+    ;      given-9.5)
+    ;   (!
+    ;      (=
+    ;         (
+    ;           (_
+    ;              map
+    ;              (-
+    ;                 (Int Int)
+    ;                 Int))
+    ;           a1Ha
+    ;           a1He)
+    ;         a1Hg)
+    ;      :named
+    ;      given-9.6)
+    ;   (!
+    ;      (= a1Hg a1Fi)
+    ;      :named
+    ;      given-9.7)
+    ;   (!
+    ;      (or
+    ;         false
+    ;         (not
+    ;            (=
+    ;               (
+    ;                 (_
+    ;                    map
+    ;                    (+
+    ;                       (Int Int)
+    ;                       Int))
+    ;                 a1Fi
+    ;                 (
+    ;                   (_
+    ;                      map
+    ;                      (+
+    ;                         (Int Int)
+    ;                         Int))
+    ;                   (store base "s" one)
+    ;                   (
+    ;                     (as
+    ;                        const
+    ;                        (Array String Int))
+    ;                     0)))
+    ;               (
+    ;                 (_
+    ;                    map
+    ;                    (+
+    ;                       (Int Int)
+    ;                       Int))
+    ;                 (store base "m" one)
+    ;                 (
+    ;                   (as
+    ;                      const
+    ;                      (Array String Int))
+    ;                   0)))))
+    ;      :named
+    ;      wanted-9))
+    (get-unsat-core)
+    ; (given-9.6
+    ;    given-9.5
+    ;    given-9.3
+    ;    given-9.7
+    ;    given-9.1
+    ;    given-9.4
+    ;    given-9.2
+    ;    wanted-9)
+    
 Unexploded Atoms
 ----------------
 
@@ -381,3 +616,6 @@ progress and I want to get on with tracing rather than yak-shaving [#]_.
 .. _smt-lib: https://smtlib.cs.uiowa.edu/language.shtml
 .. [#] I've done a little yak-shaving, writing a Kate Highlighting XML file so
     that smt2 files show with highlighting on this blog.
+.. [#] Uniques are unique identifiers used for "fast ordering and equality
+    tests" in GHC. The function used to get these when encoding is ``getUnique :: a -> Unique``.
+.. _assumptions: https://stackoverflow.com/a/40427658/1503186
