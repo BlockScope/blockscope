@@ -792,7 +792,7 @@ This is the assertion we construct when there are zero wanteds.
 
 With no wanted constraints there's no useful work to do. Checking the
 consistency of the givens without wanteds is not useful. I added a pattern match
-for empty list of wanteds and threw the problem back to GHC in that case. The
+for an empty list of wanteds and threw the problem back to GHC in that case. The
 tracing logs drastically reduced in size with this change::
 
     +--------------+--------+--------+
