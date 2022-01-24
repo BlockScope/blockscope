@@ -55,6 +55,8 @@ This the fix for that.
     +                          foldr (\e m -> showChar ' ' . showsSExpr e . m)
     +                          (showChar ')') es
 
+I contributed this fix upstream. It's been merged.
+
 Choosing an S-Expression Printer
 --------------------------------
 
