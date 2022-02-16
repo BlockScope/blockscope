@@ -4,7 +4,7 @@ import Control.Applicative (empty)
 import qualified Data.Map as Map
 import Data.List (intersperse)
 import Hakyll
-    ( (.||.), Context(..), Item(..), Configuration(..)
+    ( Context(..), Item(..), Configuration(..)
     , Rules, Pattern, Compiler, Identifier
     , defaultContext
     , dateField
@@ -45,7 +45,6 @@ import Text.Blaze.Html ((!), toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import System.FilePath
-import System.Environment (getArgs)
 
 pandocReaderOptions :: Maybe Syntax -> ReaderOptions
 pandocReaderOptions Nothing = defaultHakyllReaderOptions
@@ -100,14 +99,11 @@ main = do
         either (error . show) return
         =<< parseSyntaxDefinition "syntax/smt2.xml"
 
-    args <- getArgs
     hakyllWith config $ do
 
-        -- SEE: https://github.com/turboMaCk/turboMaCk.github.io/blob/develop/src/site.hs
-        let postsPattern =
-                if "watch" `elem` args
-                    then fromGlob "posts/*" .||. fromGlob "drafts/*"
-                    else fromGlob "posts/*"
+        let draftsPattern = fromGlob "drafts/*"
+        let reviewsPattern = fromGlob "reviews/*"
+        let postsPattern = fromGlob "posts/*"
 
         -- SEE: http://vapaus.org/text/hakyll-configuration.html
         mapM_ (directory static) ["css", "font", "js", "images", "pdf"]
@@ -126,6 +122,26 @@ main = do
 
         -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
         tags <- buildTags postsPattern (fromCapture "tags/*.html")
+
+        match draftsPattern $ do
+            route $ setExtension "html"
+            compile $ do
+                let ctx = postCtx
+
+                pandoc (Just syntax)
+                    >>= loadAndApplyTemplate "templates/post.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
+
+        match reviewsPattern $ do
+            route $ setExtension "html"
+            compile $ do
+                let ctx = postCtx
+
+                pandoc (Just syntax)
+                    >>= loadAndApplyTemplate "templates/post.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
         match postsPattern $ do
             route $ setExtension "html"
@@ -150,6 +166,38 @@ main = do
 
                 makeItem ""
                     >>= loadAndApplyTemplate "templates/tag.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
+
+        create ["draft/index.html"] $ do
+            route idRoute
+            compile $ do
+                posts <- loadAll draftsPattern >>= recentFirst
+
+                let ctx =
+                        listField "posts" postCtx (return posts)
+                        <> constField "title" "Sneak Peek"
+                        <> constField "subtitle" "Shine a light on this."
+                        <> defaultContext
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
+
+        create ["review/index.html"] $ do
+            route idRoute
+            compile $ do
+                posts <- loadAll reviewsPattern >>= recentFirst
+
+                let ctx =
+                        listField "posts" postCtx (return posts)
+                        <> constField "title" "Up for Review"
+                        <> constField "subtitle" "Looking in the rear view mirror."
+                        <> defaultContext
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
                     >>= loadAndApplyTemplate "templates/default.html" ctx
                     >>= relativizeUrls
 
