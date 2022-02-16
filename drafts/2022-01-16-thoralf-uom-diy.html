@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Z3 Thoralf DIY</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">open sourcery</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">pinned tweets</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">flying comps</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">services</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">about</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">CV</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Z3 Thoralf DIY</h1>
+                    
+                    <p class="lead">The DIY test suite as an annotated worked example.</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        haskell, tcplugins, z3
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <h1 id="the-program">The Program</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- UoM.hs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies, TypeOperators, GADTs, DataKinds, PackageImports #-}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fplugin Plugins.Thoralf.UoM #-}</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">UoM</span> <span class="kw">where</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Kind</span> (<span class="dt">Type</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-quantity&quot; <span class="dt">Data.Theory.UoM</span> (type (/:), <span class="dt">Unit</span>, <span class="dt">One</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-quantity&quot; <span class="dt">Data.UnitsOfMeasure.Syntax</span> (<span class="dt">Exp</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;thoralf-plugin&quot; <span class="dt">ThoralfPlugin.Singletons.Symbol</span> (<span class="dt">SSymbol</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;thoralf-plugin-uom&quot; <span class="dt">Data.UnitsOfMeasure.Constraint</span> (<span class="dt">IsProd</span>, <span class="dt">IsDiv</span>, <span class="dt">IsEnc</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;thoralf-plugin-uom&quot; <span class="dt">ThoralfPlugin.Singletons.Nat</span> (<span class="dt">SNat</span>(..))</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Quantity</span><span class="ot"> ::</span> <span class="dt">Unit</span> <span class="ot">-&gt;</span> <span class="dt">Type</span> <span class="kw">where</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    <span class="dt">MkQuantity</span><span class="ot"> ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Quantity</span> m</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">Quantity</span> a) <span class="kw">where</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">MkQuantity</span> x) <span class="ot">=</span> <span class="fu">show</span> x</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="ot">scalar ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Quantity</span> <span class="dt">One</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>scalar <span class="ot">=</span> <span class="dt">MkQuantity</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="ot">mkQuantity ::</span> <span class="dt">IsEnc</span> s n b <span class="ot">=&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">SSymbol</span> s <span class="ot">-&gt;</span> <span class="dt">SNat</span> n <span class="ot">-&gt;</span> <span class="dt">Quantity</span> b</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>mkQuantity d _ _ <span class="ot">=</span> <span class="dt">MkQuantity</span> d</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="ot">add ::</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Quantity</span> a</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>add (<span class="dt">MkQuantity</span> x) (<span class="dt">MkQuantity</span> y) <span class="ot">=</span> <span class="dt">MkQuantity</span> (x <span class="op">+</span> y)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">negate</span><span class="ot"> ::</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Quantity</span> a</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">negate</span> (<span class="dt">MkQuantity</span> x) <span class="ot">=</span> <span class="dt">MkQuantity</span> (<span class="op">-</span>x)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ot">mult ::</span> <span class="dt">IsProd</span> a b c <span class="ot">=&gt;</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Quantity</span> b <span class="ot">-&gt;</span> <span class="dt">Quantity</span> c</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>mult (<span class="dt">MkQuantity</span> x) (<span class="dt">MkQuantity</span> y) <span class="ot">=</span> <span class="dt">MkQuantity</span> (x <span class="op">*</span> y)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">div</span><span class="ot"> ::</span> <span class="dt">IsDiv</span> a b c <span class="ot">=&gt;</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Quantity</span> b <span class="ot">-&gt;</span> <span class="dt">Quantity</span> c</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">div</span> (<span class="dt">MkQuantity</span> x) (<span class="dt">MkQuantity</span> y) <span class="ot">=</span> <span class="dt">MkQuantity</span> (x <span class="op">/</span> y)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="ot">extract ::</span> <span class="dt">Quantity</span> a <span class="ot">-&gt;</span> <span class="dt">Double</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>extract (<span class="dt">MkQuantity</span> d) <span class="ot">=</span> d</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="co">-- velocity: m/s</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="co">-- time: s</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="co">-- distance = velocity * time</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">M</span> <span class="ot">=</span> <span class="dt">Exp</span> '[ '(<span class="st">&quot;m&quot;</span>, <span class="dv">1</span>)] <span class="co">-- metre</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">S</span> <span class="ot">=</span> <span class="dt">Exp</span> '[ '(<span class="st">&quot;s&quot;</span>, <span class="dv">1</span>)] <span class="co">-- second</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">MpS</span> <span class="ot">=</span> <span class="dt">M</span> <span class="op">/:</span> <span class="dt">S</span> <span class="co">-- metres per second</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="ot">metres ::</span> <span class="dt">Quantity</span> <span class="dt">MpS</span> <span class="ot">-&gt;</span> <span class="dt">Quantity</span> <span class="dt">S</span> <span class="ot">-&gt;</span> <span class="dt">Quantity</span> <span class="dt">M</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>metres <span class="ot">=</span> mult</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="ot">distance ::</span> <span class="dt">IsDiv</span> <span class="dt">M</span> <span class="dt">S</span> mps <span class="ot">=&gt;</span> <span class="dt">Quantity</span> mps <span class="ot">-&gt;</span> <span class="dt">Quantity</span> <span class="dt">S</span> <span class="ot">-&gt;</span> <span class="dt">Quantity</span> <span class="dt">M</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>distance <span class="ot">=</span> mult</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="co">-- Main.hs</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TemplateHaskell #-}</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Test.Tasty.TH</span> (defaultMainGenerator)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Test.Tasty.QuickCheck</span> (testProperty)</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Printf</span> (printf)</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">UoM</span> (<span class="dt">Quantity</span>(..), extract, metres, distance)</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="st">&quot;UoM examples&quot;</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="op">$</span> printf <span class="st">&quot;3 m/s for 3 s = %s m&quot;</span> (<span class="fu">show</span> <span class="op">$</span> metres (<span class="dt">MkQuantity</span> <span class="dv">3</span>) (<span class="dt">MkQuantity</span> <span class="dv">3</span>))</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="op">$</span> printf <span class="st">&quot;3 m/s for 2 s = %s m&quot;</span> (<span class="fu">show</span> <span class="op">$</span> distance (<span class="dt">MkQuantity</span> <span class="dv">3</span>) (<span class="dt">MkQuantity</span> <span class="dv">2</span>))</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>    <span class="fu">putStrLn</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    <span class="op">$</span>(defaultMainGenerator)</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a><span class="ot">prop_distance ::</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>prop_distance x y <span class="ot">=</span> x <span class="op">*</span> y <span class="op">==</span> extract (distance (<span class="dt">MkQuantity</span> x) (<span class="dt">MkQuantity</span> y))</span></code></pre></div>
+<h1 id="translated-to-smt2">Translated to SMT2</h1>
+<div class="sourceCode" id="cb2"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">n1</span> <span class="dt">Int</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1BE {0}:: mps ~ mps (CDictCan)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1BF {0}:: mps ~ mps (CDictCan)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1Bq)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1Bo)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1Bu)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Bo,a1Bq],a1Bs)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Bu,a1Bq],a1Bw)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Bs,a1Bw],a1By)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1By,a1tT)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1tT</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bo</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bq</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bs</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bu</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bw</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1By</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>) <span class="va">a1Bq</span>))</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">n1</span>) <span class="va">a1Bo</span>))</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">n1</span>) <span class="va">a1Bu</span>))</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1Bo</span> <span class="va">a1Bq</span>) <span class="va">a1Bs</span>))</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1Bu</span> <span class="va">a1Bq</span>) <span class="va">a1Bw</span>))</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">-</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1Bs</span> <span class="va">a1Bw</span>) <span class="va">a1By</span>))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1By</span> <span class="va">a1tT</span>))</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1Ct {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1Cu {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Cd,a1Ce],a1Cn)</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Cn,a1Cf)</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cd</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Ce</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cf</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cn</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">-</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1Cd</span> <span class="va">a1Ce</span>) <span class="va">a1Cn</span>))</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cn</span> <span class="va">a1Cf</span>))</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1D6 {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1D7 {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1CM,a1CN],a1D0)</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1D0,a1CO)</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CM</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CN</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CO</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1D0</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1CM</span> <span class="va">a1CN</span>) <span class="va">a1D0</span>))</span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1D0</span> <span class="va">a1CO</span>))</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1Eh {0}:: b ~ b (CDictCan)</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1Ei {0}:: b ~ b (CDictCan)</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="co">; (Enc [a1DX,a1DY],a1Eb)</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Eb,a1DZ)</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1DX</span> <span class="dt">String</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1DY</span> <span class="dt">Int</span>)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1DZ</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Eb</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">&lt;=</span> <span class="dv">0</span> <span class="va">a1DY</span>))</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">enc</span> <span class="va">a1DX</span> <span class="va">a1DY</span>) <span class="va">a1Eb</span>))</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Eb</span> <span class="va">a1DZ</span>))</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="co">; wanted constraints</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="co">; [</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="co">;   ( *:</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="co">;       [ Base [&quot;m&quot;]</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="co">;       , One []</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="co">;       ]</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="co">;   , *:</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="co">;       [ /:</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="co">;           [ *:</span></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a><span class="co">;               [ Base [&quot;m&quot;]</span></span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="co">;               , One []</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="co">;               ]</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="co">;           , *:</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="co">;               [ Base [&quot;s&quot;]</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="co">;               , One []</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="co">;               ]</span></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="co">;           ]</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="co">;       , *:</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a><span class="co">;            [ Base [&quot;s&quot;]</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="co">;            , One []</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a><span class="co">;            ]</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="co">;       ]</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a><span class="co">;   )</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a><span class="co">; ]</span></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a><span class="co">; wanteds</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">or</span></span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a>        <span class="dv">false</span></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">not</span></span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a>            (<span class="op">=</span></span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a>                ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a>                    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a>                    ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>))</span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a>                ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a>                    ((<span class="op">_</span> <span class="va">map</span> (<span class="op">-</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a>                        ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a>                            (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a>                            ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>))</span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a>                        ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a>                            (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a>                            ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>)))</span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a>                    ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a>                        (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a>                        ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>)))))))</span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1GM {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1GN {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Et,a1Eu],a1GG)</span></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1GG,a1Ev)</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Et</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Eu</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Ev</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1GG</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">-</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1Et</span> <span class="va">a1Eu</span>) <span class="va">a1GG</span>))</span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1GG</span> <span class="va">a1Ev</span>))</span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1GV {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1GW {0}:: c ~ c (CDictCan)</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1EJ,a1EK],a1GP)</span></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1GP,a1EL)</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1EJ</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1EK</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1EL</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1GP</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1EJ</span> <span class="va">a1EK</span>) <span class="va">a1GP</span>))</span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1GP</span> <span class="va">a1EL</span>))</span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1He {0}:: mps ~ mps (CDictCan)</span></span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1Hf {0}:: mps ~ mps (CDictCan)</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1H0)</span></span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1GY)</span></span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1H4)</span></span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1GY,a1H0],a1H2)</span></span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1H4,a1H0],a1H6)</span></span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1H2,a1H6],a1H8)</span></span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1H8,a1Fa)</span></span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a><span class="co">; wanted constraints</span></span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a><span class="co">; [</span></span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a><span class="co">;   ( *:</span></span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a><span class="co">;       [ a1Fa</span></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a><span class="co">;       , *:</span></span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a><span class="co">;           [ Base [&quot;s&quot;]</span></span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a><span class="co">;           , One []</span></span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a><span class="co">;           ]</span></span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a><span class="co">;       ]</span></span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a><span class="co">;   , *:</span></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a><span class="co">;       [ Base [&quot;m&quot;]</span></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a><span class="co">;       , One []</span></span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a><span class="co">;       ]</span></span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a><span class="co">;   )</span></span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a><span class="co">; ]</span></span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fa</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1GY</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H0</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H2</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H4</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H6</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H8</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>) <span class="va">a1H0</span>))</span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">n1</span>) <span class="va">a1GY</span>))</span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">n1</span>) <span class="va">a1H4</span>))</span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1GY</span> <span class="va">a1H0</span>) <span class="va">a1H2</span>))</span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1H4</span> <span class="va">a1H0</span>) <span class="va">a1H6</span>))</span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> ((<span class="op">_</span> <span class="va">map</span> (<span class="op">-</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>)) <span class="va">a1H2</span> <span class="va">a1H6</span>) <span class="va">a1H8</span>))</span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1H8</span> <span class="va">a1Fa</span>))</span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a><span class="co">; wanteds</span></span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">or</span></span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>        <span class="dv">false</span></span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">not</span></span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>            (<span class="op">=</span></span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>                ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>                    <span class="va">a1Fa</span></span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>                    ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-215"><a href="#cb2-215" aria-hidden="true" tabindex="-1"></a>                        (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-216"><a href="#cb2-216" aria-hidden="true" tabindex="-1"></a>                        ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>)))</span>
+<span id="cb2-217"><a href="#cb2-217" aria-hidden="true" tabindex="-1"></a>                ((<span class="op">_</span> <span class="va">map</span> (<span class="op">+</span> (<span class="dt">Int</span> <span class="dt">Int</span>) <span class="dt">Int</span>))</span>
+<span id="cb2-218"><a href="#cb2-218" aria-hidden="true" tabindex="-1"></a>                    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">n1</span>)</span>
+<span id="cb2-219"><a href="#cb2-219" aria-hidden="true" tabindex="-1"></a>                    ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>))))))</span>
+<span id="cb2-220"><a href="#cb2-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-221"><a href="#cb2-221" aria-hidden="true" tabindex="-1"></a><span class="co">; given constraints</span></span>
+<span id="cb2-222"><a href="#cb2-222" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~_a1Hv {0}:: b ~ b (CDictCan)</span></span>
+<span id="cb2-223"><a href="#cb2-223" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] $d~~_a1Hw {0}:: b ~ b (CDictCan)</span></span>
+<span id="cb2-224"><a href="#cb2-224" aria-hidden="true" tabindex="-1"></a><span class="co">; (Enc [a1Fw,a1Fx],a1Hp)</span></span>
+<span id="cb2-225"><a href="#cb2-225" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Hp,a1Fy)</span></span>
+<span id="cb2-226"><a href="#cb2-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-227"><a href="#cb2-227" aria-hidden="true" tabindex="-1"></a><span class="co">; declarations</span></span>
+<span id="cb2-228"><a href="#cb2-228" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fw</span> <span class="dt">String</span>)</span>
+<span id="cb2-229"><a href="#cb2-229" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fx</span> <span class="dt">Int</span>)</span>
+<span id="cb2-230"><a href="#cb2-230" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fy</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-231"><a href="#cb2-231" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb2-232"><a href="#cb2-232" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">&lt;=</span> <span class="dv">0</span> <span class="va">a1Fx</span>))</span>
+<span id="cb2-233"><a href="#cb2-233" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-234"><a href="#cb2-234" aria-hidden="true" tabindex="-1"></a><span class="co">; givens</span></span>
+<span id="cb2-235"><a href="#cb2-235" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> (<span class="fu">store</span> <span class="va">enc</span> <span class="va">a1Fw</span> <span class="va">a1Fx</span>) <span class="va">a1Hp</span>))</span>
+<span id="cb2-236"><a href="#cb2-236" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Hp</span> <span class="va">a1Fy</span>))</span>
+<span id="cb2-237"><a href="#cb2-237" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-238"><a href="#cb2-238" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb2-239"><a href="#cb2-239" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span></code></pre></div>
+<h1 id="live">Live</h1>
+<div class="sourceCode" id="cb3"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Bz {3}:: One ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Bx {2}:: Base &quot;m&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BD {2}:: Base &quot;s&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BB {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BF {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BH {1}:: (fsk0 /: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BL {1}:: fsk0 ~ mps (CTyEqCan)</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1By)</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1Bw)</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1BC)</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Bw,a1By],a1BA)</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1BC,a1By],a1BE)</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1BA,a1BE],a1BG)</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1BG,a1u1)</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1u1</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Bw</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1By</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1BA</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1BC</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1BE</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1BG</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>) <span class="va">a1By</span>))</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>) <span class="va">a1Bw</span>))</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>) <span class="va">a1BC</span>))</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="va">a1Bw</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="va">a1By</span>) <span class="va">a1BA</span>))</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a><span class="va">a1BC</span></span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a><span class="va">a1By</span>) <span class="va">a1BE</span>))</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a><span class="va">a1BA</span></span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a><span class="va">a1BE</span>) <span class="va">a1BG</span>))</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1BG</span> <span class="va">a1u1</span>))</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Cw {1}:: (a /: b) ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1CA {1}:: fsk0 ~ c (CTyEqCan)</span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Cl,a1Cm],a1Cv)</span></span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Cv,a1Cn)</span></span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cl</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cm</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cn</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Cv</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a><span class="va">a1Cl</span></span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a><span class="va">a1Cm</span>) <span class="va">a1Cv</span>))</span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span>))</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-142"><a href="#cb3-142" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-143"><a href="#cb3-143" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-144"><a href="#cb3-144" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-145"><a href="#cb3-145" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-146"><a href="#cb3-146" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-147"><a href="#cb3-147" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-148"><a href="#cb3-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-149"><a href="#cb3-149" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-150"><a href="#cb3-150" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1D9 {1}:: (a *: b) ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-151"><a href="#cb3-151" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Dd {1}:: fsk0 ~ c (CTyEqCan)</span></span>
+<span id="cb3-152"><a href="#cb3-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-153"><a href="#cb3-153" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-154"><a href="#cb3-154" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-155"><a href="#cb3-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-156"><a href="#cb3-156" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-157"><a href="#cb3-157" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1CU,a1CV],a1D8)</span></span>
+<span id="cb3-158"><a href="#cb3-158" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1D8,a1CW)</span></span>
+<span id="cb3-159"><a href="#cb3-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-160"><a href="#cb3-160" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-161"><a href="#cb3-161" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-162"><a href="#cb3-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-163"><a href="#cb3-163" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-164"><a href="#cb3-164" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CU</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-165"><a href="#cb3-165" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CV</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-166"><a href="#cb3-166" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1CW</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-167"><a href="#cb3-167" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1D8</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-168"><a href="#cb3-168" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-169"><a href="#cb3-169" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-170"><a href="#cb3-170" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-171"><a href="#cb3-171" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-172"><a href="#cb3-172" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-173"><a href="#cb3-173" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-174"><a href="#cb3-174" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-175"><a href="#cb3-175" aria-hidden="true" tabindex="-1"></a><span class="va">a1CU</span></span>
+<span id="cb3-176"><a href="#cb3-176" aria-hidden="true" tabindex="-1"></a><span class="va">a1CV</span>) <span class="va">a1D8</span>))</span>
+<span id="cb3-177"><a href="#cb3-177" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-178"><a href="#cb3-178" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1D8</span> <span class="va">a1CW</span>))</span>
+<span id="cb3-179"><a href="#cb3-179" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-180"><a href="#cb3-180" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-181"><a href="#cb3-181" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-182"><a href="#cb3-182" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-183"><a href="#cb3-183" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-184"><a href="#cb3-184" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-185"><a href="#cb3-185" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-186"><a href="#cb3-186" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-187"><a href="#cb3-187" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-188"><a href="#cb3-188" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-189"><a href="#cb3-189" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-190"><a href="#cb3-190" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-191"><a href="#cb3-191" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-192"><a href="#cb3-192" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-193"><a href="#cb3-193" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-194"><a href="#cb3-194" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-195"><a href="#cb3-195" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-196"><a href="#cb3-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-197"><a href="#cb3-197" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-198"><a href="#cb3-198" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Ek {1}:: Enc s n ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-199"><a href="#cb3-199" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Eo {1}:: fsk0 ~ b (CTyEqCan)</span></span>
+<span id="cb3-200"><a href="#cb3-200" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-201"><a href="#cb3-201" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-202"><a href="#cb3-202" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-203"><a href="#cb3-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-204"><a href="#cb3-204" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-205"><a href="#cb3-205" aria-hidden="true" tabindex="-1"></a><span class="co">; (Enc [a1E5,a1E6],a1Ej)</span></span>
+<span id="cb3-206"><a href="#cb3-206" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Ej,a1E7)</span></span>
+<span id="cb3-207"><a href="#cb3-207" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-208"><a href="#cb3-208" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-209"><a href="#cb3-209" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-210"><a href="#cb3-210" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-211"><a href="#cb3-211" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-212"><a href="#cb3-212" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1E5</span> <span class="dt">String</span>)</span>
+<span id="cb3-213"><a href="#cb3-213" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1E6</span> <span class="dt">Int</span>)</span>
+<span id="cb3-214"><a href="#cb3-214" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1E7</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-215"><a href="#cb3-215" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Ej</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-216"><a href="#cb3-216" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">&lt;=</span> <span class="dv">0</span> <span class="va">a1E6</span>))</span>
+<span id="cb3-217"><a href="#cb3-217" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-218"><a href="#cb3-218" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">enc</span> <span class="va">a1E5</span> <span class="va">a1E6</span>) <span class="va">a1Ej</span>))</span>
+<span id="cb3-219"><a href="#cb3-219" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-220"><a href="#cb3-220" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1Ej</span> <span class="va">a1E7</span>))</span>
+<span id="cb3-221"><a href="#cb3-221" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-222"><a href="#cb3-222" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-223"><a href="#cb3-223" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-224"><a href="#cb3-224" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-225"><a href="#cb3-225" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-226"><a href="#cb3-226" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-227"><a href="#cb3-227" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-228"><a href="#cb3-228" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-229"><a href="#cb3-229" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-230"><a href="#cb3-230" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-231"><a href="#cb3-231" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-232"><a href="#cb3-232" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-233"><a href="#cb3-233" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-234"><a href="#cb3-234" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-235"><a href="#cb3-235" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-236"><a href="#cb3-236" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-237"><a href="#cb3-237" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-238"><a href="#cb3-238" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-239"><a href="#cb3-239" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-240"><a href="#cb3-240" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-241"><a href="#cb3-241" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-242"><a href="#cb3-242" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-243"><a href="#cb3-243" aria-hidden="true" tabindex="-1"></a><span class="co">; [WD] hole{a1Gp} {2}:: (Base &quot;m&quot; *: One)</span></span>
+<span id="cb3-244"><a href="#cb3-244" aria-hidden="true" tabindex="-1"></a><span class="co">;                       ~</span></span>
+<span id="cb3-245"><a href="#cb3-245" aria-hidden="true" tabindex="-1"></a><span class="co">;                       (((Base &quot;m&quot; *: One) /: (Base &quot;s&quot; *: One))</span></span>
+<span id="cb3-246"><a href="#cb3-246" aria-hidden="true" tabindex="-1"></a><span class="co">;                        *: (Base &quot;s&quot; *: One)) (CNonCanonical)</span></span>
+<span id="cb3-247"><a href="#cb3-247" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-248"><a href="#cb3-248" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-249"><a href="#cb3-249" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-250"><a href="#cb3-250" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-251"><a href="#cb3-251" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-252"><a href="#cb3-252" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [Base [&quot;m&quot;],One []],*: [/: [*: [Base [&quot;m&quot;],One []],*: [Base [&quot;s&quot;],One []]],*: [Base [&quot;s&quot;],One []]])</span></span>
+<span id="cb3-253"><a href="#cb3-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-254"><a href="#cb3-254" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-255"><a href="#cb3-255" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-256"><a href="#cb3-256" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-257"><a href="#cb3-257" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-258"><a href="#cb3-258" aria-hidden="true" tabindex="-1"></a>(<span class="fu">or</span></span>
+<span id="cb3-259"><a href="#cb3-259" aria-hidden="true" tabindex="-1"></a>    <span class="dv">false</span></span>
+<span id="cb3-260"><a href="#cb3-260" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">not</span></span>
+<span id="cb3-261"><a href="#cb3-261" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span> (</span>
+<span id="cb3-262"><a href="#cb3-262" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-263"><a href="#cb3-263" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-264"><a href="#cb3-264" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-265"><a href="#cb3-265" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-266"><a href="#cb3-266" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-267"><a href="#cb3-267" aria-hidden="true" tabindex="-1"></a>(<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-268"><a href="#cb3-268" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-269"><a href="#cb3-269" aria-hidden="true" tabindex="-1"></a>    (<span class="op">as</span></span>
+<span id="cb3-270"><a href="#cb3-270" aria-hidden="true" tabindex="-1"></a>    <span class="va">const</span></span>
+<span id="cb3-271"><a href="#cb3-271" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-272"><a href="#cb3-272" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>)) (</span>
+<span id="cb3-273"><a href="#cb3-273" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-274"><a href="#cb3-274" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-275"><a href="#cb3-275" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-276"><a href="#cb3-276" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-277"><a href="#cb3-277" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-278"><a href="#cb3-278" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-279"><a href="#cb3-279" aria-hidden="true" tabindex="-1"></a>    (<span class="op">_</span></span>
+<span id="cb3-280"><a href="#cb3-280" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-281"><a href="#cb3-281" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-282"><a href="#cb3-282" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-283"><a href="#cb3-283" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-284"><a href="#cb3-284" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-285"><a href="#cb3-285" aria-hidden="true" tabindex="-1"></a>    (<span class="op">_</span></span>
+<span id="cb3-286"><a href="#cb3-286" aria-hidden="true" tabindex="-1"></a>        <span class="va">map</span></span>
+<span id="cb3-287"><a href="#cb3-287" aria-hidden="true" tabindex="-1"></a>        (<span class="op">+</span></span>
+<span id="cb3-288"><a href="#cb3-288" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-289"><a href="#cb3-289" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Int</span>))</span>
+<span id="cb3-290"><a href="#cb3-290" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-291"><a href="#cb3-291" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-292"><a href="#cb3-292" aria-hidden="true" tabindex="-1"></a>        (<span class="op">as</span></span>
+<span id="cb3-293"><a href="#cb3-293" aria-hidden="true" tabindex="-1"></a>        <span class="va">const</span></span>
+<span id="cb3-294"><a href="#cb3-294" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-295"><a href="#cb3-295" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>))</span>
+<span id="cb3-296"><a href="#cb3-296" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-297"><a href="#cb3-297" aria-hidden="true" tabindex="-1"></a>    (<span class="op">_</span></span>
+<span id="cb3-298"><a href="#cb3-298" aria-hidden="true" tabindex="-1"></a>        <span class="va">map</span></span>
+<span id="cb3-299"><a href="#cb3-299" aria-hidden="true" tabindex="-1"></a>        (<span class="op">+</span></span>
+<span id="cb3-300"><a href="#cb3-300" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-301"><a href="#cb3-301" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Int</span>))</span>
+<span id="cb3-302"><a href="#cb3-302" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-303"><a href="#cb3-303" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-304"><a href="#cb3-304" aria-hidden="true" tabindex="-1"></a>        (<span class="op">as</span></span>
+<span id="cb3-305"><a href="#cb3-305" aria-hidden="true" tabindex="-1"></a>        <span class="va">const</span></span>
+<span id="cb3-306"><a href="#cb3-306" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-307"><a href="#cb3-307" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span>)))</span>
+<span id="cb3-308"><a href="#cb3-308" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-309"><a href="#cb3-309" aria-hidden="true" tabindex="-1"></a>    (<span class="op">_</span></span>
+<span id="cb3-310"><a href="#cb3-310" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-311"><a href="#cb3-311" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-312"><a href="#cb3-312" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-313"><a href="#cb3-313" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-314"><a href="#cb3-314" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-315"><a href="#cb3-315" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-316"><a href="#cb3-316" aria-hidden="true" tabindex="-1"></a>    (<span class="op">as</span></span>
+<span id="cb3-317"><a href="#cb3-317" aria-hidden="true" tabindex="-1"></a>        <span class="va">const</span></span>
+<span id="cb3-318"><a href="#cb3-318" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-319"><a href="#cb3-319" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>)))))))</span>
+<span id="cb3-320"><a href="#cb3-320" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-321"><a href="#cb3-321" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-322"><a href="#cb3-322" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-323"><a href="#cb3-323" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-324"><a href="#cb3-324" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-325"><a href="#cb3-325" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-326"><a href="#cb3-326" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-327"><a href="#cb3-327" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-328"><a href="#cb3-328" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-329"><a href="#cb3-329" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-330"><a href="#cb3-330" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-331"><a href="#cb3-331" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-332"><a href="#cb3-332" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-333"><a href="#cb3-333" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-334"><a href="#cb3-334" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-335"><a href="#cb3-335" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-336"><a href="#cb3-336" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1GP {1}:: (a /: b) ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-337"><a href="#cb3-337" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1GT {1}:: fsk0 ~ c (CTyEqCan)</span></span>
+<span id="cb3-338"><a href="#cb3-338" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-339"><a href="#cb3-339" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-340"><a href="#cb3-340" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-341"><a href="#cb3-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-342"><a href="#cb3-342" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-343"><a href="#cb3-343" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1EB,a1EC],a1GO)</span></span>
+<span id="cb3-344"><a href="#cb3-344" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1GO,a1ED)</span></span>
+<span id="cb3-345"><a href="#cb3-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-346"><a href="#cb3-346" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-347"><a href="#cb3-347" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-348"><a href="#cb3-348" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-349"><a href="#cb3-349" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-350"><a href="#cb3-350" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1EB</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-351"><a href="#cb3-351" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1EC</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-352"><a href="#cb3-352" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1ED</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-353"><a href="#cb3-353" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1GO</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-354"><a href="#cb3-354" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-355"><a href="#cb3-355" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-356"><a href="#cb3-356" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-357"><a href="#cb3-357" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-358"><a href="#cb3-358" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-359"><a href="#cb3-359" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-360"><a href="#cb3-360" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-361"><a href="#cb3-361" aria-hidden="true" tabindex="-1"></a><span class="va">a1EB</span></span>
+<span id="cb3-362"><a href="#cb3-362" aria-hidden="true" tabindex="-1"></a><span class="va">a1EC</span>) <span class="va">a1GO</span>))</span>
+<span id="cb3-363"><a href="#cb3-363" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-364"><a href="#cb3-364" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1GO</span> <span class="va">a1ED</span>))</span>
+<span id="cb3-365"><a href="#cb3-365" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-366"><a href="#cb3-366" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-367"><a href="#cb3-367" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-368"><a href="#cb3-368" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-369"><a href="#cb3-369" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-370"><a href="#cb3-370" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-371"><a href="#cb3-371" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-372"><a href="#cb3-372" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-373"><a href="#cb3-373" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-374"><a href="#cb3-374" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-375"><a href="#cb3-375" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-376"><a href="#cb3-376" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-377"><a href="#cb3-377" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-378"><a href="#cb3-378" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-379"><a href="#cb3-379" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-380"><a href="#cb3-380" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-381"><a href="#cb3-381" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-382"><a href="#cb3-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-383"><a href="#cb3-383" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-384"><a href="#cb3-384" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1GY {1}:: (a *: b) ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-385"><a href="#cb3-385" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1H2 {1}:: fsk0 ~ c (CTyEqCan)</span></span>
+<span id="cb3-386"><a href="#cb3-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-387"><a href="#cb3-387" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-388"><a href="#cb3-388" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-389"><a href="#cb3-389" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-390"><a href="#cb3-390" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-391"><a href="#cb3-391" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1ER,a1ES],a1GX)</span></span>
+<span id="cb3-392"><a href="#cb3-392" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1GX,a1ET)</span></span>
+<span id="cb3-393"><a href="#cb3-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-394"><a href="#cb3-394" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-395"><a href="#cb3-395" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-396"><a href="#cb3-396" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-397"><a href="#cb3-397" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-398"><a href="#cb3-398" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1ER</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-399"><a href="#cb3-399" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1ES</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-400"><a href="#cb3-400" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1ET</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-401"><a href="#cb3-401" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1GX</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-402"><a href="#cb3-402" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-403"><a href="#cb3-403" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-404"><a href="#cb3-404" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-405"><a href="#cb3-405" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-406"><a href="#cb3-406" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-407"><a href="#cb3-407" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-408"><a href="#cb3-408" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-409"><a href="#cb3-409" aria-hidden="true" tabindex="-1"></a><span class="va">a1ER</span></span>
+<span id="cb3-410"><a href="#cb3-410" aria-hidden="true" tabindex="-1"></a><span class="va">a1ES</span>) <span class="va">a1GX</span>))</span>
+<span id="cb3-411"><a href="#cb3-411" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-412"><a href="#cb3-412" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1GX</span> <span class="va">a1ET</span>))</span>
+<span id="cb3-413"><a href="#cb3-413" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-414"><a href="#cb3-414" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-415"><a href="#cb3-415" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-416"><a href="#cb3-416" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-417"><a href="#cb3-417" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-418"><a href="#cb3-418" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-419"><a href="#cb3-419" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-420"><a href="#cb3-420" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-421"><a href="#cb3-421" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-422"><a href="#cb3-422" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-423"><a href="#cb3-423" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-424"><a href="#cb3-424" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-425"><a href="#cb3-425" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-426"><a href="#cb3-426" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-427"><a href="#cb3-427" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-428"><a href="#cb3-428" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-429"><a href="#cb3-429" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-430"><a href="#cb3-430" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-431"><a href="#cb3-431" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-432"><a href="#cb3-432" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1H9 {3}:: One ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-433"><a href="#cb3-433" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1H7 {2}:: Base &quot;m&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-434"><a href="#cb3-434" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hd {2}:: Base &quot;s&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-435"><a href="#cb3-435" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hb {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-436"><a href="#cb3-436" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hf {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-437"><a href="#cb3-437" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hh {1}:: (fsk0 /: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-438"><a href="#cb3-438" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hl {1}:: fsk0 ~ mps (CTyEqCan)</span></span>
+<span id="cb3-439"><a href="#cb3-439" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-440"><a href="#cb3-440" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-441"><a href="#cb3-441" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-442"><a href="#cb3-442" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-443"><a href="#cb3-443" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-444"><a href="#cb3-444" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1H8)</span></span>
+<span id="cb3-445"><a href="#cb3-445" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1H6)</span></span>
+<span id="cb3-446"><a href="#cb3-446" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1Hc)</span></span>
+<span id="cb3-447"><a href="#cb3-447" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1H6,a1H8],a1Ha)</span></span>
+<span id="cb3-448"><a href="#cb3-448" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Hc,a1H8],a1He)</span></span>
+<span id="cb3-449"><a href="#cb3-449" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Ha,a1He],a1Hg)</span></span>
+<span id="cb3-450"><a href="#cb3-450" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Hg,a1Fi)</span></span>
+<span id="cb3-451"><a href="#cb3-451" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-452"><a href="#cb3-452" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-453"><a href="#cb3-453" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-454"><a href="#cb3-454" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-455"><a href="#cb3-455" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-456"><a href="#cb3-456" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fi</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-457"><a href="#cb3-457" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H6</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-458"><a href="#cb3-458" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H8</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-459"><a href="#cb3-459" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Ha</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-460"><a href="#cb3-460" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-461"><a href="#cb3-461" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1He</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-462"><a href="#cb3-462" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hg</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-463"><a href="#cb3-463" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-464"><a href="#cb3-464" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>) <span class="va">a1H8</span>))</span>
+<span id="cb3-465"><a href="#cb3-465" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-466"><a href="#cb3-466" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>) <span class="va">a1H6</span>))</span>
+<span id="cb3-467"><a href="#cb3-467" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-468"><a href="#cb3-468" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>) <span class="va">a1Hc</span>))</span>
+<span id="cb3-469"><a href="#cb3-469" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-470"><a href="#cb3-470" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-471"><a href="#cb3-471" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-472"><a href="#cb3-472" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-473"><a href="#cb3-473" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-474"><a href="#cb3-474" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-475"><a href="#cb3-475" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-476"><a href="#cb3-476" aria-hidden="true" tabindex="-1"></a><span class="va">a1H6</span></span>
+<span id="cb3-477"><a href="#cb3-477" aria-hidden="true" tabindex="-1"></a><span class="va">a1H8</span>) <span class="va">a1Ha</span>))</span>
+<span id="cb3-478"><a href="#cb3-478" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-479"><a href="#cb3-479" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-480"><a href="#cb3-480" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-481"><a href="#cb3-481" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-482"><a href="#cb3-482" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-483"><a href="#cb3-483" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-484"><a href="#cb3-484" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-485"><a href="#cb3-485" aria-hidden="true" tabindex="-1"></a><span class="va">a1Hc</span></span>
+<span id="cb3-486"><a href="#cb3-486" aria-hidden="true" tabindex="-1"></a><span class="va">a1H8</span>) <span class="va">a1He</span>))</span>
+<span id="cb3-487"><a href="#cb3-487" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-488"><a href="#cb3-488" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-489"><a href="#cb3-489" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-490"><a href="#cb3-490" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-491"><a href="#cb3-491" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-492"><a href="#cb3-492" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-493"><a href="#cb3-493" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-494"><a href="#cb3-494" aria-hidden="true" tabindex="-1"></a><span class="va">a1Ha</span></span>
+<span id="cb3-495"><a href="#cb3-495" aria-hidden="true" tabindex="-1"></a><span class="va">a1He</span>) <span class="va">a1Hg</span>))</span>
+<span id="cb3-496"><a href="#cb3-496" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-497"><a href="#cb3-497" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1Hg</span> <span class="va">a1Fi</span>))</span>
+<span id="cb3-498"><a href="#cb3-498" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-499"><a href="#cb3-499" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-500"><a href="#cb3-500" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-501"><a href="#cb3-501" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-502"><a href="#cb3-502" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-503"><a href="#cb3-503" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-504"><a href="#cb3-504" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-505"><a href="#cb3-505" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-506"><a href="#cb3-506" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-507"><a href="#cb3-507" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-508"><a href="#cb3-508" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-509"><a href="#cb3-509" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-510"><a href="#cb3-510" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-511"><a href="#cb3-511" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-512"><a href="#cb3-512" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-513"><a href="#cb3-513" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-514"><a href="#cb3-514" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-515"><a href="#cb3-515" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-516"><a href="#cb3-516" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-517"><a href="#cb3-517" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1H9 {3}:: One ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-518"><a href="#cb3-518" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1H7 {2}:: Base &quot;m&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-519"><a href="#cb3-519" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hd {2}:: Base &quot;s&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-520"><a href="#cb3-520" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hb {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-521"><a href="#cb3-521" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hf {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-522"><a href="#cb3-522" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hh {1}:: (fsk0 /: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb3-523"><a href="#cb3-523" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hl {1}:: fsk0 ~ mps (CTyEqCan)</span></span>
+<span id="cb3-524"><a href="#cb3-524" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-525"><a href="#cb3-525" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-526"><a href="#cb3-526" aria-hidden="true" tabindex="-1"></a><span class="co">; [WD] hole{a1Hw} {3}:: (mps *: (Base &quot;s&quot; *: One))</span></span>
+<span id="cb3-527"><a href="#cb3-527" aria-hidden="true" tabindex="-1"></a><span class="co">;                       ~</span></span>
+<span id="cb3-528"><a href="#cb3-528" aria-hidden="true" tabindex="-1"></a><span class="co">;                       (Base &quot;m&quot; *: One) (CNonCanonical)</span></span>
+<span id="cb3-529"><a href="#cb3-529" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-530"><a href="#cb3-530" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-531"><a href="#cb3-531" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1H8)</span></span>
+<span id="cb3-532"><a href="#cb3-532" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1H6)</span></span>
+<span id="cb3-533"><a href="#cb3-533" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1Hc)</span></span>
+<span id="cb3-534"><a href="#cb3-534" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1H6,a1H8],a1Ha)</span></span>
+<span id="cb3-535"><a href="#cb3-535" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Hc,a1H8],a1He)</span></span>
+<span id="cb3-536"><a href="#cb3-536" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1Ha,a1He],a1Hg)</span></span>
+<span id="cb3-537"><a href="#cb3-537" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Hg,a1Fi)</span></span>
+<span id="cb3-538"><a href="#cb3-538" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-539"><a href="#cb3-539" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-540"><a href="#cb3-540" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Fi,*: [Base [&quot;s&quot;],One []]],*: [Base [&quot;m&quot;],One []])</span></span>
+<span id="cb3-541"><a href="#cb3-541" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-542"><a href="#cb3-542" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-543"><a href="#cb3-543" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Fi</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-544"><a href="#cb3-544" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H6</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-545"><a href="#cb3-545" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1H8</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-546"><a href="#cb3-546" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Ha</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-547"><a href="#cb3-547" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-548"><a href="#cb3-548" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1He</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-549"><a href="#cb3-549" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hg</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-550"><a href="#cb3-550" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-551"><a href="#cb3-551" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> ((<span class="op">as</span> <span class="va">const</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>)) <span class="dv">0</span>) <span class="va">a1H8</span>))</span>
+<span id="cb3-552"><a href="#cb3-552" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-553"><a href="#cb3-553" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>) <span class="va">a1H6</span>))</span>
+<span id="cb3-554"><a href="#cb3-554" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-555"><a href="#cb3-555" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>) <span class="va">a1Hc</span>))</span>
+<span id="cb3-556"><a href="#cb3-556" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-557"><a href="#cb3-557" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-558"><a href="#cb3-558" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-559"><a href="#cb3-559" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-560"><a href="#cb3-560" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-561"><a href="#cb3-561" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-562"><a href="#cb3-562" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-563"><a href="#cb3-563" aria-hidden="true" tabindex="-1"></a><span class="va">a1H6</span></span>
+<span id="cb3-564"><a href="#cb3-564" aria-hidden="true" tabindex="-1"></a><span class="va">a1H8</span>) <span class="va">a1Ha</span>))</span>
+<span id="cb3-565"><a href="#cb3-565" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-566"><a href="#cb3-566" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-567"><a href="#cb3-567" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-568"><a href="#cb3-568" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-569"><a href="#cb3-569" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-570"><a href="#cb3-570" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-571"><a href="#cb3-571" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-572"><a href="#cb3-572" aria-hidden="true" tabindex="-1"></a><span class="va">a1Hc</span></span>
+<span id="cb3-573"><a href="#cb3-573" aria-hidden="true" tabindex="-1"></a><span class="va">a1H8</span>) <span class="va">a1He</span>))</span>
+<span id="cb3-574"><a href="#cb3-574" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-575"><a href="#cb3-575" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (</span>
+<span id="cb3-576"><a href="#cb3-576" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-577"><a href="#cb3-577" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-578"><a href="#cb3-578" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span></span>
+<span id="cb3-579"><a href="#cb3-579" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-580"><a href="#cb3-580" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-581"><a href="#cb3-581" aria-hidden="true" tabindex="-1"></a><span class="va">a1Ha</span></span>
+<span id="cb3-582"><a href="#cb3-582" aria-hidden="true" tabindex="-1"></a><span class="va">a1He</span>) <span class="va">a1Hg</span>))</span>
+<span id="cb3-583"><a href="#cb3-583" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-584"><a href="#cb3-584" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1Hg</span> <span class="va">a1Fi</span>))</span>
+<span id="cb3-585"><a href="#cb3-585" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-586"><a href="#cb3-586" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-587"><a href="#cb3-587" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-588"><a href="#cb3-588" aria-hidden="true" tabindex="-1"></a>(<span class="fu">or</span></span>
+<span id="cb3-589"><a href="#cb3-589" aria-hidden="true" tabindex="-1"></a>    <span class="dv">false</span></span>
+<span id="cb3-590"><a href="#cb3-590" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">not</span></span>
+<span id="cb3-591"><a href="#cb3-591" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span> (</span>
+<span id="cb3-592"><a href="#cb3-592" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-593"><a href="#cb3-593" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-594"><a href="#cb3-594" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-595"><a href="#cb3-595" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-596"><a href="#cb3-596" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-597"><a href="#cb3-597" aria-hidden="true" tabindex="-1"></a><span class="va">a1Fi</span></span>
+<span id="cb3-598"><a href="#cb3-598" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-599"><a href="#cb3-599" aria-hidden="true" tabindex="-1"></a>    (<span class="op">_</span></span>
+<span id="cb3-600"><a href="#cb3-600" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-601"><a href="#cb3-601" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-602"><a href="#cb3-602" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-603"><a href="#cb3-603" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-604"><a href="#cb3-604" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-605"><a href="#cb3-605" aria-hidden="true" tabindex="-1"></a>    (</span>
+<span id="cb3-606"><a href="#cb3-606" aria-hidden="true" tabindex="-1"></a>    (<span class="op">as</span></span>
+<span id="cb3-607"><a href="#cb3-607" aria-hidden="true" tabindex="-1"></a>        <span class="va">const</span></span>
+<span id="cb3-608"><a href="#cb3-608" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-609"><a href="#cb3-609" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>))) (</span>
+<span id="cb3-610"><a href="#cb3-610" aria-hidden="true" tabindex="-1"></a>(<span class="op">_</span></span>
+<span id="cb3-611"><a href="#cb3-611" aria-hidden="true" tabindex="-1"></a>    <span class="va">map</span></span>
+<span id="cb3-612"><a href="#cb3-612" aria-hidden="true" tabindex="-1"></a>    (<span class="op">+</span></span>
+<span id="cb3-613"><a href="#cb3-613" aria-hidden="true" tabindex="-1"></a>        (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb3-614"><a href="#cb3-614" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Int</span>))</span>
+<span id="cb3-615"><a href="#cb3-615" aria-hidden="true" tabindex="-1"></a>(<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>)</span>
+<span id="cb3-616"><a href="#cb3-616" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-617"><a href="#cb3-617" aria-hidden="true" tabindex="-1"></a>    (<span class="op">as</span></span>
+<span id="cb3-618"><a href="#cb3-618" aria-hidden="true" tabindex="-1"></a>    <span class="va">const</span></span>
+<span id="cb3-619"><a href="#cb3-619" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-620"><a href="#cb3-620" aria-hidden="true" tabindex="-1"></a>    <span class="dv">0</span>))))))</span>
+<span id="cb3-621"><a href="#cb3-621" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-622"><a href="#cb3-622" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-623"><a href="#cb3-623" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-624"><a href="#cb3-624" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span>
+<span id="cb3-625"><a href="#cb3-625" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:print-success</span> <span class="dv">true</span>)</span>
+<span id="cb3-626"><a href="#cb3-626" aria-hidden="true" tabindex="-1"></a>(<span class="kw">set-option</span> <span class="er">:produce-models</span> <span class="dv">true</span>)</span>
+<span id="cb3-627"><a href="#cb3-627" aria-hidden="true" tabindex="-1"></a>(declare-datatypes () ((<span class="va">Type</span> (<span class="va">apply</span> (<span class="va">fst</span> <span class="va">Type</span>) (<span class="va">snd</span> <span class="va">Type</span>)) (<span class="va">lit</span> (<span class="va">getstr</span> <span class="dt">String</span>)))))</span>
+<span id="cb3-628"><a href="#cb3-628" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">one</span> <span class="dt">Int</span>)</span>
+<span id="cb3-629"><a href="#cb3-629" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">one</span> <span class="dv">1</span>))</span>
+<span id="cb3-630"><a href="#cb3-630" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">base</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-631"><a href="#cb3-631" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">enc</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-632"><a href="#cb3-632" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">exp</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-633"><a href="#cb3-633" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">enc</span> <span class="va">base</span>))</span>
+<span id="cb3-634"><a href="#cb3-634" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-635"><a href="#cb3-635" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-636"><a href="#cb3-636" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb3-637"><a href="#cb3-637" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Hy {1}:: Enc s n ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb3-638"><a href="#cb3-638" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1HC {1}:: fsk0 ~ b (CTyEqCan)</span></span>
+<span id="cb3-639"><a href="#cb3-639" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-640"><a href="#cb3-640" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb3-641"><a href="#cb3-641" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-642"><a href="#cb3-642" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-643"><a href="#cb3-643" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb3-644"><a href="#cb3-644" aria-hidden="true" tabindex="-1"></a><span class="co">; (Enc [a1FE,a1FF],a1Hx)</span></span>
+<span id="cb3-645"><a href="#cb3-645" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1Hx,a1FG)</span></span>
+<span id="cb3-646"><a href="#cb3-646" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-647"><a href="#cb3-647" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb3-648"><a href="#cb3-648" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb3-649"><a href="#cb3-649" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-650"><a href="#cb3-650" aria-hidden="true" tabindex="-1"></a>(<span class="kw">push</span> <span class="dv">1</span>)</span>
+<span id="cb3-651"><a href="#cb3-651" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1FE</span> <span class="dt">String</span>)</span>
+<span id="cb3-652"><a href="#cb3-652" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1FF</span> <span class="dt">Int</span>)</span>
+<span id="cb3-653"><a href="#cb3-653" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1FG</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-654"><a href="#cb3-654" aria-hidden="true" tabindex="-1"></a>(declare-const <span class="va">a1Hx</span> (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb3-655"><a href="#cb3-655" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">&lt;=</span> <span class="dv">0</span> <span class="va">a1FF</span>))</span>
+<span id="cb3-656"><a href="#cb3-656" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-657"><a href="#cb3-657" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> (<span class="fu">store</span> <span class="va">enc</span> <span class="va">a1FE</span> <span class="va">a1FF</span>) <span class="va">a1Hx</span>))</span>
+<span id="cb3-658"><a href="#cb3-658" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb3-659"><a href="#cb3-659" aria-hidden="true" tabindex="-1"></a>(<span class="op">=</span> <span class="va">a1Hx</span> <span class="va">a1FG</span>))</span>
+<span id="cb3-660"><a href="#cb3-660" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-661"><a href="#cb3-661" aria-hidden="true" tabindex="-1"></a><span class="dv">sat</span></span>
+<span id="cb3-662"><a href="#cb3-662" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> <span class="dv">false</span>)</span>
+<span id="cb3-663"><a href="#cb3-663" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb3-664"><a href="#cb3-664" aria-hidden="true" tabindex="-1"></a><span class="dv">unsat</span></span>
+<span id="cb3-665"><a href="#cb3-665" aria-hidden="true" tabindex="-1"></a>(<span class="kw">pop</span> <span class="dv">1</span>)</span>
+<span id="cb3-666"><a href="#cb3-666" aria-hidden="true" tabindex="-1"></a>(<span class="kw">exit</span>)</span></code></pre></div>
+    <div id="copyright">&copy; 2013-2021 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

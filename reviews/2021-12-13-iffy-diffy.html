@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Conditional Coding.</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">open sourcery</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">pinned tweets</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">flying comps</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">services</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">about</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">CV</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Conditional Coding.</h1>
+                    
+                    <p class="lead">Struggle to read C preprocessor interleaved <em>iffy</em> Haskell code?<br> Forget <code>CPP</code>. With cabal conditionals, get to do clean file diffs again!</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        haskell, tcplugins
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <div id="ifdef">
+<pre class="pre">
+{-# LANGUAGE CPP #-}
+
+module GHC.TcPluginM.Extra
+
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#if MIN_VERSION_ghc(9,2,0)
+#elif MIN_VERSION_ghc(9,0,0)
+#endif
+#if MIN_VERSION_ghc(9,0,0)
+#else
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#if MIN_VERSION_ghc(8,5,0)
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 711
+#else
+#if __GLASGOW_HASKELL__ < 809
+#else
+#endif
+#endif
+#if __GLASGOW_HASKELL__ < 802
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 809
+#if __GLASGOW_HASKELL__ >= 806
+#endif
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 809
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 711
+#else
+#endif
+#endif
+#if __GLASGOW_HASKELL__ < 802
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#endif
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if MIN_VERSION_ghc(8,5,0)
+#elif __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if MIN_VERSION_ghc(8,5,0)
+#else
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 711
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ >= 711
+#else
+#endif
+#if __GLASGOW_HASKELL__ < 802
+#else
+#endif
+#if MIN_VERSION_ghc(8,4,0)
+#elif MIN_VERSION_ghc(8,0,0)
+#else
+#endif
+#if MIN_VERSION_ghc(9,2,0)
+#else
+#endif
+#if MIN_VERSION_ghc(8,6,0)
+#endif
+#if __GLASGOW_HASKELL__ >= 900
+#elif __GLASGOW_HASKELL__ >= 809
+#elif __GLASGOW_HASKELL__ >= 802
+#elif __GLASGOW_HASKELL__ < 711
+#endif
+#if __GLASGOW_HASKELL__ > 711
+#endif
+</pre>
+</div>
+<p>I have a dependency on <a href="https://github.com/clash-lang/ghc-tcplugins-extra#readme">ghc-tcplugins-extra</a>. The panel on the right shows the #ifdefs of its one module, <code>GHC.TcPluginM.Extra</code>. I’m happy with this package and don’t help maintain it so why am I making a disruptive pull request with 63 changed files, 1,902 additions and 458 deletions?</p>
+<h1 id="cpp-hell-no">CPP Hell, No!</h1>
+<p>I don’t much like <code>CPP</code> and find nested conditional blocks hard to disentangle. One or two is fine but when they’re nested and the conditions range over many GHC versions I find it hard to take in the whole at a glance let alone see the difference between one GHC version and the next. What is more #ifdefs are noise in the source file.</p>
+<p>We can can stop or reduce <code>{-# LANGUAGE CPP #-}</code> pragma use even when we need to switch code between GHC versions. I’ll show you how using ghc-tcplugins-extra as an example.</p>
+<h1 id="one-internal-indirection">One Internal Indirection</h1>
+<p>I gut <code>src/GHC.TcPluginM.Extra</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and defer to <code>import Internal</code> for the implementation.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">GHC.TcPluginM.Extra</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    ( <span class="co">-- * Create new constraints</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    newWanted</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    , newGiven</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    , newDerived</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- * Creating evidence</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    , evByFiat</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- * Lookup</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    , lookupModule</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    , lookupName</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- * Trace state of the plugin</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    , tracePlugin</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- * Substitutions</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    , flattenGivens</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    , mkSubst</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    , mkSubst'</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    , substType</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    , substCt</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">where</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Internal</span></span></code></pre></div>
+<p>I thought this might screw around with the haddocks but they look good, the internal module is invisible and the module tree is unchanged.</p>
+<div id="module-list"><p class="caption">Modules</p><ul><li><span class="module details-toggle-control details-toggle collapser" data-details-id="n.1">GHC</span><details id="n.1" open="open"><summary class="hide-when-js-enabled">Submodules</summary><ul><li><span class="module details-toggle-control details-toggle collapser" data-details-id="n.1.1">TcPluginM</span><details id="n.1.1" open="open"><summary class="hide-when-js-enabled">Submodules</summary><ul><li><span class="module"><span class="noexpander">&nbsp;</span><a href="https://hackage.haskell.org/package/ghc-tcplugins-extra-0.4.2/docs/GHC-TcPluginM-Extra.html">GHC.TcPluginM.Extra</a></span></li></ul></details></li></ul></details></li></ul></div>
+<p>In the implementation I have two module hierarchies, <code>GhcApi.*</code> and <code>Internal.*</code>.</p>
+<h1 id="cabal-conditionals">Cabal conditionals</h1>
+<p>In the cabal file with <code>impl(ghc?)</code> conditonals we can pick which files to compile.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="at">library</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">exposed-modules</span><span class="kw">:</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="at">        GHC.TcPluginM.Extra</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">other-modules</span><span class="kw">:</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">        Internal</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">        src</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 9.2) &amp;&amp; impl(ghc &lt; 9.4)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-tree</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-9.2</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 9.0) &amp;&amp; impl(ghc &lt; 9.2)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-tree</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-9.0</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.10) &amp;&amp; impl(ghc &lt; 9.0)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.10</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.8) &amp;&amp; impl(ghc &lt; 8.10)</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.8</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.6) &amp;&amp; impl(ghc &lt; 8.8)</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.6</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.4) &amp;&amp; impl(ghc &lt; 8.6)</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.4</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.2) &amp;&amp; impl(ghc &lt; 8.4)</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.2</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 8.0) &amp;&amp; impl(ghc &lt; 8.2)</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-flat</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-8.0</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="at">    if impl(ghc &gt;= 7.10) &amp;&amp; impl(ghc &lt; 8.0)</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="at">        </span><span class="fu">hs-source-dirs</span><span class="kw">:</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="at">            src-ghc-cpp</span></span></code></pre></div>
+<p>When some things stay the same but others change between GHC versions we can group modules into different <code>hs-source-dirs</code> directories.</p>
+<p>When <code>8.0 &lt;= ghc &lt; 9.0</code> I include modules in <code>src-tree-flat</code> so named because the GHC module hierarchy at this time was flat. With <code>ghc &gt;= 9.0</code> GHC’s module hierarchy was moved to a deeper tree structure so I include modules from <code>src-tree-tree</code> instead.</p>
+<p>I put modules that change between versions into version-specific directories like <code>src-ghc-9.0</code> and <code>src-ghc-9.2</code>.</p>
+<p>We’re trading duplicating modules for ease of diffing. We can now see differences between GHC <em>dot-even-numbered</em> releases and see what needed to change when GHC deepened its module hierarchy.</p>
+<h1 id="file-diffing">File diffing</h1>
+<p>One change between <code>src-ghc-9.0</code> and <code>src-ghc-9.2</code>.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">--- src-ghc-9.0/GhcApi/Constraint.hs</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ src-ghc-9.2/GhcApi/Constraint.hs</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   module GhcApi.Constraint</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>       ( Ct(..</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>       , CtEvidence(..)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>       , CtLoc</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="va">+      , CanEqLHS(..)</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       , ctLoc</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       , ctEvId</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>       , mkNonCanonical</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>       ) where</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>   import GHC.Tc.Types.Constraint</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="st">-      ( Ct(..), CtEvidence(..), CtLoc</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="va">+      ( Ct(..), CtEvidence(..), CanEqLHS(..), CtLoc</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>       , ctLoc, ctEvId, mkNonCanonical</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>       )</span></code></pre></div>
+<p>An example of reacting to GHC’s change to a deeper module hierarchy.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">--- src-ghc-flat/GhcApi/Predicate.hs</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ src-ghc-tree/GhcApi/Predicate.hs</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   module GhcApi.Predicate (mkPrimEqPred) where</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">-  import Predicate (mkPrimEqPred)</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="va">+  import GHC.Core.Coercion (mkPrimEqPred)</span></span></code></pre></div>
+<h1 id="cabal-mixins">Cabal Mixins</h1>
+<p>With <a href="https://cabal.readthedocs.io/en/3.6/cabal-package.html?highlight=mixins#pkg-field-mixins">mixins</a> we can rename and alias module names<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. The <code>hiding ()</code> exposes the current names and the <code>as</code> does the aliasing.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode yaml"><code class="sourceCode yaml"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mixins</span><span class="kw">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="at">    ghc hiding ()</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">  , ghc (TcRnTypes as Constraint)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="at">  , ghc (Type as Predicate)</span></span></code></pre></div>
+<p>I could have avoided using mixins like this but it helped insulate me from GHC API changes.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">GhcApi.Constraint</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ( <span class="dt">Ct</span>(<span class="op">..</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    , <span class="dt">CtEvidence</span>(<span class="op">..</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    , <span class="dt">CtLoc</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    , ctLoc</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    , ctEvId</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    , mkNonCanonical</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">where</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Constraint</span> (<span class="dt">Ct</span> (..), <span class="dt">CtEvidence</span> (..), <span class="dt">CtLoc</span>, ctLoc, ctEvId, mkNonCanonical)</span></code></pre></div>
+<p>I can <code>import Constraint</code> when that module exists in GHC and when it doesn’t exist.</p>
+<pre class="pre"><code>&gt; cabal build all
+Build profile: -w ghc-8.10.7 -O1
+[1 of 8] Compiling GhcApi.Constraint
+[2 of 8] Compiling GhcApi.GhcPlugins
+[3 of 8] Compiling GhcApi.Predicate
+[4 of 8] Compiling Internal.Constraint
+[5 of 8] Compiling Internal.Evidence
+[6 of 8] Compiling Internal.Type
+[7 of 8] Compiling Internal
+[8 of 8] Compiling GHC.TcPluginM.Extra</code></pre>
+<p>Without the mixin renaming TcRnTypes to Constraint this module errors.</p>
+<pre class="pre"><code>&gt; cabal build all
+Build profile: -w ghc-8.8.4 -O1
+
+src-ghc-flat/GhcApi/Constraint.hs:11:1: error:
+    Could not find module ‘Constraint’
+    Perhaps you meant Constants (from ghc-8.8.4)
+    Use -v (or `:set -v` in ghci) to see a list of the files searched for.
+   |
+11 | import Constraint
+   | ^^^^^^^^^^^^^^^^^...</code></pre>
+<h1 id="simpler-with-dhall">Simpler with dhall</h1>
+<p>Tweaking the cabal file with all these conditionals and mixins is a bit too much repetitive work but with <a href="https://github.com/cabalism/hpack-dhall#readme">hpack-dhall</a> we can simplify this chore.</p>
+<pre class="dhall"><code>λ(low : Text) →
+λ(high : Text) →
+λ(srcs : List Text) →
+λ(ghc : { name : Text, mixin : List Text }) →
+λ(mods : List Text) →
+  { condition = &quot;impl(ghc &gt;= ${low}) &amp;&amp; impl(ghc &lt; ${high})&quot;
+  , source-dirs =
+      Prelude/List/map Text Text (λ(x : Text) → &quot;src-ghc-${x}&quot;) srcs
+  , dependencies = [ ghc ⫽ { version = &quot;&gt;=${low} &amp;&amp; &lt;${high}&quot; } ]
+  , other-modules = mods
+  }</code></pre>
+<h1 id="why-do-this">Why do this?</h1>
+<p>I feel that copying code files this way is better than using CPP. We can single thread our thoughts looking at plain Haskell code uninterrupted by C prepocessor #ifdefs and deal with only one GHC version at a time when getting the code to compile against a newer GHC version or when debugging a problem.</p>
+<p>Backporting changes is simpler too because of the diffing but may require more edits if ranging back over multiple GHC versions. If we don’t care about backporting then the set of modules for an older GHC version can be left alone as we don’t need to touch them with CPP #ifdefs.</p>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Except for <code>ghc &lt; 8.0</code> where I have left the original CPP-heavy module alone untouched.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Mixins are a cabal 2.0 feature and requires <code>impl(ghc &gt;= 8.2)</code>. That’s true if I use stack but with cabal-install I can get <code>impl(ghc &gt;= 7.10.3) &amp;&amp; impl(ghc &lt; 8.0)</code> to compile a package using cabal mixins. With the cabal github action in <code>.github/workflows/cabal.yml</code> cabal can build against GHC versions <code>[ 7.10.3, 8.0.2, 8.2.2, 8.4.4, 8.6.5, 8.8.4, 8.10.7, 9.0.1, 9.2.1 ]</code><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2021 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

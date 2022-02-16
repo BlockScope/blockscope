@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Unit Definitions.</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">open sourcery</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">pinned tweets</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">flying comps</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">services</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">about</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">CV</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Unit Definitions.</h1>
+                    
+                    <p class="lead">How do unit definitions like <code>[u| s, min = 60 s, Hz = s^-1 |]</code> work?</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        haskell, tcplugins
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <h1 id="quasiquotes-for-units">Quasiquotes for Units</h1>
+<p>In F# units are builtin, declared with special syntax and erased at runtime. They’re more like Haskell newtypes than single case discriminated unions because of this erasure.</p>
+<p>Shipped with the <span class="title-ref">uom-plugin</span>, is the u quasiquoter. Units need not be declared this way to use the plugin but this is convenient and looks good. There are base units, derived units and convertible units.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>declareBaseUnit <span class="st">&quot;m&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>declareDerivedUnit <span class="st">&quot;N&quot;</span> <span class="st">&quot;kg m / s^2&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>declareConvertibleUnit <span class="st">&quot;kilobyte&quot;</span> <span class="dv">1024</span> <span class="st">&quot;byte&quot;</span></span></code></pre></div>
+<p>With the quasiquoter these unit definitions can be written as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[u| m |]</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>[u| N = kg m / s^2 |]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>[u| kilobyte = 1024 byte |]</span></code></pre></div>
+<h1 id="declarations-unpacked">Declarations Unpacked</h1>
+<p>The following code snippet was successfully declaring byte as a unit but then made to fail by not giving the plugin as a GHC option. Error messages are shorter by including some strictly unnecessary imports.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE FlexibleContexts #-}</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE FlexibleInstances #-}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE QuasiQuotes #-}</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TemplateHaskell #-}</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE UndecidableInstances #-}</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE PackageImports #-}</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">--{-# OPTIONS_GHC -fplugin Plugins.UoM #-}</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fno-warn-orphans #-}</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Defs</span> <span class="kw">where</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">-- </span><span class="al">NOTE</span><span class="co">: The only import needed for the declaration.</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-th&quot; <span class="dt">Data.UnitsOfMeasure.TH</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">-- </span><span class="al">NOTE</span><span class="co">: Imports added to drop prefixes in the error messages. </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-quantity&quot; <span class="dt">Data.Theory.UoM</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-quantity&quot; <span class="dt">Data.UnitsOfMeasure.Syntax</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;uom-th&quot; <span class="dt">Data.UnitsOfMeasure.Canonical</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>declareBaseUnit <span class="st">&quot;byte&quot;</span></span></code></pre></div>
+<pre class="pre"><code>test-suite-defs/Defs.hs:23:1: error:
+    • Could not deduce: IsCanonical (Unpack (Base &quot;byte&quot;))
+        arising from the superclasses of an instance declaration
+    • In the instance declaration for ‘HasCanonicalBaseUnit &quot;byte&quot;’
+   |
+23 | declareBaseUnit &quot;byte&quot;
+   | ^^^^^^^^^^^^^^^^^^^^^^
+
+test-suite-defs/Defs.hs:23:1: error:
+    • Couldn't match type ‘One’ with ‘Base &quot;byte&quot; /: Base &quot;byte&quot;’
+        arising from a use of ‘Data.UnitsOfMeasure.Canonical.$dmconversionBase’
+    • In the expression:
+        Data.UnitsOfMeasure.Canonical.$dmconversionBase @(&quot;byte&quot;)
+    In an equation for ‘conversionBase’:
+        conversionBase
+            = Data.UnitsOfMeasure.Canonical.$dmconversionBase @(&quot;byte&quot;)
+    In the instance declaration for ‘HasCanonicalBaseUnit &quot;byte&quot;’
+   |
+23 | declareBaseUnit &quot;byte&quot;
+   | ^^^^^^^^^^^^^^^^^^^^^^</code></pre>
+<p>How is the plugin helping GHC to:</p>
+<blockquote>
+<ul>
+<li>deduce <code>IsCanonical (Unpack (Base "byte"))</code></li>
+<li>match <code>One</code> with <code>Base "byte" /: Base "byte"</code></li>
+</ul>
+</blockquote>
+<p>It looks for unpacks and then lets GHC know that two types are equivalent, the unpacked one and another it creates on the fly using unit syntax.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">lookForUnpacks ::</span> <span class="dt">UnitDefs</span> <span class="ot">-&gt;</span> [<span class="dt">Ct</span>] <span class="ot">-&gt;</span> [<span class="dt">Ct</span>] <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> [<span class="dt">Ct</span>]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>lookForUnpacks uds givens wanteds <span class="ot">=</span> <span class="fu">mapM</span> unpackCt unpacks <span class="kw">where</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    unpacks <span class="ot">=</span> <span class="fu">concatMap</span> collectCt <span class="op">$</span> givens <span class="op">++</span> wanteds</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    collectCt ct <span class="ot">=</span> collectType uds ct <span class="op">$</span> ctEvPred <span class="op">$</span> ctEvidence ct</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    unpackCt (ct,a,xs) <span class="ot">=</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        newGivenCt loc (mkEqPred ty1 ty2) (evByFiat <span class="st">&quot;units&quot;</span> ty1 ty2)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            ty1 <span class="ot">=</span> <span class="dt">TyConApp</span> (unpackTyCon uds) [a]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            ty2 <span class="ot">=</span> mkTyConApp (unitSyntaxPromotedDataCon uds)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>                [ typeSymbolKind</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                , <span class="fu">foldr</span> promoter nil ys</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                , <span class="fu">foldr</span> promoter nil zs ]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            loc <span class="ot">=</span> ctLoc ct</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            ys <span class="ot">=</span> <span class="fu">concatMap</span> (\ (s, i) <span class="ot">-&gt;</span> <span class="kw">if</span> i <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">then</span> genericReplicate i s <span class="kw">else</span> []) xs</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            zs <span class="ot">=</span> <span class="fu">concatMap</span> (\ (s, i) <span class="ot">-&gt;</span> <span class="kw">if</span> i <span class="op">&lt;</span> <span class="dv">0</span> <span class="kw">then</span> genericReplicate (<span class="fu">abs</span> i) s <span class="kw">else</span> []) xs</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    nil <span class="ot">=</span> mkTyConApp (promoteDataCon nilDataCon) [typeSymbolKind]</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    promoter x t <span class="ot">=</span> mkTyConApp cons_tycon [typeSymbolKind, mkStrLitTy x, t]</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    cons_tycon <span class="ot">=</span> promoteDataCon consDataCon</span></code></pre></div>
+<p>The state of this plugin is <code>UnitDefs</code>, a record of type families.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">lookupUnitDefs ::</span> <span class="dt">ModuleName</span> <span class="ot">-&gt;</span> <span class="dt">ModuleName</span> <span class="ot">-&gt;</span> <span class="dt">FastString</span> <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> <span class="dt">UnitDefs</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>lookupUnitDefs theory syntax pkgName <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    mT <span class="ot">&lt;-</span> lookupModule theory pkgName</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    mS <span class="ot">&lt;-</span> lookupModule syntax pkgName</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> f <span class="ot">=</span> divulgeTyCon mT</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> g <span class="ot">=</span> divulgeTyCon mS</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    u <span class="ot">&lt;-</span> f <span class="st">&quot;Unit&quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    b <span class="ot">&lt;-</span> f <span class="st">&quot;Base&quot;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    o <span class="ot">&lt;-</span> f <span class="st">&quot;One&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> f <span class="st">&quot;*:&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    d <span class="ot">&lt;-</span> f <span class="st">&quot;/:&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    e <span class="ot">&lt;-</span> f <span class="st">&quot;^:&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    x <span class="ot">&lt;-</span> g <span class="st">&quot;Unpack&quot;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    i <span class="ot">&lt;-</span> g <span class="st">&quot;UnitSyntax&quot;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    c <span class="ot">&lt;-</span> g <span class="st">&quot;~~&quot;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        <span class="dt">UnitDefs</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>            { unitKindCon <span class="ot">=</span> u</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>            , unitBaseTyCon <span class="ot">=</span> b</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>            , unitOneTyCon <span class="ot">=</span> o</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>            , mulTyCon <span class="ot">=</span> m</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>            , divTyCon <span class="ot">=</span> d</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>            , expTyCon <span class="ot">=</span> e</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>            , unpackTyCon <span class="ot">=</span> x</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>            , unitSyntaxTyCon <span class="ot">=</span> i</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            , unitSyntaxPromotedDataCon <span class="ot">=</span> getDataCon i <span class="st">&quot;:/&quot;</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            , equivTyCon <span class="ot">=</span> c</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        getDataCon u s <span class="ot">=</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            <span class="kw">case</span> [ dc</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>                 <span class="op">|</span> dc <span class="ot">&lt;-</span> tyConDataCons u</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                 , occNameFS (occName (dataConName dc)) <span class="op">==</span> fsLit s</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                 ] <span class="kw">of</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>                 [d] <span class="ot">-&gt;</span> promoteDataCon d</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>                 _ <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="op">$</span> <span class="st">&quot;lookupUnitDefs/getDataCon: missing &quot;</span> <span class="op">++</span> s</span></code></pre></div>
+<h1 id="debugging-time">Debugging Time</h1>
+<p>Tracing added to typechecker plugins will only fire when compilation of a module in triggered, for instance when reloading the module in the REPL. Once compilation is done, tracing stops. Running the program will be quiet.</p>
+    <div id="copyright">&copy; 2013-2021 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

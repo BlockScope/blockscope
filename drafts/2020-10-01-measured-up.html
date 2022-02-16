@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Units</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">open sourcery</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">pinned tweets</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">flying comps</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">services</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">about</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">CV</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Units</h1>
+                    
+                    <p class="lead">How do we measure up when static typing?</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        fsharp, haskell, uom
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>I much prefer static type checking and strong types. If a compiler is going to catch more of my errors, sign me up. I worked on a crop model where the model did its calculating in units customarily used in my home country, close but not exactly the same as international units. Results however were stored in SI units. For users from any country, we had to be able to display quantities such as irrigation, fertilization and yields in all possible unit combinations. One user might want to view yield in <a href="https://en.wikipedia.org/wiki/Ton">tons</a> or <a href="https://en.wikipedia.org/wiki/Tonne">tonnes</a> per hectare and another view it in <a href="https://en.wikipedia.org/wiki/Hundredweight">hundredweight</a> per acre.</p>
+<p>I’m disappointed and surprised there’s a gaping type hole in most programming languages surrounding units of measure. It’s a trap to fall in and there’s no help from the compiler digging ourselves out. A small oversight of taking a quantity in the wrong units or combining quantities of different unit without first doing unit conversions and calcualtion results will be off and it may well be hard to track down the error without domain knowledge, without already knowing what are sensible ranges for values.</p>
+<p>The only language I’ve used with this capability baked in is F# but there’s a compiler type checker plugin for Haskell that gives us similar capabilities. The <a href="https://github.com/adamgundry/uom-plugin">uom-plugin</a> works with the compiler, solving unit type equalities and conversions that the GHC compiler can’t solve without outside help.</p>
+<p>A pair of monomorphic functions for converting between degrees and radians.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">open</span> System</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">open</span> FSharp<span class="kw">.</span>Data<span class="kw">.</span>UnitSystems<span class="kw">.</span>SI<span class="kw">.</span>UnitSymbols</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">open</span> Flight<span class="kw">.</span>Units</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> convertDegToRad <span class="op">(</span>x : <span class="dt">float</span>&lt;deg&gt;<span class="op">)</span> : <span class="dt">float</span>&lt;rad&gt; = x * Math<span class="kw">.</span>PI / <span class="fl">180.0</span>&lt;deg/rad&gt;</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> convertRadToDeg <span class="op">(</span>x : <span class="dt">float</span>&lt;rad&gt;<span class="op">)</span> : <span class="dt">float</span>&lt;deg&gt; = x / Math<span class="kw">.</span>PI * <span class="fl">180.0</span>&lt;deg/rad&gt; </span></code></pre></div>
+<p>I can convert between units related in their definition.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.UnitsOfMeasure</span> (<span class="dt">Quantity</span>, u, convert)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.UnitsOfMeasure.Convert</span> (<span class="dt">Convertible</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>[u| rad |]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>[u| deg = (5030569068109113 % 288230376151711744) rad |]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="ot">convert ::</span> <span class="kw">forall</span> a u v <span class="op">.</span> (<span class="dt">Fractional</span> a, <span class="dt">Convertible</span> u v) <span class="ot">=&gt;</span> <span class="dt">Quantity</span> a u <span class="ot">-&gt;</span> <span class="dt">Quantity</span> a v</span></code></pre></div>
+<p>The development of GHC moves fast, type checker plugins are not part of its test suite and from ghc-8.4 something has changed so that the uom-plugin fails to resolve equalities it was once able to resolve. Without really wanting to I’ve had to look at the innards of GHC typechecker plugins to see what the upset is between GHC and this plugin.</p>
+<p>Another plugin I’ve looked at is the thoralf-plugin. I attended the talk about the <a href="https://icfp18.sigplan.org/details/haskellsymp-2018-papers/12/The-Thoralf-Plugin-For-Your-Fancy-Type-Needs">thoralf-paper</a> at ICFP 2018. I thought it looked very cool, wiring up an SMT solver to do equality reasoning. The authors of the paper presented at the conference suggest that it could subsume the uom-plugin. I dabbled at bit with this plugin. It requires adding more constraints than needed with the uom-plugin so that we can avoid unification variables because unification with SMT solvers is difficult.</p>
+    <div id="copyright">&copy; 2013-2021 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

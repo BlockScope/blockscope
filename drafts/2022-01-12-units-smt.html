@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Unit Solving with Z3.</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <link rel="stylesheet" type="text/css" href="../css/app.css" />
+        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies"><a href="../">{...}</a></h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../post">blog</a></li>
+            <li class="nav-item"><a class="nav-link" href="../contrib">open sourcery</a></li>
+            <li class="nav-item"><a class="nav-link" href="../tweet">pinned tweets</a></li>
+            <li class="nav-item"><a class="nav-link" href="../project">flying comps</a></li>
+            <li class="nav-item"><a class="nav-link" href="../b">services</a></li>
+            <li class="nav-item"><a class="nav-link" href="../p">about</a></li>
+            <li class="nav-item"><a class="nav-link" href="../cv">CV</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Unit Solving with Z3.</h1>
+                    
+                    <p class="lead">Worked examples with the encoding from the Thoralf plugin.</p>
+                    
+                </div>
+            </td>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-right">
+        haskell, tcplugins
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <h1 id="tracing-plugins">Tracing Plugins</h1>
+<p>I’d like to get the test suite <code>uom-plugin:force</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> working in full with the <code>thoralf-plugin</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- test-suite-force/UnitDefs.hs</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">UnitDefs</span> () <span class="kw">where</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>[u| m, kg, s |]</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>[u| N = kg m / s^2 |]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- test-suite-force/Tests.hs</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">UnitDefs</span> ()</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>myMass <span class="ot">=</span> [u| 65 kg |]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>gravityOnEarth <span class="ot">=</span> [u| 9.808 m/(s*s) |]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>forceOnGround <span class="ot">=</span> gravityOnEarth <span class="op">*:</span> myMass</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> defaultMain tests</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>tests <span class="ot">=</span> testGroup <span class="st">&quot;uom-plugin:units&quot;</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>[ testGroup <span class="st">&quot;showQuantity&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    [ testCase <span class="st">&quot;myMass&quot;</span>         <span class="op">$</span> showQuantity myMass         <span class="op">@?=</span> <span class="st">&quot;65.0 kg&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    , testCase <span class="st">&quot;gravityOnEarth&quot;</span> <span class="op">$</span> showQuantity gravityOnEarth <span class="op">@?=</span> <span class="st">&quot;9.808 m / s^2&quot;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    , testCase <span class="st">&quot;forceOnGround&quot;</span>  <span class="op">$</span> showQuantity forceOnGround  <span class="op">@?=</span> <span class="st">&quot;637.52 kg m / s^2&quot;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
+<h1 id="option-tracing">Option Tracing</h1>
+<p>To help me understand, I’m tracing typechecking by adding the ghc option <code>-ddump-tc-trace</code>. Compiling this program logged 70,000 lines of tracing, the unique first words<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of which are:</p>
+<p class="mono-flow">
+About addFamInsts addInertCan addInertEq Adding addLocalFamInst addTcEvBind alfi
+Ambiguity Application applyDefaultingRules Bindings can_eq_nc can_pred Can't
+canClass canEqTyVar canEvNC:cls canEvNC:eq canEvNC:irred canonicalize check_type
+checkExpectedKind checkForConflicts checkMain checkSatisfiability
+checkValidInstance checkValidType complete_matches Constraint cvi
+decideKindGeneralisationPlan Decls deeply_instantiate dischargeFmv
+doClsInstErrorChecks Done doTopReact doTopReact/found Eager Emit Emitting End
+end env2 extendFlatCache Filling finish_tuple flatten flatten_many
+flatten/flat-cache floatEqualities Following found Generalisation getNoGivenEqs
+getUnsolvedInerts Got improveTopFunEqs insertInertCan instance instantiating
+Instantiating instCallConstraints kcTyClGroup kcTyClGroup: Kick Linking lk1
+matchClass matchClassInst matchFamTcM mk_deflt_at_instance mkTypeableBinds New
+newOpenInferExpType newTcEvBinds newWantedEvVar/cache Non quantifyZonkedTyVars
+reactFunEq reportAllUnsolved reportUnsolved reportUnsolved(ambig)
+rewriteEqEvidence rnd runStage setImplicationStatus simplifyAmbiguityCheck
+simplifyTop simplifyUnits Sneaky solveEqualities solveImplication
+solveNestedImplications solveSimple solveSimpleWanteds solveWanteds Start
+Starting Step tc_def tc_hs_type tc_infer_args tc_sub_tc_type tc_sub_type_ds Tc10
+Tc11 Tc2 Tc3 Tc3b Tc3c Tc4 Tc4a Tc5 Tc6 Tc7 Tc7a Tc9 tcAddImplicits tcBody
+tcCheckId tcDeriving tcExtendIdBndrs tcFamInstDecl tcFamTyPats tcImplicitTKBndrs
+tcInferId tcInstDecl2 tcInstMeth tcLocalInstDecl tcMatchesFun tcMethodBody
+<code>tcPluginInit tcPluginSolve tcPluginStop</code> tcPolyCheck tcPolyExpr tcPolyExprNC
+tcSemigroupWarnings tcSkolemise tcSpecPrags tcSubType_NC tcSubTypeDS_O tcTyAndCl
+tcTyFamInstEqn tcTyVar2a tcTyVar2b tcWrapResult try_fundeps txExtendKindEnv
+txExtendKindEnvList type u_tys Unfilled unflatten_eq unflattenFmv Unflattening
+unifyTyVar unifyUnits uom-solve updSolvedSetTcs: utype_defer VTA writeMetaTyVar
+zonkSimples
+</p>
+<h1 id="wrapped-tracing">Wrapped Tracing</h1>
+<p>To write a plugin we fill in a <code>TcPlugin</code> with functions.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">TcPlugin</span> <span class="ot">=</span> <span class="kw">forall</span> s<span class="op">.</span> <span class="dt">TcPlugin</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    {<span class="ot"> tcPluginInit ::</span> <span class="dt">TcPluginM</span> s</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> tcPluginSolve ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginSolver</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> tcPluginStop ::</span> s <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> ()</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<p>Here’s where we set this up for the <code>uom-plugin</code> with tracing.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;ghc-tcplugins-extra&quot; <span class="dt">GHC.TcPluginM.Extra</span> (tracePlugin)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- | The plugin that GHC will load when this module is used with the</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- @-fplugin@ option.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="ot">plugin ::</span> <span class="dt">Plugin</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>plugin <span class="ot">=</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> theory <span class="ot">=</span> mkModuleName <span class="st">&quot;Data.Theory.UoM&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        syntax <span class="ot">=</span> mkModuleName <span class="st">&quot;Data.UnitsOfMeasure.Syntax&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        tc <span class="ot">=</span> uomSimplifyPlugin theory syntax (fsLit <span class="st">&quot;uom-quantity&quot;</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        defaultPlugin</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            { tcPlugin <span class="ot">=</span> <span class="fu">const</span> <span class="op">.</span> <span class="dt">Just</span> <span class="op">$</span> tracePlugin <span class="st">&quot;uom-simplify-plugin&quot;</span> tc</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>            , pluginRecompile <span class="ot">=</span> purePlugin</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>            }</span></code></pre></div>
+<p>Calling <code>tracePlugin</code> wraps the functions we provide with a layer for tracing.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Print out extra information about the initialisation, stop, and every run</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- of the plugin when @-ddump-tc-trace@ is enabled.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="ot">tracePlugin ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">TcPlugin</span> <span class="ot">-&gt;</span> <span class="dt">TcPlugin</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>tracePlugin s <span class="dt">TcPlugin</span>{<span class="op">..</span>} <span class="ot">=</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">TcPlugin</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        { tcPluginInit <span class="ot">=</span> traceInit</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        , tcPluginSolve <span class="ot">=</span> traceSolve</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        , tcPluginStop <span class="ot">=</span> traceStop</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">where</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    traceInit <span class="ot">=</span> tcPluginTrace (<span class="st">&quot;tcPluginInit &quot;</span> <span class="op">++</span> s) empty <span class="op">&gt;&gt;</span> tcPluginInit</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    traceStop z <span class="ot">=</span> tcPluginTrace (<span class="st">&quot;tcPluginStop &quot;</span> <span class="op">++</span> s) empty <span class="op">&gt;&gt;</span> tcPluginStop z</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    traceSolve z given derived wanted <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        tcPluginTrace</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>            (<span class="st">&quot;tcPluginSolve start &quot;</span> <span class="op">++</span> s)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            (text <span class="st">&quot;given =&quot;</span> <span class="op">&lt;+&gt;</span> ppr given</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">$$</span> text <span class="st">&quot;derived =&quot;</span> <span class="op">&lt;+&gt;</span> ppr derived</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>            <span class="op">$$</span> text <span class="st">&quot;wanted =&quot;</span> <span class="op">&lt;+&gt;</span> ppr wanted)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        r <span class="ot">&lt;-</span> tcPluginSolve z given derived wanted</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="kw">case</span> r <span class="kw">of</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            <span class="dt">TcPluginOk</span> solved new <span class="ot">-&gt;</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                tcPluginTrace</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>                    (<span class="st">&quot;tcPluginSolve ok &quot;</span> <span class="op">++</span> s)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>                    (text <span class="st">&quot;solved =&quot;</span> <span class="op">&lt;+&gt;</span> ppr solved <span class="op">$$</span> text <span class="st">&quot;new =&quot;</span> <span class="op">&lt;+&gt;</span> ppr new)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>            <span class="dt">TcPluginContradiction</span> bad <span class="ot">-&gt;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>                tcPluginTrace</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>                    (<span class="st">&quot;tcPluginSolve contradiction &quot;</span> <span class="op">++</span> s)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                    (text <span class="st">&quot;bad =&quot;</span> <span class="op">&lt;+&gt;</span> ppr bad)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span> r</span></code></pre></div>
+<h1 id="unit-equations-to-solve">Unit Equations to Solve</h1>
+<p>Counting the hits for “tcPluginSolve start uom-simplify-plugin”, I see the plugin was called on 16 times to help with typechecking this small program. Here is the complete set of constraints and unit equations the program needs solved in order<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. I found this sequence twice in the log, we’re typechecking the same thing, once for each module we’re compiling.</p>
+<p>\[\begin{align}IsCanonical(s)\\ 1&amp;=\frac{s}{s}\\ IsCanonical(kg)\\ 1&amp;=\frac{kg}{kg}\\ IsCanonical(m)\\ 1&amp;=\frac{m}{m}\\ \frac{kg \cdot m}{s^2} &amp;= \frac{m}{s^2} \cdot kg\\ \end{align}\]</p>
+<pre class="pre"><code>tcPluginSolve start uom-simplify-plugin
+wanted  = [[WD] hole{aaGE} {2}::
+            (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
+<p>The uom-plugin and the thoralf-plugin can both solve simple single unit equations.</p>
+<pre class="pre"><code>tcPluginSolve ok uom-simplify-plugin
+solved = [(CO U(plugin:uom-solve, One, Base &quot;s&quot; /: Base &quot;s&quot;)_N,
+            [WD] hole{aaGE} {2}::
+             (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical))]</code></pre>
+<pre class="pre"><code>tcPluginSolve ok thoralf-uom-plugin
+solved = [(CO U(plugin:thoralf, One, Base &quot;m&quot; /: Base &quot;m&quot;)_N,
+            [WD] hole{aaJY} {2}:: (One :: Unit)
+                                ~# ((Base &quot;m&quot; /: Base &quot;m&quot;) :: Unit) (CNonCanonical))]</code></pre>
+<p>A harder unit equation the program needs to typecheck is showing that:</p>
+<p>$$\frac{kg \cdot m}{s^2} = \frac{m}{s^2} \cdot kg$$</p>
+<pre class="pre"><code>tcPluginSolve start uom-simplify-plugin
+wanted  = [[WD] irred_acAG {0}:: ((Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;))
+                              ~~ ((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;)
+                              (CNonCanonical),
+            [WD] $dIP_acB2 {0}:: ?callStack::CallStack (CDictCan),
+            [WD] $dKnownUnit_acB6 {0}::
+                    KnownUnit (Unpack (Base &quot;kg&quot;)) (CDictCan),
+            [WD] $dKnownUnit_acBc {0}::
+                    KnownUnit (Unpack (Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;))) (CDictCan),
+            [WD] $dKnownUnit_acBf {0}::
+                    KnownUnit (Unpack ((Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;)))
+                    (CDictCan)]</code></pre>
+<p>Only the uom-plugin can solve this.</p>
+<pre class="pre"><code>tcPluginSolve ok uom-simplify-plugin
+solved = [(Eq# @[Unit, Unit,
+                (Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;),
+                (Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;]
+                [CO U(plugin:uom-solve
+                    , (Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;)
+                    , (Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;)_N]
+                `cast`
+                    U(plugin:uom-solve
+                    , (((Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;)) :: Unit)
+                   ~~ (((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;) :: Unit)
+                    , ((Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;))
+                   ~~ ((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;))_R,
+            [WD] irred_acAG {0}:: ((Base &quot;kg&quot; *: Base &quot;m&quot;) /: (Base &quot;s&quot; *: Base &quot;s&quot;))
+                               ~~ ((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;)
+                               (CNonCanonical))]</code></pre>
+<h1 id="abbreviations">Abbreviations</h1>
+<p>The solved output is cryptic but there are only a few key strings like <code>CO</code> to lookup in GHC source to find out what’s being pretty printed.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- OccName.hs</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- These derived variables have a prefix that no Haskell value could have</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mkDictOcc <span class="ot">=</span> mk_simple_deriv varName <span class="st">&quot;$d&quot;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- TysPrim.hs</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>eqPrimTyConName <span class="ot">=</span> mkPrimTc (fsLit <span class="st">&quot;~#&quot;</span>) eqPrimTyConKey eqPrimTyCon</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- TysWiredIn.hs</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>heqTyConName <span class="ot">=</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    mkWiredInTyConName <span class="dt">UserSyntax</span> gHC_TYPES (fsLit <span class="st">&quot;~~&quot;</span>) heqTyConKey heqTyCon</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>heqDataConName <span class="ot">=</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    mkWiredInDataConName <span class="dt">UserSyntax</span> gHC_TYPES (fsLit <span class="st">&quot;Eq#&quot;</span>) heqDataConKey heqDataCon</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">-- TcEvidence.hs</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Outputable</span> <span class="dt">EvTerm</span> <span class="kw">where</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">EvCast</span> v co) <span class="ot">=</span> ppr v <span class="op">&lt;+&gt;</span> (text <span class="st">&quot;`cast`&quot;</span>) <span class="op">&lt;+&gt;</span> pprParendCo co</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">EvCoercion</span> co) <span class="ot">=</span> text <span class="st">&quot;CO&quot;</span> <span class="op">&lt;+&gt;</span> ppr co</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co">-- TcMType.hs</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="ot">predTypeOccName ::</span> <span class="dt">PredType</span> <span class="ot">-&gt;</span> <span class="dt">OccName</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>predTypeOccName ty <span class="ot">=</span> <span class="kw">case</span> classifyPredType ty <span class="kw">of</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="dt">ClassPred</span> cls _ <span class="ot">-&gt;</span> mkDictOcc (getOccName cls)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    <span class="dt">EqPred</span> _ _ _ <span class="ot">-&gt;</span> mkVarOccFS (fsLit <span class="st">&quot;cobox&quot;</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="dt">IrredPred</span> _ <span class="ot">-&gt;</span> mkVarOccFS (fsLit <span class="st">&quot;irred&quot;</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="co">-- TcRnTypes.hs</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Outputable</span> <span class="dt">Ct</span> <span class="kw">where</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    ppr ct <span class="ot">=</span> ppr (cc_ev ct) <span class="op">&lt;+&gt;</span> parens pp_sort</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        pp_sort <span class="ot">=</span> <span class="kw">case</span> ct <span class="kw">of</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CTyEqCan</span>{} <span class="ot">-&gt;</span> text <span class="st">&quot;CTyEqCan&quot;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CFunEqCan</span>{} <span class="ot">-&gt;</span> text <span class="st">&quot;CFunEqCan&quot;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CNonCanonical</span>{} <span class="ot">-&gt;</span> text <span class="st">&quot;CNonCanonical&quot;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CDictCan</span>{cc_pend_sc <span class="ot">=</span> pend_sc}</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>                <span class="op">|</span> pend_sc <span class="ot">-&gt;</span> text <span class="st">&quot;CDictCan(psc)&quot;</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>                <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> text <span class="st">&quot;CDictCan&quot;</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CIrredEvCan</span>{} <span class="ot">-&gt;</span> text <span class="st">&quot;CIrredEvCan&quot;</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CHoleCan</span>{cc_hole <span class="ot">=</span> hole} <span class="ot">-&gt;</span> text <span class="st">&quot;CHoleCan:&quot;</span> <span class="op">&lt;+&gt;</span> ppr (holeOcc hole)</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Outputable</span> <span class="dt">CtFlavour</span> <span class="kw">where</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    ppr <span class="dt">Given</span> <span class="ot">=</span> text <span class="st">&quot;[G]&quot;</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">Wanted</span> <span class="dt">WDeriv</span>) <span class="ot">=</span> text <span class="st">&quot;[WD]&quot;</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">Wanted</span> <span class="dt">WOnly</span>) <span class="ot">=</span> text <span class="st">&quot;[W]&quot;</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    ppr <span class="dt">Derived</span> <span class="ot">=</span> text <span class="st">&quot;[D]&quot;</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Outputable</span> <span class="dt">TcEvDest</span> <span class="kw">where</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">HoleDest</span> h)   <span class="ot">=</span> text <span class="st">&quot;hole&quot;</span> <span class="op">&lt;&gt;</span> ppr h</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>    ppr (<span class="dt">EvVarDest</span> ev) <span class="ot">=</span> ppr ev</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Outputable</span> <span class="dt">CtEvidence</span> <span class="kw">where</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>    ppr ev <span class="ot">=</span> ppr (ctEvFlavour ev)</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;+&gt;</span> pp_ev</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;+&gt;</span> braces (ppr (ctl_depth (ctEvLoc ev))) <span class="op">&lt;&gt;</span> dcolon</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;+&gt;</span> ppr (ctEvPred ev)</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>        pp_ev <span class="ot">=</span> <span class="kw">case</span> ev <span class="kw">of</span></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CtGiven</span>{ctev_evar <span class="ot">=</span> v} <span class="ot">-&gt;</span> ppr v</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CtWanted</span>{ctev_dest <span class="ot">=</span> d} <span class="ot">-&gt;</span> ppr d</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>            <span class="dt">CtDerived</span>{} <span class="ot">-&gt;</span> text <span class="st">&quot;_&quot;</span></span></code></pre></div>
+<p>So we can say that:</p>
+<dl>
+<dt><code>CO</code></dt>
+<dd><p>is evidence of coercion.</p>
+</dd>
+<dt><code>~#</code></dt>
+<dd><p>is primitive type constructor equality.</p>
+</dd>
+<dt><code>Eq#</code></dt>
+<dd><p>is data constructor equality.</p>
+</dd>
+<dt><code>~~</code></dt>
+<dd><p>is type constructor equality.</p>
+</dd>
+<dt><code>cast</code></dt>
+<dd><p>is evidence of a cast.</p>
+</dd>
+<dt><code>[WD]</code></dt>
+<dd><p>are wanted and derived constraints.</p>
+</dd>
+<dt><code>cobox</code></dt>
+<dd><p>is an equality predicate.</p>
+</dd>
+<dt><code>irred</code></dt>
+<dd><p>is an irreducible predicate.</p>
+</dd>
+<dt><code>CDictCan</code></dt>
+<dd><p>is a typeclass canonical constraint.</p>
+</dd>
+<dt><code>CNonCanonical</code></dt>
+<dd><p>is a non-canonical constraint.</p>
+</dd>
+<dt><code>{_}::</code></dt>
+<dd><p>the sub-goal depth to prevent constraint solver looping.</p>
+</dd>
+</dl>
+<p>I’m pretty sure that the <code>_N</code> and <code>_R</code> indicate equivalence as nominal or representational. A <code>$d</code> prefix, like <code>$dKnownUnit</code>, is a type class. Re-reading the first simple wanted; it is a wanted and derived type hole, the subgoal depth is 2 and we’re seeking a non-canonical constraint equating primitives.</p>
+<pre class="pre"><code>wanted  = [[WD] hole{aaGE} {2}::
+            (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
+<h1 id="unwrapped-tracing">Unwrapped Tracing</h1>
+<p>This plugin also does its own tracing with calls to <code>tcPluginTrace</code> such as when it is unifying normalized units.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | An atom in the normal form is either a base unit, a variable or a</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- stuck type family application (but not one of the built-in type</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- families that correspond to group operations).</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Atom</span> <span class="ot">=</span> <span class="dt">BaseAtom</span> <span class="dt">Type</span> <span class="op">|</span> <span class="dt">VarAtom</span> <span class="dt">TyVar</span> <span class="op">|</span> <span class="dt">FamAtom</span> <span class="dt">TyCon</span> [<span class="dt">Type</span>]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- | A unit normal form is a signed multiset of atoms; we maintain the</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- invariant that the map does not contain any zero values.</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">NormUnit</span> <span class="ot">=</span> <span class="dt">NormUnit</span>{<span class="ot">_NormUnit ::</span> <span class="dt">Map.Map</span> <span class="dt">Atom</span> <span class="dt">Integer</span>} <span class="kw">deriving</span> <span class="dt">Eq</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">UnitEquality</span> <span class="ot">=</span> <span class="dt">UnitEquality</span> <span class="dt">Ct</span> <span class="dt">NormUnit</span> <span class="dt">NormUnit</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Attempt to unify two normalised units to produce a unifying</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- substitution.  The 'Ct' is the equality between the non-normalised (and</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="co">-- perhaps less substituted) unit type expressions.</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ot">unifyUnits ::</span> <span class="dt">UnitDefs</span> <span class="ot">-&gt;</span> <span class="dt">UnitEquality</span> <span class="ot">-&gt;</span> <span class="dt">TcPluginM</span> <span class="dt">UnifyResult</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>unifyUnits uds (<span class="dt">UnitEquality</span> ct u0 v0) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    tcPluginTrace <span class="st">&quot;unifyUnits&quot;</span> (ppr u0 <span class="op">$$</span> ppr v0)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    unifyOne uds ct [] [] [] (u0 <span class="op">/:</span> v0)</span></code></pre></div>
+<pre class="pre"><code>unifyUnits
+    [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]
+    [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]</code></pre>
+<h1 id="tracing-in-io">Tracing in IO</h1>
+<p>It is good to be able to see the conversation the <code>thoralf-plugin</code> has with the SMT solver. The code for <a href="https://richarde.dev/papers/2018/thoralf/thoralf.pdf">the Thoralf plugin paper</a> used <code>tcPluginIO</code> to write to stout with <code>putStrLn</code>. I find that useful too as I can pick just what I want to trace uninterrupted by copious other tracing. I have a small package for doing this, <a href="https://github.com/BlockScope/ghc-tcplugins-trace">ghc-tcplugins-trace</a>.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugCt</span> </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugCt</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceCallCount ::</span> <span class="dt">TraceCallCount</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace TcPlugin call count.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceCts ::</span> <span class="dt">TraceCts</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace GHC constraints.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceCarry ::</span> <span class="dt">TraceCarry</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace GHC constraints carried through conversion and solving.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceSolution ::</span> <span class="dt">TraceSolution</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace the solution, the @TcPluginResult@.</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
+<p>With these flags we get to see typechecking from the plugin’s point of view. We can:</p>
+<ul>
+<li><p>Trace call count</p>
+<blockquote>
+<pre class="pre"><code>[ghc-tcplugin]
+    call = 1
+[ghc-tcplugin]
+    call = 2
+[ghc-tcplugin]
+    call = 3
+...
+[ghc-tcplugin]
+    call = 63</code></pre>
+</blockquote></li>
+<li><p>Trace constraints</p>
+<blockquote>
+<pre class="pre"><code>[constraints]
+    given = [
+    [G] $dNum_a9vZ {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9vN {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9wR {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9wT {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9wW {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9wS {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9wU {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9wX {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9wV {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9wY {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9x1 {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9wZ {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9x2 {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9vJ:s],fsk;a9ws:s)
+    , (Unpack [v;a9vK:s],fsk;a9wB:s)
+    , (Pack [fsk;a9ws:s],fsk;a9wu:s)
+    , (Pack [fsk;a9wB:s],fsk;a9wD:s)
+    , (HasCanonical [fsk;a9ws:s],fsk;a9wz:s)
+    , (HasCanonical [fsk;a9wB:s],fsk;a9wF:s)
+    , (ToCBU [fsk;a9wB:s],fsk;a9wM:s)
+    , (ToCBU [fsk;a9ws:s],fsk;a9wK:s)
+    , (fsk;a9wD:s,v;a9vK:s)
+    , (fsk;a9wu:s,u;a9vJ:s)
+    , (fsk;a9wK:s,fsk;a9wM:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $dNum_a9xH {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9xy {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9yg {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9yi {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9yl {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9yh {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9yj {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9ym {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9yk {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9yn {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9yq {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9yo {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9yr {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9xw:s],fsk;a9xX:s)
+    , (Unpack [v;a9xx:s],fsk;a9y3:s)
+    , (Pack [fsk;a9xX:s],fsk;a9xZ:s)
+    , (Pack [fsk;a9y3:s],fsk;a9y5:s)
+    , (HasCanonical [fsk;a9xX:s],fsk;a9y1:s)
+    , (HasCanonical [fsk;a9y3:s],fsk;a9y7:s)
+    , (ToCBU [fsk;a9y3:s],fsk;a9yb:s)
+    , (ToCBU [fsk;a9xX:s],fsk;a9y9:s)
+    , (fsk;a9y5:s,v;a9xx:s)
+    , (fsk;a9xZ:s,u;a9xw:s)
+    , (fsk;a9y9:s,fsk;a9yb:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [ (AllHasCanonical [xs;a9yX:s],fsk;a9z7:s) ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [ (HasCanonical [u;a9zo:s],fsk;a9zv:s) ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%,,%)_a9A5 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d~_a9A6 {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9A7 {0}:: u ~ u (CDictCan)
+    , [G] $dKnownUnit_a9A8 {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9zL:s],fsk;a9zY:s)
+    , (Pack [fsk;a9zY:s],fsk;a9A0:s)
+    , (HasCanonical [fsk;a9zY:s],fsk;a9A2:s)
+    , (fsk;a9A0:s,u;a9zL:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [ (AllHasCanonical [xs;a9Ab:s],fsk;a9IF:s) ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%%)_a9IL {0}:: () :: Constraint (CDictCan)
+    , (xs;a9Ab:s,[] [Symbol []])
+    , (fsk;a9IF:s,(%%) [])
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%%)_a9IL {0}:: () :: Constraint (CDictCan)
+    , (xs;a9Ab:s,[] [Symbol []])
+    , (fsk;a9IF:s,(%%) [])
+    ]
+    derived = []
+    wanted = [ (/: [One [],One []],One []) ]
+[constraints]
+    given = [
+    [G] $d(%,%)_a9JF {0}:: (HasCanonicalBaseUnit x, fsk0) (CDictCan)
+    , [G] $dHasCanonicalBaseUnit_a9JG {0}:: HasCanonicalBaseUnit
+                                        x (CDictCan)
+    , [G] $dKnownSymbol_a9E7 {0}:: KnownSymbol x (CDictCan)
+    , (AllHasCanonical [xs1;a9E5:s],fsk;a9JD:s)
+    , (CanonicalBaseUnit [x;a9E3:s],fsk;a9JO:s)
+    , (Unpack [fsk;a9JO:s],fsk;a9JQ:s)
+    , (IsCanonical [fsk;a9JQ:s],fsk;a9JS:s)
+    , (xs;a9Ab:s,: [Symbol [],x;a9E3:s,xs1;a9E5:s])
+    , (fsk;a9IF:s,(%,%) [HasCanonicalBaseUnit [x;a9E3:s],fsk;a9JD:s])
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%,%)_a9JF {0}:: (HasCanonicalBaseUnit x, fsk0) (CDictCan)
+    , [G] $dHasCanonicalBaseUnit_a9JG {0}:: HasCanonicalBaseUnit
+                                        x (CDictCan)
+    , [G] $dKnownSymbol_a9E7 {0}:: KnownSymbol x (CDictCan)
+    , (AllHasCanonical [xs1;a9E5:s],fsk;a9JD:s)
+    , (CanonicalBaseUnit [x;a9E3:s],fsk;a9JO:s)
+    , (Unpack [fsk;a9JO:s],fsk;a9JQ:s)
+    , (IsCanonical [fsk;a9JQ:s],fsk;a9JS:s)
+    , (xs;a9Ab:s,: [Symbol [],x;a9E3:s,xs1;a9E5:s])
+    , (fsk;a9IF:s,(%,%) [HasCanonicalBaseUnit [x;a9E3:s],fsk;a9JD:s])
+    ]
+    derived = []
+    wanted = [ [WD] irred_a9Kj {0}:: ((Base x *: Prod xs1)
+                    /: (CanonicalBaseUnit x *: ListToCBU xs1))
+                    ~~ ((Base x /: CanonicalBaseUnit x)
+                        *: (Prod xs1 /: ListToCBU xs1)) (CNonCanonical) ]
+[constraints]
+    given = [ (HasCanonical [u;a9ED:s],fsk;a9Kl:s) ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%,%)_a9Kt {0}:: (fsk0, fsk1) (CDictCan)
+    , (AllHasCanonical [xs;a9EI:s],fsk;a9Kp:s)
+    , (AllHasCanonical [ys;a9EJ:s],fsk;a9Kr:s)
+    , (u;a9ED:s,:/ [Symbol [],xs;a9EI:s,ys;a9EJ:s])
+    , (fsk;a9Kl:s,(%,%) [fsk;a9Kp:s,fsk;a9Kr:s])
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $d(%,%)_a9Kt {0}:: (fsk0, fsk1) (CDictCan)
+    , (AllHasCanonical [xs;a9EI:s],fsk;a9Kp:s)
+    , (AllHasCanonical [ys;a9EJ:s],fsk;a9Kr:s)
+    , (u;a9ED:s,:/ [Symbol [],xs;a9EI:s,ys;a9EJ:s])
+    , (fsk;a9Kl:s,(%,%) [fsk;a9Kp:s,fsk;a9Kr:s])
+    ]
+    derived = []
+    wanted = [ [WD] irred_a9KX {0}:: ((Prod xs /: Prod ys)
+                    /: (ListToCBU xs /: ListToCBU ys))
+                    ~~ ((Prod xs /: ListToCBU xs)
+                        /: (Prod ys /: ListToCBU ys)) (CNonCanonical) ]
+[constraints]
+    given = [
+    [G] $d(%,,%)_a9Lc {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d~_a9Ld {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9Le {0}:: u ~ u (CDictCan)
+    , [G] $dKnownUnit_a9Lf {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9F6:s],fsk;a9L5:s)
+    , (Pack [fsk;a9L5:s],fsk;a9L7:s)
+    , (HasCanonical [fsk;a9L5:s],fsk;a9L9:s)
+    , (fsk;a9L7:s,u;a9F6:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+    , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+    , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+    , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+    , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+    , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+    , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+    , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+    , (fsk;a9LR:s,v;a9Fm:s)
+    , (fsk;a9LL:s,u;a9Fl:s)
+    , (fsk;a9LV:s,fsk;a9LX:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+    , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+    , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+    , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+    , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+    , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+    , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+    , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+    , (fsk;a9LR:s,v;a9Fm:s)
+    , (fsk;a9LL:s,u;a9Fl:s)
+    , (fsk;a9LV:s,fsk;a9LX:s)
+    ]
+    derived = []
+    wanted = [
+    [WD] irred_a9Mu {0}:: (u /: v)
+                    ~~ ((u /: ToCBU (Unpack v))
+                        /: (v /: ToCBU (Unpack v))) (CNonCanonical)
+    , [WD] $dIP_a9ME {0}:: ?callStack::CallStack (CDictCan)
+    ]
+[constraints]
+    given = [
+    [G] $dNum_a9Lt {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9Fq {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9M2 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9M4 {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9M7 {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9M3 {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9M5 {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9M8 {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9M6 {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9M9 {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9Mc {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Ma {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Md {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9Fl:s],fsk;a9LJ:s)
+    , (Unpack [v;a9Fm:s],fsk;a9LP:s)
+    , (Pack [fsk;a9LJ:s],fsk;a9LL:s)
+    , (Pack [fsk;a9LP:s],fsk;a9LR:s)
+    , (HasCanonical [fsk;a9LJ:s],fsk;a9LN:s)
+    , (HasCanonical [fsk;a9LP:s],fsk;a9LT:s)
+    , (ToCBU [fsk;a9LP:s],fsk;a9LX:s)
+    , (ToCBU [fsk;a9LJ:s],fsk;a9LV:s)
+    , (fsk;a9LR:s,v;a9Fm:s)
+    , (fsk;a9LL:s,u;a9Fl:s)
+    , (fsk;a9LV:s,fsk;a9LX:s)
+    ]
+    derived = []
+    wanted = [ [WD] $dIP_a9ME {0}:: ?callStack::CallStack (CDictCan) ]
+[constraints]
+    given = [
+    [G] $dNum_a9MF {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9HC:s],fsk;a9MV:s)
+    , (Unpack [v;a9HD:s],fsk;a9N1:s)
+    , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+    , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+    , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+    , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+    , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+    , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+    , (fsk;a9N3:s,v;a9HD:s)
+    , (fsk;a9MX:s,u;a9HC:s)
+    , (fsk;a9N7:s,fsk;a9N9:s)
+    ]
+    derived = []
+    wanted = []
+[constraints]
+    given = [
+    [G] $dNum_a9MF {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9HC:s],fsk;a9MV:s)
+    , (Unpack [v;a9HD:s],fsk;a9N1:s)
+    , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+    , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+    , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+    , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+    , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+    , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+    , (fsk;a9N3:s,v;a9HD:s)
+    , (fsk;a9MX:s,u;a9HC:s)
+    , (fsk;a9N7:s,fsk;a9N9:s)
+    ]
+    derived = []
+    wanted = [ [WD] irred_a9NU {0}:: v ~~ ((v /: u) *: u) (CNonCanonical) ]
+[constraints]
+    given = [
+    [G] $dNum_a9MF {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9HC:s],fsk;a9MV:s)
+    , (Unpack [v;a9HD:s],fsk;a9N1:s)
+    , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+    , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+    , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+    , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+    , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+    , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+    , (fsk;a9N3:s,v;a9HD:s)
+    , (fsk;a9MX:s,u;a9HC:s)
+    , (fsk;a9N7:s,fsk;a9N9:s)
+    ]
+    derived = []
+    wanted = [ [WD] $dIP_a9NW {0}:: ?callStack::CallStack (CDictCan) ]
+[constraints]
+    given = [
+    [G] $dNum_a9MF {0}:: Num a (CDictCan)
+    , [G] $dFractional_a9HF {0}:: Fractional a (CDictCan)
+    , [G] $d~_a9Ne {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~_a9Ng {0}:: v ~ v (CDictCan)
+    , [G] $d~_a9Nj {0}:: u ~ u (CDictCan)
+    , [G] $d~~_a9Nf {0}:: fsk0 ~ fsk0 (CDictCan)
+    , [G] $d~~_a9Nh {0}:: v ~ v (CDictCan)
+    , [G] $d~~_a9Nk {0}:: u ~ u (CDictCan)
+    , [G] $d(%,,%)_a9Ni {0}:: ((u ~ u, KnownUnit fsk0, fsk1),
+                (v ~ v, KnownUnit fsk2, fsk3), fsk4 ~ fsk4) (CDictCan)
+    , [G] $d(%,,%)_a9Nl {0}:: (u ~ u, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $d(%,,%)_a9No {0}:: (v ~ v, KnownUnit fsk0, fsk1) (CDictCan)
+    , [G] $dKnownUnit_a9Nm {0}:: KnownUnit fsk0 (CDictCan)
+    , [G] $dKnownUnit_a9Np {0}:: KnownUnit fsk0 (CDictCan)
+    , (Unpack [u;a9HC:s],fsk;a9MV:s)
+    , (Unpack [v;a9HD:s],fsk;a9N1:s)
+    , (Pack [fsk;a9MV:s],fsk;a9MX:s)
+    , (Pack [fsk;a9N1:s],fsk;a9N3:s)
+    , (HasCanonical [fsk;a9MV:s],fsk;a9MZ:s)
+    , (HasCanonical [fsk;a9N1:s],fsk;a9N5:s)
+    , (ToCBU [fsk;a9N1:s],fsk;a9N9:s)
+    , (ToCBU [fsk;a9MV:s],fsk;a9N7:s)
+    , (fsk;a9N3:s,v;a9HD:s)
+    , (fsk;a9MX:s,u;a9HC:s)
+    , (fsk;a9N7:s,fsk;a9N9:s)
+    ]
+    derived = []
+    wanted = [ [WD] $dIP_a9NX {0}:: ?callStack::CallStack (CDictCan) ]</code></pre>
+</blockquote></li>
+<li><p>Trace solutions</p>
+<blockquote>
+<pre class="pre"><code>[solve]
+    solution =
+        [ (CO U(plugin:uom-solve
+        , One /: One, One)_N,(/: [One [],One []],One []))
+        ]
+    new-wanted = []
+[solve]
+    solution = [ (Eq# @[Unit, Unit,
+    (Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1),
+    (Base x /: CanonicalBaseUnit x) *: (Prod xs1 /: ListToCBU xs1)]
+    [CO U(plugin:uom-solve
+        , (Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1)
+        , (Base x /: CanonicalBaseUnit x)
+          *: (Prod xs1 /: ListToCBU xs1))_N]
+        `cast`
+        U(plugin:uom-solve
+        , ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+        ~ ((Base x /: CanonicalBaseUnit x) *: (Prod xs1 /: ListToCBU xs1))
+        , ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+        ~~ ((Base x /: CanonicalBaseUnit x)
+            *: (Prod xs1 /: ListToCBU xs1)))_R
+        ,[WD] irred_a9Kj {0}::
+            ((Base x *: Prod xs1) /: (CanonicalBaseUnit x *: ListToCBU xs1))
+            ~~ ((Base x /: CanonicalBaseUnit x)
+                *: (Prod xs1 /: ListToCBU xs1))
+            (CNonCanonical)) ]
+    new-wanted = []
+[solve]
+    solution = [ (Eq# @[Unit, Unit,
+    (Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys),
+    (Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys)]
+    [CO U(plugin:uom-solve
+        , (Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys)
+        , (Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))_N]
+        `cast`
+        U(plugin:uom-Solve
+        , ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+        ~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))
+        , ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+        ~~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys)))_R
+        ,[WD] irred_a9KX {0}::
+            ((Prod xs /: Prod ys) /: (ListToCBU xs /: ListToCBU ys))
+            ~~ ((Prod xs /: ListToCBU xs) /: (Prod ys /: ListToCBU ys))
+            (CNonCanonical)) ]
+    new-wanted = []
+[solve]
+    solution = [ (Eq# @[Unit, Unit, u /: v,
+    (u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v))]
+    [CO U(plugin:uom-solve
+    , u /: v
+    , (u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))_N]
+    `cast`
+    U(plugin:uom-solve
+    , (u /: v) ~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))
+    , (u /: v) ~~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v))))_R
+    ,[WD] irred_a9Mu {0}::
+        (u /: v) ~~ ((u /: ToCBU (Unpack v)) /: (v /: ToCBU (Unpack v)))
+        (CNonCanonical)) ]
+    new-wanted = []
+[solve]
+    solution = [ (Eq# @[Unit, Unit, v, (v /: u) *: u]
+    [CO U(plugin:uom-solve
+    , v
+    , (v /: u) *: u)_N]
+    `cast`
+    U(plugin:uom-solve
+    , v ~ ((v /: u) *: u)
+    , v ~~ ((v /: u) *: u))_R
+    ,[WD] irred_a9NU {0}:: v ~~ ((v /: u) *: u) (CNonCanonical)) ]
+    new-wanted = []</code></pre>
+</blockquote></li>
+</ul>
+<p>I’m using this with both plugins and have another for tracing SMT conversion and conversation.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmt</span> <span class="ot">=</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmt</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceConvertCtsToSmt ::</span> <span class="dt">TraceConvertCtsToSmt</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace conversions to SMT notation</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceSmtConversation ::</span> <span class="dt">TraceSmtConversation</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace the conversation with the SMT solver</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
+<p>After commenting out the parts of the program that don’t compile with the <code>thoralf-plugin</code> let’s see how it traces SMT:</p>
+<ul>
+<li>Converting constraints to SMT</li>
+</ul>
+<pre class="pre"><code>[smt-step]
+  smt-wanted = [
+    (assert
+      (or
+        false
+        (not
+          (=
+            ((as const (Array String Int)) 0)
+            (
+              (_ map (- (Int Int) Int))
+              (store base &quot;s&quot; n1)
+              (store base &quot;s&quot; n1))))))
+  ]</code></pre>
+<ul>
+<li>Listening in on the conversation with the solver</li>
+</ul>
+<pre class="pre"><code>[send-&gt;] (declare-const base (Array String Int))
+[&lt;-recv] success</code></pre>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>I’ve removed pragmas, most imports and type signatures from the program listing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>With a regex I grabbed the first word <code>s/^(\S+).*$/$1/</code>, deleted lines with leading spaces with <code>s/ .*\n/\n/</code> and deleted multiple blank lines with <code>s/\n\n+/\n/</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Not shown are calls to the plugin want to solve constraints for <code>?callStack</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2021 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+    <script language="javascript" src="../css/app.js" defer></script>
+</html>

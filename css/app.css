@@ -11920,9 +11920,13 @@ article {
 
 .pre {
   color: #fff;
-  background-color: #000;
+  background-color: #000; }
+
+.pre, .mono-flow {
   padding: 1em 2em 1em 1em;
-  border-radius: 1em; }
+  border-radius: 1em;
+  font-size: 10pt;
+  font-family: 'B612 Mono', monospace; }
 
 #ifdef .pre {
   color: #000;
@@ -12073,6 +12077,9 @@ a.nav-link {
 
 a {
   color: #0572e7; }
+
+dd {
+  margin-left: 2em; }
 
 
 /*# sourceMappingURL=app.css.map*/
