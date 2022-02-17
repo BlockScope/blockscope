@@ -173,19 +173,34 @@ main = do
             route idRoute
             compile $ do
                 posts <- loadAll draftsPattern >>= recentFirst
-                pandocPost' $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
+                let ctx = mkPostsCtx "Sneak Peek" "Shine a light on this." posts
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
         create ["review/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll reviewsPattern >>= recentFirst
-                pandocPost' $ mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
+                let ctx = mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
         create ["post/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll postsPattern >>= recentFirst
-                pandocPost' $ mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
+                let ctx = mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/archive.html" ctx
+                    >>= loadAndApplyTemplate "templates/default.html" ctx
+                    >>= relativizeUrls
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
