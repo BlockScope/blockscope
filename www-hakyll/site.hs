@@ -92,14 +92,14 @@ mkStatic path = do
             >>= loadAndApplyTemplate (fromFilePath $ "templates" </> path <.> ".html") postCtx
             >>= relativizeUrls
 
-pandocTemplate :: Identifier -> Context String -> Maybe Syntax -> Compiler (Item String)
-pandocTemplate template ctx syntax = do
+pandocTemplate :: Identifier -> Maybe Syntax -> Context String -> Compiler (Item String)
+pandocTemplate template syntax ctx = do
     pandoc syntax
         >>= loadAndApplyTemplate template ctx
         >>= loadAndApplyTemplate "templates/default.html" ctx
         >>= relativizeUrls
 
-pandocPost :: Context String -> Maybe Syntax -> Compiler (Item String)
+pandocPost :: Maybe Syntax -> Context String -> Compiler (Item String)
 pandocPost = pandocTemplate "templates/post.html"
 
 mkPostsCtx :: String -> String -> [Item String] -> Context String
@@ -112,9 +112,8 @@ mkPostsCtx title subtitle posts =
 main :: IO ()
 main = do
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
-    syntax <-
-        either (error . show) return
-        =<< parseSyntaxDefinition "syntax/smt2.xml"
+    syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
+    let pandocPost' = pandocPost (Just syntax)
 
     hakyllWith config $ do
 
@@ -142,18 +141,18 @@ main = do
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do pandocPost postCtx (Just syntax)
+            compile $ do pandocPost' postCtx
 
         match reviewsPattern $ do
             route $ setExtension "html"
-            compile $ do pandocPost postCtx (Just syntax)
+            compile $ do pandocPost' postCtx
 
         match postsPattern $ do
             route $ setExtension "html"
             compile $ do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
-                pandocPost ctx (Just syntax)
+                pandocPost' ctx
 
         tagsRules tags $ \tag tagPattern -> do
             route idRoute
@@ -173,27 +172,24 @@ main = do
         create ["draft/index.html"] $ do
             route idRoute
             compile $ do
-                posts <- loadAll reviewsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Sneak Peek" "Shine a light on this." posts
-                pandocPost ctx (Just syntax)
+                posts <- loadAll draftsPattern >>= recentFirst
+                pandocPost' $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
 
         create ["review/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll reviewsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
-                pandocPost ctx (Just syntax)
+                pandocPost' $ mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
 
         create ["post/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll postsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
-                pandocPost ctx (Just syntax)
+                pandocPost' $ mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
-            compile $ do pandocTemplate "templates/index.html" postCtx Nothing
+            compile $ do pandocTemplate "templates/index.html" Nothing postCtx
 
         match "templates/*" $ compile templateCompiler
 
