@@ -92,6 +92,23 @@ mkStatic path = do
             >>= loadAndApplyTemplate (fromFilePath $ "templates" </> path <.> ".html") postCtx
             >>= relativizeUrls
 
+pandocTemplate :: Identifier -> Context String -> Maybe Syntax -> Compiler (Item String)
+pandocTemplate template ctx syntax = do
+    pandoc syntax
+        >>= loadAndApplyTemplate template ctx
+        >>= loadAndApplyTemplate "templates/default.html" ctx
+        >>= relativizeUrls
+
+pandocPost :: Context String -> Maybe Syntax -> Compiler (Item String)
+pandocPost = pandocTemplate "templates/post.html"
+
+mkPostsCtx :: String -> String -> [Item String] -> Context String
+mkPostsCtx title subtitle posts =
+    listField "posts" postCtx (return posts)
+    <> constField "title" title
+    <> constField "subtitle" subtitle
+    <> defaultContext
+
 main :: IO ()
 main = do
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
@@ -125,34 +142,18 @@ main = do
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do
-                let ctx = postCtx
-
-                pandoc (Just syntax)
-                    >>= loadAndApplyTemplate "templates/post.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+            compile $ do pandocPost postCtx (Just syntax)
 
         match reviewsPattern $ do
             route $ setExtension "html"
-            compile $ do
-                let ctx = postCtx
-
-                pandoc (Just syntax)
-                    >>= loadAndApplyTemplate "templates/post.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+            compile $ do pandocPost postCtx (Just syntax)
 
         match postsPattern $ do
             route $ setExtension "html"
             compile $ do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
-
-                pandoc (Just syntax)
-                    >>= loadAndApplyTemplate "templates/post.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                pandocPost ctx (Just syntax)
 
         tagsRules tags $ \tag tagPattern -> do
             route idRoute
@@ -172,58 +173,27 @@ main = do
         create ["draft/index.html"] $ do
             route idRoute
             compile $ do
-                posts <- loadAll draftsPattern >>= recentFirst
-
-                let ctx =
-                        listField "posts" postCtx (return posts)
-                        <> constField "title" "Sneak Peek"
-                        <> constField "subtitle" "Shine a light on this."
-                        <> defaultContext
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                posts <- loadAll reviewsPattern >>= recentFirst
+                let ctx = mkPostsCtx "Sneak Peek" "Shine a light on this." posts
+                pandocPost ctx (Just syntax)
 
         create ["review/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll reviewsPattern >>= recentFirst
-
-                let ctx =
-                        listField "posts" postCtx (return posts)
-                        <> constField "title" "Up for Review"
-                        <> constField "subtitle" "Looking in the rear view mirror."
-                        <> defaultContext
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                let ctx = mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
+                pandocPost ctx (Just syntax)
 
         create ["post/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll postsPattern >>= recentFirst
-
-                let ctx =
-                        listField "posts" postCtx (return posts)
-                        <> constField "title" "Post it, Notes"
-                        <> constField "subtitle" "Power-on, self-test."
-                        <> defaultContext
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                let ctx = mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
+                pandocPost ctx (Just syntax)
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
-            compile $ do
-                pandoc Nothing
-                    >>= loadAndApplyTemplate "templates/index.html" postCtx
-                    >>= loadAndApplyTemplate "templates/default.html" postCtx
-                    >>= relativizeUrls
+            compile $ do pandocTemplate "templates/index.html" postCtx Nothing
 
         match "templates/*" $ compile templateCompiler
 
