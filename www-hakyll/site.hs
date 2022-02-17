@@ -109,6 +109,13 @@ mkPostsCtx title subtitle posts =
     <> constField "subtitle" subtitle
     <> defaultContext
 
+mkPostItem :: Context String -> Compiler (Item String)
+mkPostItem ctx =
+    makeItem ""
+        >>= loadAndApplyTemplate "templates/archive.html" ctx
+        >>= loadAndApplyTemplate "templates/default.html" ctx
+        >>= relativizeUrls
+
 main :: IO ()
 main = do
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
@@ -173,34 +180,19 @@ main = do
             route idRoute
             compile $ do
                 posts <- loadAll draftsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Sneak Peek" "Shine a light on this." posts
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                mkPostItem $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
 
         create ["review/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll reviewsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                mkPostItem $ mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
 
         create ["post/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll postsPattern >>= recentFirst
-                let ctx = mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
-
-                makeItem ""
-                    >>= loadAndApplyTemplate "templates/archive.html" ctx
-                    >>= loadAndApplyTemplate "templates/default.html" ctx
-                    >>= relativizeUrls
+                mkPostItem $ mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
