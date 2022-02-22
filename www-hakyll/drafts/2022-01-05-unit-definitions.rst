@@ -2,7 +2,16 @@
 title: Unit Definitions.
 subtitle: How do unit definitions like <code>[u| s, min = 60 s, Hz = s^-1 |]</code> work?
 tags: haskell, tcplugins
----
+--
+
+Units are for Reals
+-------------------
+
+I've been quite interested in units of measure in programming languages since I
+worked on a 3-year project to commercialise a potato crop model. The model was
+in NZ customary units; kgs, hectares and litres. We stored the data in SI units
+but we also had to display in the user's choice of units, such as acre and
+gallon and even some unusual units such as hundredweight.
 
 Quasiquotes for Units
 ---------------------
