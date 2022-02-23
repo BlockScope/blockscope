@@ -230,6 +230,9 @@ GHC modules with a deeper hierarchy. To track less sweeping changes between GHC
 *dot-even-numbered* releases we'll use version-specific directories like
 ``src-ghc-9.0`` and ``src-ghc-9.2``.
 
+File Diffing
+------------
+
 We're trading duplicating modules for ease of diffing. With everyday file diff
 tooling we can review how we tracked GHC changes more explicitly. No more
 squinting at mixed language source files. For a library such as
@@ -239,9 +242,6 @@ fear of screwing up support for older versions because the version-specific
 directories are isolated. If we stuffed up the cabal conditionals somehow we'd
 get an error when compiling, either about missing modules or about duplicate
 modules.
-
-File diffing
-------------
 
 One change between ``src-ghc-9.0`` and ``src-ghc-9.2``.
 
@@ -336,7 +336,7 @@ Without the mixin renaming TcRnTypes to Constraint this module errors.
     11 | import Constraint
        | ^^^^^^^^^^^^^^^^^...
 
-Simpler with dhall
+Simpler with Dhall
 ------------------
 
 Tweaking the cabal file with all these conditionals and mixins is a bit too much
