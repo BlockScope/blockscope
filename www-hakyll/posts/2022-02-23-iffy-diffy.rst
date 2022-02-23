@@ -1,8 +1,8 @@
 ---
 title: Conditional Coding.
 subtitle: >-
-    Struggle to read C preprocessor interleaved <em>iffy</em> Haskell code?<br>
-    Forget <code>CPP</code>. With cabal conditionals, get to do clean file diffs again!
+    Struggle with C preprocessor interleaved <em>iffy</em> Haskell code?<br>
+    Forget <code>CPP</code>. Wipe your code clean with cabal conditionals!
 tags: haskell, tcplugins
 ---
 
