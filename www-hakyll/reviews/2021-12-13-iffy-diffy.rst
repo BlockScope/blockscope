@@ -227,16 +227,18 @@ group modules into different ``hs-source-dirs`` directories.
 When ``8.0 <= ghc < 9.0`` in ``src-ghc-flat`` we import from the flatter GHC
 module hierarchy but with ``src-ghc-tree`` we import from the newer layout of
 GHC modules with a deeper hierarchy. To track less sweeping changes between GHC
-versions we'll use version-specific directories like ``src-ghc-9.0`` and
-``src-ghc-9.2``.
+*dot-even-numbered* releases we'll use version-specific directories like
+``src-ghc-9.0`` and ``src-ghc-9.2``.
 
 We're trading duplicating modules for ease of diffing. With everyday file diff
-tooling we can now see differences between GHC
-*dot-even-numbered* releases and see what needed to change when GHC deepened
-its module hierarchy. We don't need to squint at mixed language source files. 
-I'm not sure how I'd know how to set IDE-tooling to gray out inapplicable
-sections of code based on #ifdefs or know if such a feature is yet available for
-Haskell.
+tooling we can review how we tracked GHC changes more explicitly. No more
+squinting at mixed language source files. For a library such as
+ghc-tcplugins-extra, supporting a newer GHC version starts with copying a
+directory, recompiling and then making whatever changes are necessary without
+fear of screwing up support for older versions because the version-specific
+directories are isolated. If we stuffed up the cabal conditionals somehow we'd
+get an error when compiling, either about missing modules or about duplicate
+modules.
 
 File diffing
 ------------
