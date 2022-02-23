@@ -8,6 +8,7 @@ cabal-dev
 _cache
 _site
 .shake
+dist-newstyle
 .stack-work
 .stack-work-dhall
 __*
