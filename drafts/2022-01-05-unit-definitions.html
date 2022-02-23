@@ -22,7 +22,7 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>Unit Definitions.</title>
+        <title>2022-01-05-unit-definitions</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
         <script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
@@ -77,9 +77,7 @@
             </td>
             <td>
                 <div>
-                    <h1 class="display-4">Unit Definitions.</h1>
-                    
-                    <p class="lead">How do unit definitions like <code>[u| s, min = 60 s, Hz = s^-1 |]</code> work?</p>
+                    <h1 class="display-4">2022-01-05-unit-definitions</h1>
                     
                 </div>
             </td>
@@ -88,15 +86,10 @@
 </header>
 
     
-        <div class="float-right">
-        haskell, tcplugins
-        </div>
-        <div class="clearfix">
-            <br />
-            <br />
-        </div>
-    
-    <h1 id="quasiquotes-for-units">Quasiquotes for Units</h1>
+    <p>— title: Unit Definitions. subtitle: How do unit definitions like &lt;code&gt;[u| s, min = 60 s, Hz = s^-1 |]&lt;/code&gt; work? tags: haskell, tcplugins –</p>
+<h1 id="units-are-for-reals">Units are for Reals</h1>
+<p>I’ve been quite interested in units of measure in programming languages since I worked on a 3-year project to commercialise a potato crop model. The model was in NZ customary units; kgs, hectares and litres. We stored the data in SI units but we also had to display in the user’s choice of units, such as acre and gallon and even some unusual units such as hundredweight.</p>
+<h1 id="quasiquotes-for-units">Quasiquotes for Units</h1>
 <p>In F# units are builtin, declared with special syntax and erased at runtime. They’re more like Haskell newtypes than single case discriminated unions because of this erasure.</p>
 <p>Shipped with the <span class="title-ref">uom-plugin</span>, is the u quasiquoter. Units need not be declared this way to use the plugin but this is convenient and looks good. There are base units, derived units and convertible units.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>declareBaseUnit <span class="st">&quot;m&quot;</span></span>
