@@ -132,8 +132,8 @@ One Internal Indirection
 ------------------------
 
 To start, I gut ``src/GHC.TcPluginM.Extra``[#]_ and defer to ``import Internal``
-for the implementation so that this module only does exports and has no
-definitions of its own.
+for the implementation so that this module only imports and re-exports. None of
+the definitions remain.
 
 .. code-block:: haskell 
 
@@ -169,11 +169,12 @@ internal module is invisible and the module tree is unchanged.
 In the implementation I have two module hierarchies, ``GhcApi.*`` and
 ``Internal.*``.
 
-Cabal conditionals
+Cabal Conditionals
 ------------------
 
 In the cabal file with ``impl(ghc?)`` conditonals we can pick which files to
-compile.
+compile. This is how we're going to branch instead of using #ifdefs interleaved
+with the source code.
 
 .. code-block:: yaml
 
@@ -223,18 +224,19 @@ compile.
 When some things stay the same but others change between GHC versions we can
 group modules into different ``hs-source-dirs`` directories.
 
-When ``8.0 <= ghc < 9.0`` I include modules in ``src-tree-flat`` so named
-because the GHC module hierarchy at this time was flat. With ``ghc >= 9.0``
-GHC's module hierarchy was moved to a deeper tree structure so I include modules
-from ``src-tree-tree`` instead.
+When ``8.0 <= ghc < 9.0`` in ``src-ghc-flat`` we import from the flatter GHC
+module hierarchy but with ``src-ghc-tree`` we import from the newer layout of
+GHC modules with a deeper hierarchy. To track less sweeping changes between GHC
+versions we'll use version-specific directories like ``src-ghc-9.0`` and
+``src-ghc-9.2``.
 
-I put modules that change between versions into version-specific directories
-like ``src-ghc-9.0`` and ``src-ghc-9.2``.
-
-We're trading duplicating modules for ease of diffing. We can now see
-differences between GHC
+We're trading duplicating modules for ease of diffing. With everyday file diff
+tooling we can now see differences between GHC
 *dot-even-numbered* releases and see what needed to change when GHC deepened
-its module hierarchy.
+its module hierarchy. We don't need to squint at mixed language source files. 
+I'm not sure how I'd know how to set IDE-tooling to gray out inapplicable
+sections of code based on #ifdefs or know if such a feature is yet available for
+Haskell.
 
 File diffing
 ------------
