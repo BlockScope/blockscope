@@ -131,8 +131,9 @@ as an example.
 One Internal Indirection
 ------------------------
 
-I gut ``src/GHC.TcPluginM.Extra``[#]_ and defer to ``import Internal`` for the
-implementation.
+To start, I gut ``src/GHC.TcPluginM.Extra``[#]_ and defer to ``import Internal``
+for the implementation so that this module only does exports and has no
+definitions of its own.
 
 .. code-block:: haskell 
 
