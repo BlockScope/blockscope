@@ -2,7 +2,7 @@
 
 import Control.Applicative (empty)
 import qualified Data.Map as Map
-import Data.List (intersperse)
+import Data.List (intersperse, stripPrefix)
 import Hakyll
     ( Context(..), Item(..), Configuration(..)
     , Rules, Pattern, Compiler, Identifier
@@ -76,7 +76,7 @@ directory :: (Pattern -> Rules a) -> String -> Rules a
 directory act f = act $ fromGlob $ f ++ "/**"
 
 config :: Configuration
-config = defaultConfiguration { providerDirectory = "www-hakyll" }
+config = defaultConfiguration { providerDirectory = "." }
 
 mkStatic :: FilePath -> Rules ()
 mkStatic path = do
@@ -133,6 +133,14 @@ main = do
 
         match "favicon/*.*" $ do
             route $ customRoute (flip replaceDirectory "" . toFilePath)
+            compile copyFileCompiler
+
+        match "node_modules/typeface-et-book/et-book/et-book/**/*.*" $ do
+            route $ customRoute (etBookFontRoute . toFilePath)
+            compile copyFileCompiler
+
+        match "node_modules/@fortawesome/fontawesome-free/webfonts/*.*" $ do
+            route $ customRoute (faFontRoute . toFilePath)
             compile copyFileCompiler
 
         -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
@@ -220,3 +228,16 @@ tagsFieldNonEmpty =
                 ! A.class_ "badge badge-light"
                 ! A.href (toValue $ toUrl filePath)
             $ toHtml tag
+
+etBookFontRoute :: FilePath -> FilePath
+etBookFontRoute x
+    | Just y <- stripPrefix "node_modules/typeface-et-book/et-book/" x
+    = "css" </> y
+    | otherwise = error $ "Unexpected et-book font of " ++ x
+
+faFontRoute :: FilePath -> FilePath
+faFontRoute x
+    | Just y <- stripPrefix "node_modules/@fortawesome/fontawesome-free/webfonts/" x
+    = "css" </> "fonts" </> y
+    | otherwise = error $ "Unexpected fontawesome font of " ++ x
+

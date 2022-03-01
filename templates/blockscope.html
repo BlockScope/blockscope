@@ -4,7 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         $partial("templates/meta.html")$
-        <title>$title$</title>
+        <title>Block Scope - Fresh coding and untangling knotty codebases.</title>
         <link rel="stylesheet" href="/css/app.css" >
         $partial("templates/favicon.html")$
     </head>
@@ -14,11 +14,14 @@
                 <div id="side" class="col-3 card d-print-none">
                     $partial("templates/nav.html")$
                 </div>
-                <div class="col-9">
+                <div id="content">
                     $body$
+                    <hr/>
+                    <footer>
+                        $partial("templates/contact-blockscope.html")$
+                    </footer>
                 </div>
             </div>
         </div>
     </body>
-    <script language="javascript" src="/css/app.js" defer></script>
 </html>

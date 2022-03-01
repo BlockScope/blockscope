@@ -4,22 +4,20 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         $partial("templates/meta.html")$
-        <title>CV - $title$</title>
+        <title>$title$</title>
         <link rel="stylesheet" href="/css/app.css" >
         $partial("templates/favicon.html")$
     </head>
-    <body id="body-cv">
+    <body>
         <div class="container">
             <div class="row">
-                <div id="content-cv">
+                <div id="side" class="col-3 card d-print-none">
+                    $partial("templates/nav.html")$
+                </div>
+                <div id="content">
                     $body$
-                    <hr/>
-                    <footer>
-                        $partial("templates/contact-cv.html")$
-                    </footer>
                 </div>
             </div>
         </div>
     </body>
-    <script language="javascript" src="/css/app.js" defer></script>
 </html>

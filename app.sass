@@ -1,32 +1,33 @@
-// https://stackoverflow.com/questions/33649761/how-do-i-load-font-awesome-using-scss-sass-in-webpack-using-relative-paths
-$fa-font-path: "~@fortawesome/fontawesome-free/webfonts";
-@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "~@fortawesome/fontawesome-free/scss/brands.scss";
-@import "~@fortawesome/fontawesome-free/scss/regular.scss";
-@import "~@fortawesome/fontawesome-free/scss/solid.scss";
-@import "pandoc-solarized.css";
-@import url('https://fonts.googleapis.com/css?family=Open+Sans|B612|B612+Mono&display=swap');
+@use "sass:meta"
 
-$body-bg: #fffff8;
-@import "~bootstrap/scss/bootstrap";
-@import "~typeface-et-book/et-book/et-book.css";
-@import "./automated-a11y-sass/a11y-color";
+@use "@fortawesome/fontawesome-free/scss/fontawesome.scss" as * with ($fa-font-path: "./fonts")
+@use "@fortawesome/fontawesome-free/scss/solid.scss" as * with ($fa-font-path: "./fonts")
+@use "@fortawesome/fontawesome-free/scss/brands.scss" as * with ($fa-font-path: "./fonts")
+
+@use "bootstrap/scss/bootstrap.scss" as *
+
+@use "./pandoc-solarized.css" as *
+
+$body-bg: #fffff8
+@use "typeface-et-book/et-book/et-book.css" as *
+
+@import url('https://fonts.googleapis.com/css?family=Open+Sans|B612|B612+Mono&display=swap')
 
 body
-    font-family: 'B612 Mono', monospace;
-    margin: 2.5rem;
+    font-family: 'B612 Mono', monospace
+    margin: 2.5rem
 
 body#body-cv
-    background-color: transparent;
+    background-color: transparent
 
 #copyright
-    font-size: 0.8rem;
-    font-weight: 300;
+    font-size: 0.8rem
+    font-weight: 300
 
 .badge, #copyright
-    font-family: 'B612 Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 300;
+    font-family: 'B612 Mono', monospace
+    font-size: 0.8rem
+    font-weight: 300
 
 .badge:before
     content: "["
@@ -35,230 +36,230 @@ body#body-cv
     content: "]"
 
 .badge.badge-light
-    background-color: transparent;
+    background-color: transparent
 
 article
-    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
-    font-size: 1.2rem;
+    font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif
+    font-size: 1.2rem
 
 .sourceCode, .pre
-    font-size: 0.9rem;
+    font-size: 0.9rem
 
 .sourceCode.diff
-    font-size: 1.05rem;
+    font-size: 1.05rem
 
 .sourceCode.diff span.st
-    color: #DC322F;
+    color: #DC322F
 
 .sourceCode.diff span.va
-    color: #2AA198;
+    color: #2AA198
 
 .sourceCode.pre
-    color: #000;
-    background-color: transparent;
+    color: #000
+    background-color: transparent
 
 .pre
-    color: #fff;
-    background-color: #000;
+    color: #fff
+    background-color: #000
 
 .pre, .mono-flow
-    padding: 1em 2em 1em 1em;
-    border-radius: 1em;
-    font-size: 10pt;
-    font-family: 'B612 Mono', monospace;
+    padding: 1em 2em 1em 1em
+    border-radius: 1em
+    font-size: 10pt
+    font-family: 'B612 Mono', monospace
 
 #ifdef .pre
-    color: #000;
-    background-color: transparent;
-    border: solid 1px #000;
-    opacity: 0.5;
-    font-size: 5pt;
-    float: right;
-    position: relative;
-    left: 10px;
+    color: #000
+    background-color: transparent
+    border: solid 1px #000
+    opacity: 0.5
+    font-size: 5pt
+    float: right
+    position: relative
+    left: 10px
 
 .spacer
-    height: 20px;
+    height: 20px
 
 .box span.tag
-    border-radius: 0;
+    border-radius: 0
 
 .card-title a
-    text-decoration: none;
-    color: #000;
+    text-decoration: none
+    color: #000
 
 blockquote
-    display: block;
-    margin-block-start: 1em;
-    margin-block-end: 1em;
-    margin-inline-start: 40px;
-    margin-inline-end: 40px;
+    display: block
+    margin-block-start: 1em
+    margin-block-end: 1em
+    margin-inline-start: 40px
+    margin-inline-end: 40px
 
 blockquote footer
-    display: block;
-    font-size: 1.1rem;
-    text-align: right;
-    margin-inline-end: 40px;
+    display: block
+    font-size: 1.1rem
+    text-align: right
+    margin-inline-end: 40px
 
 blockquote footer:before
     content: "— "
 
 #side
-    background-color: inherit;
-    border: inherit;
+    background-color: inherit
+    border: inherit
 
 #side > .card-body
-    padding-left: 0;
-    padding-top: 0;
+    padding-left: 0
+    padding-top: 0
 
 #content
-    @extend .col-9;
+    @extend .col-9
 
 #content-cv
-    @extend .col-12;
+    @extend .col-12
 
 @media print
     body
-        font-size: 12pt;
-        margin-top: 2cm;
-        margin-right: 2cm;
-        margin-bottom: 1.5cm;
+        font-size: 12pt
+        margin-top: 2cm
+        margin-right: 2cm
+        margin-bottom: 1.5cm
         margin-left: 2cm
 
 // WARNING: You may not @extend an outer selector from within @media so I am
 // not doing @extend .col-12 for print.
 @media print
     #content
-        flex: 0 0 100%;
-        max-width: 100%;
+        flex: 0 0 100%
+        max-width: 100%
 
-$date: #808080;
+$date: #808080
 
 // NOTE: First group of 7.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
 // ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f']
-$cit: #a6cee3;
-$bracco: #1f78b4;
-$flaretiming: #b2df8a;
-$aqualinc: #33a02c;
-$tagly: #fb9a99;
-$apress: #e31a1c;
-$travieo: #fdbf6f;
+$cit: #a6cee3
+$bracco: #1f78b4
+$flaretiming: #b2df8a
+$aqualinc: #33a02c
+$tagly: #fb9a99
+$apress: #e31a1c
+$travieo: #fdbf6f
 
 // NOTE: Second group of 5.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=5
 // ['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61e']
-$cactus: #1b9e77;
-$croplogic: #7570b3;
-$waimak: #e7298a;
-$nutricentre: #66a61e;
-$niwa: #e6ab02;
+$cactus: #1b9e77
+$croplogic: #7570b3
+$waimak: #e7298a
+$nutricentre: #66a61e
+$niwa: #e6ab02
 
 // NOTE: Third group of 4.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Set2&n=4
 // ['#66c2a5','#fc8d62','#8da0cb','#e78ac3']
-$obvious: #66c2a5;
-$aspelle: #fc8d62;
-$sml: #8da0cb;
-$trimble: #e78ac3;
+$obvious: #66c2a5
+$aspelle: #fc8d62
+$sml: #8da0cb
+$trimble: #e78ac3
 
-$twitter: #1da1f2;
-$linkedin: #0077b5;
-$stackoverflow: #f48024;
-$skype: #00aff0;
+$twitter: #1da1f2
+$linkedin: #0077b5
+$stackoverflow: #f48024
+$skype: #00aff0
 
 .date,
 .date > code
-    color: $date;
+    color: $date
 
 .flaretiming,
 .flaretiming > code
-    color: $flaretiming;
+    color: $flaretiming
 
 .cit,
 .cit > code
-    color: $cit;
+    color: $cit
 
 .bracco,
 .bracco > code
-    color: $bracco;
+    color: $bracco
 
 .aqualinc,
 .aqualinc > code
-    color: $aqualinc;
+    color: $aqualinc
 
 .cactus,
 .cactus > code
-    color: $cactus;
+    color: $cactus
 
 .tagly,
 .tagly > code
-    color: $tagly;
+    color: $tagly
 
 .apress,
 .apress > code
-    color: $apress;
+    color: $apress
 
 .travieo,
 .travieo > code
-    color: $travieo;
+    color: $travieo
 
 .croplogic,
 .croplogic > code
-    color: $croplogic;
+    color: $croplogic
 
 .waimak,
 .waimak > code
-    color: $waimak;
+    color: $waimak
 
 .nutricentre,
 .nutricentre > code
-    color: $nutricentre;
+    color: $nutricentre
 
 .niwa,
 .niwa > code
-    color: $niwa;
+    color: $niwa
 
 .aspelle,
 .aspelle > code
-    color: $aspelle;
+    color: $aspelle
 
 .obvious,
 .obvious > code
-    color: $obvious;
+    color: $obvious
 
 .sml,
 .sml > code
-    color: $sml;
+    color: $sml
 
 .trimble,
 .trimble > code
-    color: $trimble;
+    color: $trimble
 
 h2.work-section
-    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-    font-size: 1rem;
-    padding-left: 1.5rem;
+    font-family: SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace
+    font-size: 1rem
+    padding-left: 1.5rem
 
 div.work-history > ul
-    list-style-type: none;
-    padding-inline-start: 0;
-    text-indent: -3.2rem;
-    margin-left: 3.2rem;
+    list-style-type: none
+    padding-inline-start: 0
+    text-indent: -3.2rem
+    margin-left: 3.2rem
 
 div.work-history,
 div.work-history > pre
-    margin: 0;
+    margin: 0
 
 a:target::after
-    content: " ☜";
+    content: " ☜"
 
 a.nav-link
-    font-size: 1.4rem;
-    font-weight: bold;
+    font-size: 1.4rem
+    font-weight: bold
 
 a
-    color: a11y-color(#007bff, #fffff8);
+    color: a11y-color(#007bff, #fffff8)
 
 dd
-    margin-left: 2em;
+    margin-left: 2em

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: bd193797123a451f4a35c5bedc571143f73b889f652bde502d838bdb1090007f
+-- hash: 71455a2d44542b27745fcee17f659dbf560507de9bd19bf1a9ec88c6e3bdd8d6
 
 name:           camp-hog
 version:        1.0.0
@@ -15,7 +15,7 @@ homepage:       https://github.com/blockscope/blockscope/tree/develop#readme
 bug-reports:    https://github.com/blockscope/blockscope/issues
 author:         Phil de Joux
 maintainer:     phil.dejoux@blockscope.com
-copyright:      © 2017-2018 Phil de Joux, © 2017-2018 Block Scope Limited
+copyright:      © 2017-2022 Phil de Joux, © 2017-2022 Block Scope Limited
 license:        MPL-2.0
 license-file:   LICENSE.md
 tested-with:
@@ -35,59 +35,7 @@ executable site
   other-modules:
       Paths_camp_hog
   hs-source-dirs:
-      www-hakyll
-  default-extensions:
-      DataKinds
-      DeriveFunctor
-      DeriveGeneric
-      DeriveAnyClass
-      DerivingStrategies
-      DisambiguateRecordFields
-      FlexibleContexts
-      FlexibleInstances
-      GeneralizedNewtypeDeriving
-      GADTs
-      LambdaCase
-      MultiParamTypeClasses
-      MultiWayIf
-      NamedFieldPuns
-      OverloadedStrings
-      PackageImports
-      ParallelListComp
-      PartialTypeSignatures
-      PatternSynonyms
-      QuasiQuotes
-      RankNTypes
-      RecordWildCards
-      ScopedTypeVariables
-      StandaloneDeriving
-      TemplateHaskell
-      TypeApplications
-      TypeFamilies
-      TypeOperators
-      TypeSynonymInstances
-      TupleSections
-      UndecidableInstances
-  ghc-options: -Wall -Werror
-  build-depends:
-      base
-    , blaze-html
-    , containers
-    , filepath
-    , hakyll
-    , pandoc >=2.9
-    , skylighting
-    , skylighting-core
-  default-language: Haskell2010
-
-test-suite hlint
-  type: exitcode-stdio-1.0
-  main-is: HLint.hs
-  other-modules:
-      Paths_camp_hog
-  hs-source-dirs:
       ./
-      test-suite-hlint
   default-extensions:
       DataKinds
       DeriveFunctor
@@ -127,7 +75,6 @@ test-suite hlint
     , containers
     , filepath
     , hakyll
-    , hlint
     , pandoc >=2.9
     , skylighting
     , skylighting-core

@@ -1,5 +1,0 @@
-resolver: nightly-2018-11-29
-flags: {}
-packages: []
-local-bin-path: __shake-build
-work-dir: .stack-work-dhall

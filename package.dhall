@@ -25,14 +25,5 @@ in  let deps =
                   "https://github.com/blockscope/blockscope/tree/develop#readme"
               , executables.site
                 =
-                { dependencies = deps
-                , source-dirs = "www-hakyll"
-                , main = "site.hs"
-                }
-              , tests.hlint
-                =
-                { dependencies = deps # [ "hlint" ]
-                , main = "HLint.hs"
-                , source-dirs = [ ".", "test-suite-hlint" ]
-                }
+                { dependencies = deps, source-dirs = ".", main = "site.hs" }
               }
