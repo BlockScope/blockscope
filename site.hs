@@ -100,7 +100,7 @@ pandocTemplate template syntax ctx = do
         >>= relativizeUrls
 
 pandocPost :: Maybe Syntax -> Context String -> Compiler (Item String)
-pandocPost = pandocTemplate "templates/post.html"
+pandocPost = pandocTemplate "templates/posts/post.html"
 
 mkPostsCtx :: String -> String -> [Item String] -> Context String
 mkPostsCtx title subtitle posts =
@@ -147,8 +147,8 @@ main = do
         match "static/b.md" $ mkStatic "blockscope"
         match "static/p.md" $ mkStatic "philderbeast"
         match "static/cv.md" $ mkStatic "cv"
-        match "static/project.md" $ mkStatic "project"
-        match "static/contrib.md" $ mkStatic "project"
+        match "static/project.md" $ mkStatic ("projects" </> "project")
+        match "static/contrib.md" $ mkStatic ("projects" </> "project")
         match "static/tweet.md" $ mkStatic "tweet"
 
         -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
@@ -207,6 +207,8 @@ main = do
             compile $ do pandocTemplate "templates/index.html" Nothing postCtx
 
         match "templates/*" $ compile templateCompiler
+        match "templates/posts/*" $ compile templateCompiler
+        match "templates/projects/*" $ compile templateCompiler
 
 postCtx :: Context String
 postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
