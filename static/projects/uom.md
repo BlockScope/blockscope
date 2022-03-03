@@ -49,9 +49,9 @@ gallon and even some unusual units such as hundredweight. We used the [unified c
 ```
 
 In C# we parsed this and added some conversion functions. There has to be a
-better way, right? Well there is. F# has units of measure built in. They typed
-checked and erased. I've contributed to type checker plugins that help GHC, the
-Haskell compiler, with units of measure.
+better way, right? Well there is. F# has units of measure built in. They're
+typed checked and erased. I've contributed to type checker plugins that help
+GHC, the Haskell compiler, with units of measure.
 
 * `adamgundry`[**/units-parser**](https://github.com/adamgundry/units-parser)  
 [Bump](https://github.com/adamgundry/units-parser/commit/9db2652bfbeea5d69f590ce15c171d7b9801bb60)
