@@ -27,4 +27,6 @@ quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757
 
 I'll use front end frameworks (especially those that change the paradigm or
 bring more type checking) to redo a portion of nose cone and get a feel for how
-they work in practice.
+they work in practice. At the `github`/[nose-cone](https://github.com/NoseCone)
+organisation you'll find rescript, svelte, feliz and sutil redos of the original
+reflex-frp single page app user interface. Each has an accompanying demo.
