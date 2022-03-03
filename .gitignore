@@ -43,7 +43,7 @@ result
 **/_template/**
 
 *.log
-**/www-hakyll/css/**
+css/
 *.tgz
 .yarn
 .vscode

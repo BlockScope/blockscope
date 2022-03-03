@@ -79,7 +79,7 @@ config :: Configuration
 config = defaultConfiguration { providerDirectory = "." }
 
 mkStatic :: FilePath -> Rules ()
-mkStatic path = do
+mkStatic template = do
     -- SEE: https://aherrmann.github.io/programming/2016/01/31/jekyll-style-urls-with-hakyll/
     route
         $ gsubRoute "static/" (const "")
@@ -89,18 +89,15 @@ mkStatic path = do
     compile $ do
         pandoc Nothing
             >>= loadAndApplyTemplate "templates/about.html" postCtx
-            >>= loadAndApplyTemplate (fromFilePath $ "templates" </> path <.> ".html") postCtx
+            >>= loadAndApplyTemplate (fromFilePath $ template <.> ".html") postCtx
             >>= relativizeUrls
 
-pandocTemplate :: Identifier -> Maybe Syntax -> Context String -> Compiler (Item String)
-pandocTemplate template syntax ctx = do
+mkPost :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkPost syntax ctx =
     pandoc syntax
-        >>= loadAndApplyTemplate template ctx
-        >>= loadAndApplyTemplate "templates/default.html" ctx
+        >>= loadAndApplyTemplate "templates/posts/post.html" ctx
+        >>= loadAndApplyTemplate "templates/posts/default.html" ctx
         >>= relativizeUrls
-
-pandocPost :: Maybe Syntax -> Context String -> Compiler (Item String)
-pandocPost = pandocTemplate "templates/posts/post.html"
 
 mkPostsCtx :: String -> String -> [Item String] -> Context String
 mkPostsCtx title subtitle posts =
@@ -112,15 +109,15 @@ mkPostsCtx title subtitle posts =
 mkPostItem :: Context String -> Compiler (Item String)
 mkPostItem ctx =
     makeItem ""
-        >>= loadAndApplyTemplate "templates/archive.html" ctx
-        >>= loadAndApplyTemplate "templates/default.html" ctx
+        >>= loadAndApplyTemplate "templates/posts/archive.html" ctx
+        >>= loadAndApplyTemplate "templates/posts/default.html" ctx
         >>= relativizeUrls
 
 main :: IO ()
 main = do
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
     syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
-    let pandocPost' = pandocPost (Just syntax)
+    let mkPost' = mkPost (Just syntax)
 
     hakyllWith config $ do
 
@@ -144,30 +141,82 @@ main = do
             compile copyFileCompiler
 
         -- SEE: https://groups.google.com/d/msg/hakyll/IhKmFO9vCIw/kC78nWp6CAAJ
-        match "static/b.md" $ mkStatic "blockscope"
-        match "static/p.md" $ mkStatic "philderbeast"
-        match "static/cv.md" $ mkStatic "cv"
-        match "static/project.md" $ mkStatic ("projects" </> "project")
-        match "static/contrib.md" $ mkStatic ("projects" </> "project")
-        match "static/tweet.md" $ mkStatic "tweet"
+        match "static/b.md" $ mkStatic "templates/blockscope"
+        match "static/p.md" $ mkStatic "templates/philderbeast"
+        match "static/cv.md" $ mkStatic "templates/cv"
+        match "static/tweets.md" $ mkStatic "templates/tweets"
+
+        match "static/projects/uom.md" $ do
+            route . customRoute $ const "projects/uom/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/geodetics.md" $ do
+            route . customRoute $ const "projects/geodetics/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/build-tools.md" $ do
+            route . customRoute $ const "projects/build-tools/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/fly.md" $ do
+            route . customRoute $ const "projects/fly/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/contrib.md" $ do
+            route . customRoute $ const "projects/contrib/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/index.md" $ do
+            route . customRoute $ const "projects/index.html"
+
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= relativizeUrls
 
         -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
         tags <- buildTags postsPattern (fromCapture "tags/*.html")
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do pandocPost' postCtx
+            compile $ do mkPost' postCtx
 
         match reviewsPattern $ do
             route $ setExtension "html"
-            compile $ do pandocPost' postCtx
+            compile $ do mkPost' postCtx
 
         match postsPattern $ do
             route $ setExtension "html"
             compile $ do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
-                pandocPost' ctx
+                mkPost' ctx
 
         tagsRules tags $ \tag tagPattern -> do
             route idRoute
@@ -196,7 +245,7 @@ main = do
                 posts <- loadAll reviewsPattern >>= recentFirst
                 mkPostItem $ mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
 
-        create ["post/index.html"] $ do
+        create ["blog/index.html"] $ do
             route idRoute
             compile $ do
                 posts <- loadAll postsPattern >>= recentFirst
@@ -204,7 +253,11 @@ main = do
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
-            compile $ do pandocTemplate "templates/index.html" Nothing postCtx
+            compile
+                $ pandoc Nothing
+                >>= loadAndApplyTemplate "templates/index.html" postCtx
+                >>= loadAndApplyTemplate "templates/default.html" postCtx
+                >>= relativizeUrls
 
         match "templates/*" $ compile templateCompiler
         match "templates/posts/*" $ compile templateCompiler
