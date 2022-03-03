@@ -22,8 +22,8 @@ suppress the ``-nopie`` warnings on macOS.
 * `haskell`[**/cabal**](https://github.com/haskell/cabal)  
 Raised
 [issues](https://github.com/haskell/cabal/issues?q=is%3Aissue+author%3Aphilderbeast)
-and supplied [documentation](https://github.com/haskell/cabal/pull/7000/files) for
-`cabal install all:exes`.
+and supplied [pull requests](https://github.com/haskell/cabal/pulls?q=author%3Aphilderbeast), such as filling gaps in the documentation for commands like
+`cabal install all:exes` and `cabal list-bin`.
 * `nmattia`[**/snack**](https://github.com/nmattia/snack/commits?author=philderbeast)  
 An incremental build tool for Haskell projects.
 
