@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+        <title>Geodetics</title>
+        <link rel="stylesheet" href="../../css/app.css">
+        <link rel="apple-touch-icon" sizes="180x180" href="../../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../../favicon-16x16.png">
+<link rel="manifest" href="../../site.webmanifest">
+<link rel="mask-icon" href="../../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div id="side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies">{<a href="../../">...</a>}</h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../../projects/">projects</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/uom/">&nbsp;units</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/geodetics/">&nbsp;geodetics</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/fly/">&nbsp;flight</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/tooling/">&nbsp;tooling</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div class="col-9">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Geodetics</h1>
+                    
+                    <p class="lead">Where on Earth are we?</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+    <p>I’ve coded up solutions to the direct and indirect problems of geodetics in Haskell, F#, Unison and Koka and in so doing have been able to find problems with some of these compilers.</p>
+<h2 id="the-direct-or-forward-geodetics-problem">The Direct or Forward Geodetics Problem</h2>
+<ul>
+<li>{x} The departure point on the ellipsoid.</li>
+<li>{α₁} The azimuth from the departure point.</li>
+<li>{s} The distance to the arrival point.</li>
+</ul>
+<p>Given the above inputs, find:</p>
+<ul>
+<li>{y} The arrival point.</li>
+<li>{α₂} The azimuth at the arrival point.</li>
+</ul>
+<h2 id="the-inverse-or-reverse-geodetics-problem">The Inverse or Reverse Geodetics Problem</h2>
+<ul>
+<li>{x} The departure point.</li>
+<li>{y} The arrival point.</li>
+</ul>
+<p>Given the above inputs, find:</p>
+<ul>
+<li>{s} The distance between departure and arrival points.</li>
+<li>{α₁} The azimuth at the departure point.</li>
+<li>{α₂} The azimuth at the arrival point.</li>
+</ul>
+<h2 id="geodetics-solutions">Geodetics Solutions</h2>
+<p>At the <code>github</code>/<a href="https://github.com/flight-earth">flight-earth</a> organisation you’ll find a set of solutions to geodesy problems in various programming languages.</p>
+<ul>
+<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/meridian-arc">meridian-arc</a> for F#. Also published on nuget as <a href="https://www.nuget.org/packages/meridian-arc/">meridian-arc</a>. Interestingly, the math doesn’t work quite the same on all platforms (Windows, Mac and Ubuntu) I tested with.</li>
+<li><code>glide-angle</code>/<a href="https://github.com/GlideAngle/flare-timing/tree/main/lang-haskell/earth">flight-earth</a> for Haskell. I’m waiting on a fix for the <code>uom-plugin</code> dependency to land before I move the package between organisations, from <code>glide-angle</code> to <code>flight-earth</code>.</li>
+<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/flat-earth">flat-earth</a> for Unison. Also published on unison share but I’m not finding it.</li>
+<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/coriolis-effect">coriolis-effect</a> for Koka.</li>
+</ul>
+<h2 id="issues-found-incidentally">Issues Found Incidentally</h2>
+<ul>
+<li><code>koka-lang</code><a href="http://koka-lang.org/"><strong>/koka</strong></a><br />
+Found <a href="https://github.com/koka-lang/koka/issues/created_by/philderbeast">issues</a> compiling <code>flight-earth</code><a href="https://github.com/flight-earth/coriolis-effect"><strong>/coriolis-effect</strong></a>.</li>
+<li><code>unisonweb</code><a href="https://www.unisonweb.org/"><strong>/unison</strong></a><br />
+Found <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">issues</a> compiling <code>flight-earth</code><a href="https://github.com/flight-earth/flat-earth"><strong>/flat-earth</strong></a>.</li>
+</ul>
+</article>
+
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
