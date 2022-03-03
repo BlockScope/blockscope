@@ -1,8 +1,8 @@
 ---
-title: 'Build Tools'
-subtitle: Contributions to tooling to ease the pain of adoption.
+title: 'Tooling'
+subtitle: A little help can go a long way.
 ---
-What is the use of a programming language if it is a huge pain to resolve dependencies with or to build. That's an area where a little help can go a long way to ease the pain of adoption.
+What is the use of a programming language if it is a huge pain to resolve dependencies with or to build. That's an area where a little help can go a long way to ease the pain.
 
 #### Build Tools
 * `cabalism`[**/hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  

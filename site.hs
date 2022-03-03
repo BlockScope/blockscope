@@ -164,8 +164,8 @@ main = do
                 >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
-        match "static/projects/build-tools.md" $ do
-            route . customRoute $ const "projects/build-tools/index.html"
+        match "static/projects/tooling.md" $ do
+            route . customRoute $ const "projects/tooling/index.html"
 
             compile
                 $ pandoc Nothing
