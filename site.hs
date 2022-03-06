@@ -99,6 +99,13 @@ mkPost syntax ctx =
         >>= loadAndApplyTemplate "templates/posts/default.html" ctx
         >>= relativizeUrls
 
+mkDraft :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkDraft syntax ctx =
+    pandoc syntax
+        >>= loadAndApplyTemplate "templates/posts/post.html" ctx
+        >>= loadAndApplyTemplate "templates/drafts/default.html" ctx
+        >>= relativizeUrls
+
 mkPostsCtx :: String -> String -> [Item String] -> Context String
 mkPostsCtx title subtitle posts =
     listField "posts" postCtx (return posts)
@@ -113,11 +120,19 @@ mkPostItem ctx =
         >>= loadAndApplyTemplate "templates/posts/default.html" ctx
         >>= relativizeUrls
 
+mkDraftItem :: Context String -> Compiler (Item String)
+mkDraftItem ctx =
+    makeItem ""
+        >>= loadAndApplyTemplate "templates/posts/archive.html" ctx
+        >>= loadAndApplyTemplate "templates/drafts/default.html" ctx
+        >>= relativizeUrls
+
 main :: IO ()
 main = do
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
     syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
     let mkPost' = mkPost (Just syntax)
+    let mkDraft' = mkDraft (Just syntax)
 
     hakyllWith config $ do
 
@@ -205,7 +220,7 @@ main = do
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do mkPost' postCtx
+            compile $ do mkDraft' postCtx
 
         match reviewsPattern $ do
             route $ setExtension "html"
@@ -237,7 +252,7 @@ main = do
             route idRoute
             compile $ do
                 posts <- loadAll draftsPattern >>= recentFirst
-                mkPostItem $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
+                mkDraftItem $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
 
         create ["review/index.html"] $ do
             route idRoute
@@ -261,6 +276,7 @@ main = do
 
         match "templates/*" $ compile templateCompiler
         match "templates/posts/*" $ compile templateCompiler
+        match "templates/drafts/*" $ compile templateCompiler
         match "templates/projects/*" $ compile templateCompiler
 
 postCtx :: Context String
