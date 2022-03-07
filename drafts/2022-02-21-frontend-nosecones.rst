@@ -44,17 +44,20 @@ I wanted to compare a few front end frameworks and instead of something like the
 TODO app, I chose to reimplement a few pages of the front end of flare-timing
 that I then split off from the main project and renamed nose cone::
 
-    +----------------+-------+
-    | Framework      | Hours |
-    +================+=======+
-    | rescript react |       |
-    +----------------+-------+
-    | svelte         |       |
-    +----------------+-------+
-    | feliz          |       |
-    +----------------+-------+
-    | sutil          |       |
-    +----------------+-------+
+    +-----------+-------+
+    | Framework | Hours |
+    +===========+=======+
+    | rescript  | 11.75 |
+    +-----------+-------+
+    | svelte    |  8.5  |
+    +-----------+-------+
+    | feliz     | 13.0  |
+    +-----------+-------+
+    | sutil     |  6.75 |
+    +-----------+-------+
+
+Note that the sutil solution borrows the Thoth JSON decoding and components from
+feliz solution.
 
 
 .. __reflex-frp: https://reflex-frp.org/
