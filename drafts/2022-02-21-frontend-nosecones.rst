@@ -24,25 +24,37 @@ a comp side-by-side, I could see at a glance where the big differences were. The
 more things I added to the visualization app, the faster development became and
 I was able to quickly find bugs in the official scoring program.
 
-When I first wrote the front end flare-timing I wanted to learn something new.
-Apart from the effort of getting setup, developing in reflex-frp__ was really
-intuitive for me with a printed copy of `cheat sheet`__ at hand. I've developed
-product user interfaces for desktop and the web using many different frameworks
-and paradigms:
+When I first wrote the front end to flare-timing I wanted to learn something
+new.  I'd been keen to try functional reactive ever since Stephen Blackheath
+explained the fundamentals of it in a short talk he'd given at a Haskell
+Hackathon in Wellington, New Zealand.  Apart from the effort of getting setup,
+developing this in reflex-frp__ was really intuitive for me with a printed copy
+of `cheat sheet`__ at hand.
 
-* ASP.NET Web Forms in C# and Razor
-* Adding some dynamic content to server rendered pages with jQuery and Knockout.js.
-* Early React in Typescript without JSX
-* Elm when it had signals
+I'd previously developed product user interfaces for desktop and the web using
+many different frameworks and paradigms:
+
+* Classic TUI [#]_ with Turbo Vision and Pascal.
+* Windows GUI [#]_ with MFC [#]_ in C++.
+* ASP.NET Web Forms in C# and Razor.
+* Adding dynamic content to server rendered pages with jQuery and Knockout.js.
+* Early React in Typescript without JSX.
+* Elm when it had signals.
+
+.. [#] Text User Interface (TUI)
+.. [#] Graphical User Interface (GUI)
+.. [#] Microsof Foundation Classes (MFC)
 
 Recently I was external reviewer for Compositional IT's `SAFE stack course`__.
-I'd used F# in the backend before but with React and Elm up in front.  Reviewing
-this training material was a great way to get up to speed quickly. Thanks Isaac
-for picking me to do the review.
+I'd used F# in the backend before but with React and Elm up front.  Reviewing
+this training material was a great way to get up to speed quickly with that part
+of the SAFE stack I was unfamiliar with, Fable. Thanks Isaac for picking me to
+do the review.
 
-I wanted to compare a few front end frameworks and instead of something like the
-TODO app, I chose to reimplement a few pages of the front end of flare-timing
-that I then split off from the main project and renamed nose cone::
+After completing this review, I wanted to compare a few front end frameworks and
+instead of something like the TODO app, I chose to reimplement a few pages of
+the front end of flare-timing that I then split off from the main project and
+renamed nose cone::
 
     +-----------+-------+
     | Framework | Hours |
