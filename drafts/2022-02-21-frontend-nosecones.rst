@@ -62,7 +62,8 @@ whole user interface again would be way too much work but some the first few
 views would be representative enough of read-only front end development work.
 I'd be fetching and presenting data in an interactive user interface but I
 wouldn't be showing any forms, doing validation or posting data back to a
-server.
+server. I wouldn't be starting from scratch either. I'd be able to grab the
+markup from the full solution.
 
 .. raw:: html
 
