@@ -28,7 +28,7 @@ When I first wrote the front end to flare-timing I wanted to learn something
 new.  I'd been keen to try functional reactive ever since Stephen Blackheath
 explained the fundamentals of it in a short talk he'd given at a Haskell
 Hackathon in Wellington, New Zealand.  Apart from the effort of getting setup,
-developing this in reflex-frp__ was really intuitive for me with a printed copy
+developing this in Reflex-FRP_ was really intuitive for me with a printed copy
 of `cheat sheet`__ at hand.
 
 I'd previously developed product user interfaces for desktop and the web using
@@ -56,8 +56,8 @@ do the review.
 
 
 After the review I wanted to give some front end frameworks a go and compare
-them.  Instead of something like the TODO app, how about Flare Timing. I'd split
-the reflex-frp front end of that project off as Nose Cone. Obviously doing the
+them.  Instead of something like the TODO app, how about Flare Timing? I'd split
+the Reflex-FRP front end of that project off as Nose Cone. Obviously doing the
 whole user interface again would be way too much work but some the first few
 views would be representative enough of read-only front end development work.
 I'd be fetching and presenting data in an interactive user interface but I
@@ -82,7 +82,7 @@ Note that the Sutil solution borrows the Thoth JSON decoding and views from
 Feliz solution.
 
 .. _Fable: https://fable.io/
-.. __reflex-frp: https://reflex-frp.org/
+.. _Reflex-FRP: https://reflex-frp.org/
 .. __cheat sheet: https://github.com/reflex-frp/reflex/blob/develop/Quickref.md
 .. __safe stack course: https://www.compositional-it.com/training-coaching/functional-web-programming/
 .. __demo: https://github.com/reflex-frp/reflex/blob/develop/Quickref.md
