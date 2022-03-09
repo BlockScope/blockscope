@@ -66,20 +66,20 @@ server.
 
 .. raw:: html
 
-    <pre><code>+-----------+-------+--------------------------+
-    | Framework | Hours |         Demo             |
-    +===========+=======+==========================+
-    | rescript  | 11.75 | <a href="http://rescript.flaretiming.com/">rescript.flaretiming.com</a> |
-    +-----------+-------+--------------------------+
-    | svelte    |  8.5  |   <a href="http://svelte.flaretiming.com/">svelte.flaretiming.com</a> |
-    +-----------+-------+--------------------------+
-    | feliz     | 13.0  |    <a href="http://feliz.flaretiming.com/">feliz.flaretiming.com</a> |
-    +-----------+-------+--------------------------+
-    | sutil     |  6.75 |    <a href="http://sutil.flaretiming.com/">sutil.flaretiming.com</a> |
-    +-----------+-------+--------------------------+</code></pre>
+    <pre><code>+-----------+-------+--------------------------+-------------------+
+    | Framework | Hours |          Demo            |      Source       |
+    |===========|=======|==========================|===================|
+    | rescript  | 11.75 | <a href="http://rescript.flaretiming.com/">rescript.flaretiming.com</a> |     <a href="https://github.com/NoseCone/dive-stick">dive-stick</a>    |
+    +-----------+-------+--------------------------+-------------------+
+    | svelte    |  8.5  |   <a href="http://svelte.flaretiming.com/">svelte.flaretiming.com</a> | <a href="https://github.com/NoseCone/variable-geometry">variable-geometry</a> |
+    +-----------+-------+--------------------------+-------------------+
+    | feliz     | 13.0  |    <a href="http://feliz.flaretiming.com/">feliz.flaretiming.com</a> |  <a href="https://github.com/NoseCone/leading-edge">leading-edge</a>     |
+    +-----------+-------+--------------------------+-------------------+
+    | sutil     |  6.75 |    <a href="http://sutil.flaretiming.com/">sutil.flaretiming.com</a> |   <a href="https://github.com/NoseCone/aspect-ratio">aspect-ratio</a>    |
+    +-----------+-------+--------------------------+-------------------+</code></pre>
 
-Note that the sutil solution borrows the Thoth JSON decoding and components from
-feliz solution.
+Note that the Sutil solution borrows the Thoth JSON decoding and views from
+Feliz solution.
 
 .. _Fable: https://fable.io/
 .. __reflex-frp: https://reflex-frp.org/
