@@ -34,7 +34,8 @@ of `cheat sheet`__ at hand.
 I'd previously developed product user interfaces for desktop and the web using
 many different frameworks and paradigms:
 
-* Classic TUI [#]_ with Turbo Vision and Pascal.
+* Classic TUI [#]_ with `Turbo Vision`_ and Turbo Pascal on 486 PCs with turbo buttons.
+    |turbo buttons|
 * Windows GUI [#]_ with MFC [#]_ in C++.
 * ASP.NET Web Forms in C# and Razor.
 * Adding dynamic content to server rendered pages with jQuery and Knockout.js.
@@ -44,17 +45,26 @@ many different frameworks and paradigms:
 .. [#] Text User Interface (TUI)
 .. [#] Graphical User Interface (GUI)
 .. [#] Microsof Foundation Classes (MFC)
+.. _Turbo Vision: https://en.wikipedia.org/wiki/Turbo_Vision
+.. |turbo buttons| image:: https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Casebuttons.jpg/330px-Casebuttons.jpg
 
 Recently I was external reviewer for Compositional IT's `SAFE stack course`__.
 I'd used F# in the backend before but with React and Elm up front.  Reviewing
 this training material was a great way to get up to speed quickly with that part
-of the SAFE stack I was unfamiliar with, Fable. Thanks Isaac for picking me to
+of the SAFE stack I was unfamiliar with, Fable_. Thanks Isaac for picking me to
 do the review.
 
-After completing this review, I wanted to compare a few front end frameworks and
-instead of something like the TODO app, I chose to reimplement a few pages of
-the front end of flare-timing that I then split off from the main project and
-renamed nose cone::
+
+After the review I wanted to give some front end frameworks a go and compare
+them.  Instead of something like the TODO app, how about Flare Timing. I'd split
+the reflex-frp front end of that project off as Nose Cone. Obviously doing the
+whole user interface again would be way too much work but some the first few
+views would be representative enough of read-only front end development work.
+I'd be fetching and presenting data in an interactive user interface but I
+wouldn't be showing any forms, doing validation or posting data back to a
+server.
+
+::
 
     +-----------+-------+
     | Framework | Hours |
@@ -72,6 +82,7 @@ Note that the sutil solution borrows the Thoth JSON decoding and components from
 feliz solution.
 
 
+.. _Fable: https://fable.io/
 .. __reflex-frp: https://reflex-frp.org/
 .. __cheat sheet: https://github.com/reflex-frp/reflex/blob/develop/Quickref.md
 .. __safe stack course: https://www.compositional-it.com/training-coaching/functional-web-programming/
