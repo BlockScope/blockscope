@@ -64,23 +64,22 @@ I'd be fetching and presenting data in an interactive user interface but I
 wouldn't be showing any forms, doing validation or posting data back to a
 server.
 
-::
+.. raw:: html
 
-    +-----------+-------+
-    | Framework | Hours |
-    +===========+=======+
-    | rescript  | 11.75 |
-    +-----------+-------+
-    | svelte    |  8.5  |
-    +-----------+-------+
-    | feliz     | 13.0  |
-    +-----------+-------+
-    | sutil     |  6.75 |
-    +-----------+-------+
+    <pre><code>+-----------+-------+--------------------------+
+    | Framework | Hours |         Demo             |
+    +===========+=======+==========================+
+    | rescript  | 11.75 | <a href="http://rescript.flaretiming.com/">rescript.flaretiming.com</a> |
+    +-----------+-------+--------------------------+
+    | svelte    |  8.5  |   <a href="http://svelte.flaretiming.com/">svelte.flaretiming.com</a> |
+    +-----------+-------+--------------------------+
+    | feliz     | 13.0  |    <a href="http://feliz.flaretiming.com/">feliz.flaretiming.com</a> |
+    +-----------+-------+--------------------------+
+    | sutil     |  6.75 |    <a href="http://sutil.flaretiming.com/">sutil.flaretiming.com</a> |
+    +-----------+-------+--------------------------+</code></pre>
 
 Note that the sutil solution borrows the Thoth JSON decoding and components from
 feliz solution.
-
 
 .. _Fable: https://fable.io/
 .. __reflex-frp: https://reflex-frp.org/
