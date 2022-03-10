@@ -45,6 +45,7 @@ import Text.Blaze.Html ((!), toHtml, toValue)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import System.FilePath
+import System.Environment (getArgs)
 
 pandocReaderOptions :: Maybe Syntax -> ReaderOptions
 pandocReaderOptions Nothing = defaultHakyllReaderOptions
@@ -129,6 +130,8 @@ mkDraftItem ctx =
 
 main :: IO ()
 main = do
+    args <- getArgs
+
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
     syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
     let mkPost' = mkPost (Just syntax)
@@ -136,9 +139,11 @@ main = do
 
     hakyllWith config $ do
 
-        let draftsPattern = fromGlob "drafts/*"
-        let reviewsPattern = fromGlob "reviews/*"
         let postsPattern = fromGlob "posts/*"
+        let reviewsPattern = fromGlob "reviews/*"
+
+        -- NOTE: We don't want to publish drafts so they're watch only.
+        let draftsPattern = if "watch" `elem` args then fromGlob "drafts/*" else ""
 
         -- SEE: http://vapaus.org/text/hakyll-configuration.html
         mapM_ (directory static) ["css", "font", "js", "images", "pdf"]
@@ -252,7 +257,7 @@ main = do
             route idRoute
             compile $ do
                 posts <- loadAll draftsPattern >>= recentFirst
-                mkDraftItem $ mkPostsCtx "Sneak Peek" "Shine a light on this." posts
+                mkDraftItem $ mkPostsCtx "Sneak Peek" "Shine a light on these draft posts (not for publication)." posts
 
         create ["review/index.html"] $ do
             route idRoute
