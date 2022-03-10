@@ -93,19 +93,21 @@ mkStatic template = do
             >>= loadAndApplyTemplate (fromFilePath $ template <.> ".html") postCtx
             >>= relativizeUrls
 
-mkPost :: Maybe Syntax -> Context String -> Compiler (Item String)
-mkPost syntax ctx =
+mkArticle :: Identifier -> Maybe Syntax -> Context String -> Compiler (Item String)
+mkArticle articleTemplate syntax ctx =
     pandoc syntax
         >>= loadAndApplyTemplate "templates/posts/post.html" ctx
-        >>= loadAndApplyTemplate "templates/posts/default.html" ctx
+        >>= loadAndApplyTemplate articleTemplate ctx
         >>= relativizeUrls
 
+mkPost :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkPost = mkArticle "templates/posts/default.html"
+
+mkReview :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkReview = mkArticle "templates/reviews/default.html"
+
 mkDraft :: Maybe Syntax -> Context String -> Compiler (Item String)
-mkDraft syntax ctx =
-    pandoc syntax
-        >>= loadAndApplyTemplate "templates/posts/post.html" ctx
-        >>= loadAndApplyTemplate "templates/drafts/default.html" ctx
-        >>= relativizeUrls
+mkDraft = mkArticle "templates/drafts/default.html"
 
 mkPostsCtx :: String -> String -> [Item String] -> Context String
 mkPostsCtx title subtitle posts =
@@ -114,23 +116,25 @@ mkPostsCtx title subtitle posts =
     <> constField "subtitle" subtitle
     <> defaultContext
 
-mkPostItem :: Context String -> Compiler (Item String)
-mkPostItem ctx =
+mkArticleItem :: Identifier -> Context String -> Compiler (Item String)
+mkArticleItem articleTemplate ctx =
     makeItem ""
         >>= loadAndApplyTemplate "templates/posts/archive.html" ctx
-        >>= loadAndApplyTemplate "templates/posts/default.html" ctx
+        >>= loadAndApplyTemplate articleTemplate ctx
         >>= relativizeUrls
+
+mkPostItem :: Context String -> Compiler (Item String)
+mkPostItem = mkArticleItem "templates/posts/default.html"
+
+mkReviewItem :: Context String -> Compiler (Item String)
+mkReviewItem = mkArticleItem "templates/reviews/default.html"
 
 mkDraftItem :: Context String -> Compiler (Item String)
-mkDraftItem ctx =
-    makeItem ""
-        >>= loadAndApplyTemplate "templates/posts/archive.html" ctx
-        >>= loadAndApplyTemplate "templates/drafts/default.html" ctx
-        >>= relativizeUrls
+mkDraftItem = mkArticleItem "templates/drafts/default.html"
 
 mkArticles :: Pattern -> (Context String -> Compiler (Item String)) -> String -> String -> Rules ()
-mkArticles articlePattern mkArticle title subtitle = compile $
-    loadAll articlePattern >>= recentFirst >>= mkArticle . mkPostsCtx title subtitle
+mkArticles articlePattern mkArticle' title subtitle = compile $
+    loadAll articlePattern >>= recentFirst >>= mkArticle' . mkPostsCtx title subtitle
 
 main :: IO ()
 main = do
@@ -138,8 +142,6 @@ main = do
 
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
     syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
-    let mkPost' = mkPost (Just syntax)
-    let mkDraft' = mkDraft (Just syntax)
 
     hakyllWith config $ do
 
@@ -229,18 +231,18 @@ main = do
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do mkDraft' postCtx
+            compile $ do mkDraft (Just syntax) postCtx
 
         match reviewsPattern $ do
             route $ setExtension "html"
-            compile $ do mkPost' postCtx
+            compile $ do mkReview (Just syntax) postCtx
 
         match postsPattern $ do
             route $ setExtension "html"
             compile $ do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
-                mkPost' ctx
+                mkPost (Just syntax) ctx
 
         tagsRules tags $ \tag tagPattern -> do
             route idRoute
@@ -263,7 +265,7 @@ main = do
 
         create ["review/index.html"] $ do
             route idRoute
-            mkArticles reviewsPattern mkPostItem "Up for Review" "Looking in the rear view mirror."
+            mkArticles reviewsPattern mkReviewItem "Up for Review" "Looking in the rear view mirror."
 
         create ["blog/index.html"] $ do
             route idRoute
@@ -279,6 +281,7 @@ main = do
 
         match "templates/*" $ compile templateCompiler
         match "templates/posts/*" $ compile templateCompiler
+        match "templates/reviews/*" $ compile templateCompiler
         match "templates/drafts/*" $ compile templateCompiler
         match "templates/projects/*" $ compile templateCompiler
 
