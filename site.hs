@@ -128,6 +128,10 @@ mkDraftItem ctx =
         >>= loadAndApplyTemplate "templates/drafts/default.html" ctx
         >>= relativizeUrls
 
+mkArticles :: Pattern -> (Context String -> Compiler (Item String)) -> String -> String -> Rules ()
+mkArticles articlePattern mkArticle title subtitle = compile $
+    loadAll articlePattern >>= recentFirst >>= mkArticle . mkPostsCtx title subtitle
+
 main :: IO ()
 main = do
     args <- getArgs
@@ -255,21 +259,15 @@ main = do
 
         create ["draft/index.html"] $ do
             route idRoute
-            compile $ do
-                posts <- loadAll draftsPattern >>= recentFirst
-                mkDraftItem $ mkPostsCtx "Sneak Peek" "Shine a light on these draft posts (not for publication)." posts
+            mkArticles draftsPattern mkDraftItem  "Sneak Peek" "Shine a light on these draft posts (not for publication)."
 
         create ["review/index.html"] $ do
             route idRoute
-            compile $ do
-                posts <- loadAll reviewsPattern >>= recentFirst
-                mkPostItem $ mkPostsCtx "Up for Review" "Looking in the rear view mirror." posts
+            mkArticles reviewsPattern mkPostItem "Up for Review" "Looking in the rear view mirror."
 
         create ["blog/index.html"] $ do
             route idRoute
-            compile $ do
-                posts <- loadAll postsPattern >>= recentFirst
-                mkPostItem $ mkPostsCtx "Post it, Notes" "Power-on, self-test." posts
+            mkArticles postsPattern mkPostItem "Post it, Notes" "Power-on, self-test."
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
@@ -316,4 +314,3 @@ faFontRoute x
     | Just y <- stripPrefix "node_modules/@fortawesome/fontawesome-free/webfonts/" x
     = "css" </> "fonts" </> y
     | otherwise = error $ "Unexpected fontawesome font of " ++ x
-
