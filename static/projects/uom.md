@@ -2,11 +2,33 @@
 title: 'Units of Measure'
 subtitle: We're not comparing apples and oranges, are we?
 ---
-I've been quite interested in units of measure in programming languages since I
-worked on a 3-year project to commercialise a potato crop model. The model was
-in NZ customary units; kgs, hectares and litres. We stored the data in SI units
-but we also had to display in the user's choice of units, such as acre and
-gallon and even some unusual units such as hundredweight. We used the [unified code](https://en.wikipedia.org/wiki/Unified_Code_for_Units_of_Measure) for units of measure as XML.
+Professionally, I develop software applications. When I most needed better types
+for units I didn't know that types could help with checking unit conformance and
+conversion.
+
+At the time I joined a project[^1] to commercialise a potato crop model it was
+coded in Borland Builder C++ and built one executable. This Windows GUI [^2]
+desktop app, agronomists could use to setup and run the model. It had pickers
+for input files and a presentation layer for the results of the model run.  I
+didn't need the GUI elements as we would be delivering these via the web in the
+commercial product.
+
+The model itself was not a lot of code and within a couple of days I was able to
+port it to standard C++ and then to C#. There were comments in places that
+mentioned units, mostly on numeric properties of classes.  Even with those
+comments, as a developer without prior experience in this domain, I couldn't
+step through the code and know what a sensible range would be for any variable
+I'd drag into the watch pane. When I ran the model I was getting different
+outputs than expected.
+
+Familiar with the model, the research programmer at the institute had a good
+working knowledge of sensible ranges and pinpointed the problem quickly.  Turned
+out to be a unit conversion error. A needle in a haystack problem for me, not a
+domain insider.
+
+Later on, we used the [unified
+code](https://en.wikipedia.org/wiki/Unified_Code_for_Units_of_Measure) for units
+as XML. That was some help but not type level help.
 
 ```xml
 <?xml version="1.0" encoding="ascii"?>
@@ -77,3 +99,6 @@ some build warnings and got it compiling with ghc-8.6.1.
   [thoralf-plugin]: https://github.com/bgamari/the-thoralf-plugin
   [ghc-tcplugins-extra]: https://github.com/BlockScope/ghc-tcplugins-extra
   [units-parser]: https://github.com/adamgundry/units-parser
+
+[^1]: Crop Logic, a now defunct startup spun out of a research institute.
+[^2]: A graphical user interface.
