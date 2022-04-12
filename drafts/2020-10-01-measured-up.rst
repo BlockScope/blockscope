@@ -1,17 +1,39 @@
 ---
-title: Units
-subtitle: How do we measure up when static typing?
-slug: Units. How do we measure up?
+title: Absolute Units
+subtitle: are defined in terms of the fundamental units of a system
+slug: Unit absolutism
 tags: fsharp, haskell, uom
 ---
-I much prefer static type checking and strong types. If a compiler is going to
-catch more of my errors, sign me up. I worked on a crop model where the model
-did its calculating in units customarily used in my home country, close but not
-exactly the same as international units. Results however were stored in SI
-units. For users from any country, we had to be able to display quantities such
-as irrigation, fertilization and yields in all possible unit combinations. One
-user might want to view yield in tons_ or tonnes_ per hectare and another view it
-in hundredweight_ per acre.
+I like static type checking. If a compiler is going to catch some of my errors
+before a program runs, sign me up. Strong types are cool too. They help me think
+about how to fit things together to make a solution. If I'm missing a piece of
+the puzzle, the compiler could suggest what fits and will show me the shape of
+the hole.
+
+So what's the big deal about units of measure as types?
+
+Motivation
+----------
+
+    "Units-of-measure are to science what types are to programming"[#]_
+
+Professionally, I develop software applications. When I most needed better types
+for units I didn't know that types could help with checking unit conformance and
+conversion. At the time I joined a project[#]_ to commercialise a potato crop
+model it was coded in Borland Builder C++ and built one executable. This Windows
+GUI desktop app, agronomists could use to setup and run the model. It had
+pickers for input files and a presentation layer for the results of the model
+run.  I didn't need the GUI elements as we would be delivering these via the web
+in the commercial product.  The model itself was not a lot of code and within a
+couple of days I was able to port it to standard C++ and then to C#. There were
+comments in places that mentioned units, mostly on numeric properties of
+classes.  Even with those comments, as a developer without prior experience in
+this domain, I couldn't step through the code and know what a sensible range
+would be for any variable I'd drag into the watch pane. When I ran the model I
+was getting different outputs than expected.  Familiar with the model and
+sensible ranges of some key variables, the research programmer at the institute
+pinpointed the problem quickly.  Turned out to be a unit conversion error. A
+needle in a haystack problem for me, not a domain insider.
 
 I'm disappointed and surprised there's a gaping type hole in most programming
 languages surrounding units of measure. It's a trap to fall in and there's no
@@ -25,6 +47,9 @@ The only language I've used with this capability baked in is F# but there's
 a compiler type checker plugin for Haskell that gives us similar capabilities.
 The uom-plugin_ works with the compiler, solving unit type equalities and
 conversions that the GHC compiler can't solve without outside help.
+
+Comparing Units
+---------------
 
 A pair of monomorphic functions for converting between degrees and radians.
 
@@ -55,16 +80,8 @@ fails to resolve equalities it was once able to resolve. Without really
 wanting to I've had to look at the innards of GHC typechecker plugins to see
 what the upset is between GHC and this plugin.
 
-Another plugin I've looked at is the thoralf-plugin. I attended the talk about
-the thoralf-paper_ at ICFP 2018. I thought it looked very cool, wiring up an
-SMT solver to do equality reasoning. The authors of the paper presented at the
-conference suggest that it could subsume the uom-plugin. I dabbled at bit with
-this plugin. It requires adding more constraints than needed with the
-uom-plugin so that we can avoid unification variables because unification with
-SMT solvers is difficult.
-
 .. _uom-plugin: https://github.com/adamgundry/uom-plugin
-.. _thoralf-paper: https://icfp18.sigplan.org/details/haskellsymp-2018-papers/12/The-Thoralf-Plugin-For-Your-Fancy-Type-Needs
-.. _hundredweight: https://en.wikipedia.org/wiki/Hundredweight
-.. _tons: https://en.wikipedia.org/wiki/Ton
-.. _tonnes: https://en.wikipedia.org/wiki/Tonne
+.. _absolute_unit: https://www.lexico.com/definition/absolute_unit
+
+.. [#] Types for Units-of-Measure: Theory and Practice by Andrew Kennedy
+.. [#] Crop Logic, a now defunct startup spun out of a research institute.
