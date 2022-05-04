@@ -10873,7 +10873,7 @@ progress {
   width: 66.66666667%;
 }
 
-.col-9, #content {
+.col-9, .d-lg-block #content {
   flex: 0 0 auto;
   width: 75%;
 }
@@ -10888,7 +10888,7 @@ progress {
   width: 91.66666667%;
 }
 
-.col-12, #content-cv {
+.col-12, .d-lg-none #content, #content-cv {
   flex: 0 0 auto;
   width: 100%;
 }
