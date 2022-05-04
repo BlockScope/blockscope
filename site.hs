@@ -302,7 +302,7 @@ tagsFieldNonEmpty =
         simpleRenderLink tag (Just filePath) =
             Just
             $ H.a
-                ! A.class_ "badge badge-light"
+                ! A.class_ "badge bg-light text-dark"
                 ! A.href (toValue $ toUrl filePath)
             $ toHtml tag
 
