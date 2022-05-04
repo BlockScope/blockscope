@@ -7,7 +7,25 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <a href="/" role="button">`$> exit`</a>  
 <br/>
 <div class="work-history">
-<h2 class="work-section">&lt;F#, Elm, Haskell &amp; SQL&gt;</h2>
+<h2 class="work-section">&lt;Haskell&gt;</h2>
+<ul>
+<li>
+  <span class="blobs">`B` `?` ▩ </span><span class="date">`2021/12—2022/03`</span>
+  [**Plugins for Blobs**](https://github.com/BlockScope/plugins-for-blobs)
+  ☞ Type check units of measure with SMT solving.
+</li>
+<li>
+  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
+  [**Flare Timing**](http://www.flaretiming.com) scoring flying competitions
+  ☞ Ask [how](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
+  some [rules](https://github.com/BlockScope/CIVL-GAP#readme) typesetting them
+  in LaTeX.  Develop
+  a [reference](https://github.com/BlockScope/flare-timing#readme)
+  implementation.  Publish comparisons of implementations.
+</li>
+</ul>
+
+<h2 class="work-section">&lt;F#, Elm &amp; SQL&gt;</h2>
 <ul>
 <li>
   <span class="cit">`C` `$` ▩ </span><span class="date">`2021/06—2021/10`</span>
@@ -19,15 +37,6 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
   [**Bracco**](http://www.bracco.com) ☞ Prototype an app for interpreting
   [contrast-enhanced
   ultrasound](https://www.contrastultrasound-modality.com/index.php).
-</li>
-<li>
-  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
-  [**Flare Timing**](http://www.flaretiming.com) scoring flying competitions
-  ☞ Ask [how](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
-  some [rules](https://github.com/BlockScope/CIVL-GAP#readme) typesetting them
-  in LaTeX.  Develop
-  a [reference](https://github.com/BlockScope/flare-timing#readme)
-  implementation.  Publish comparisons of implementations.
 </li>
 <li>
   <span class="aqualinc">`A` `$` ▩ </span><span class="date">`2014/02—2017/04`</span>
@@ -116,7 +125,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
                                                          <span class="cactus">CC</span>
                                            <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
                               <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
-    <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span>
+    <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span>
  <span class="date">~~~|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+~~~</span>
  <span class="date">  1995           2000           2005           2010           2015           2020</span>
 </code>

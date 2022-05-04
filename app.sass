@@ -134,18 +134,23 @@ blockquote footer:before
 
 $date: #808080
 
-// NOTE: First group of 7.
-// SEE: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=7
-// ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f']
+// NOTE: First group of 2.
+// SEE: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=5
+// ['#e66101','#fdb863','#f7f7f7','#b2abd2','#5e3c99']
+$blobs: #e66101
+$flaretiming: #5e3c99
+
+// NOTE: Second group of 6.
+// SEE: https://colorbrewer2.org/#type=qualitative&scheme=Paired&n=6
+// ['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c']
 $cit: #a6cee3
 $bracco: #1f78b4
-$flaretiming: #b2df8a
-$aqualinc: #33a02c
-$tagly: #fb9a99
-$apress: #e31a1c
-$travieo: #fdbf6f
+$aqualinc: #b2df8a
+$tagly: #33a02c
+$apress: #fb9a99
+$travieo: #e31a1c
 
-// NOTE: Second group of 5.
+// NOTE: Third group of 5.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Dark2&n=5
 // ['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61e']
 $cactus: #1b9e77
@@ -154,7 +159,7 @@ $waimak: #e7298a
 $nutricentre: #66a61e
 $niwa: #e6ab02
 
-// NOTE: Third group of 4.
+// NOTE: Fourth group of 4.
 // SEE: https://colorbrewer2.org/#type=qualitative&scheme=Set2&n=4
 // ['#66c2a5','#fc8d62','#8da0cb','#e78ac3']
 $obvious: #66c2a5
@@ -170,6 +175,10 @@ $skype: #00aff0
 .date,
 .date > code
     color: $date
+
+.blobs,
+.blobs > code
+    color: $blobs
 
 .flaretiming,
 .flaretiming > code
