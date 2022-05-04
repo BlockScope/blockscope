@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Primary Meta Tags -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
 <meta name="description" content="Linking moves, deferring to the compilers.">
 
@@ -22,12 +23,12 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>Splitting Packages</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
-        <link rel="stylesheet" type="text/css" href="../css/app.css" />
-        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <title>Splitting Packages</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" type="text/css" href="../css/app.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="manifest" href="../site.webmanifest">
@@ -35,11 +36,118 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 
-    </head>
-    <body>
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+    </ul>
+</nav>
+
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Splitting Packages</h1>
+                    
+                    <p class="lead">Ease the pain of moving modules around with package imports.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>There’s this one large haskell project, <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>, that I regularly wait around 360 seconds to build from scratch. What am I doing with my time? Could splitting the large <code>gap</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> package into smaller packages speed up the compile?</p>
+<p>This package, with many reverse dependencies, implements the simpler parts of <a href="https://github.com/BlockScope/CIVL-GAP/releases">GAP</a>, the rules for scoring flying competitions. Flights are scored on measures of distance, effort, leading, speed and arrival at goal. Depending on key factors like how many pilots made goal, the weight and allocation of points varies as does the validity of each task in a competition. Penalties and stopped tasks are also dealt with here. All these aspects of scoring are mostly independant of each other so we have an opportunity to break up this package.</p>
+<p>Smaller modules compile faster<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. If I broke up this big package would compile times improve? I hoped so because not every one of its dependants depends on the same set of imports. For instance one exe only deals with scoring effort and another one only deals with scoring leading.</p>
+<p>The package exposes one mega-module, <code>Flight.Score</code><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. For the breakup, I created new packages but kept <code>gap</code> around so I could defer updating dependant’s dependencies. For the moment they could stay the same with their imports. Here is how those imports would have looked before the breakup if I had been using the <a href="https://ghc.readthedocs.io/en/latest/glasgow_exts.html?highlight=packageimports#extension-PackageImports">PackageImports</a> extension.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap&quot; <span class="dt">Flight.Score</span> (...)</span></code></pre></div>
+<p>I ended up adding seven <code>gap-*</code> packages<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> after regrouping modules.</p>
+<pre class="pre"><code>.
+├── gap
+├── gap-allot
+├── gap-effort
+├── gap-lead
+├── gap-math
+├── gap-stop
+├── gap-valid
+└── gap-weight</code></pre>
+<p>The original module imports all the others for re-export.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Flight.Score</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ( <span class="co">-- explicit exports go here but are not shown</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    ) <span class="kw">where</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-allot&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-effort&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-lead&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-math&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-stop&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-valid&quot; <span class="dt">Flight.Score</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> &quot;flight-gap-weight&quot; <span class="dt">Flight.Score</span></span></code></pre></div>
+<p>After making changes so that packages don’t depend on <code>flight-gap</code> but on the finer grained <code>flight-gap-*</code> packages, the build took 315 seconds, an improvement of 12.5%.</p>
+<p>To change package dependencies, I swapped packages in the cabal file and added the package name to imports, like with this diff;</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- import qualified Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st">-- import Flight.Score (ArrivalFraction(..))</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="va">++ import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span></code></pre></div>
+<p>As a finickity last step I could change the exported module names but haven’t got around to this yet.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- import qualified &quot;flight-gap-valid&quot; Flight.Score as Gap (ReachToggle(..))</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">-- import &quot;flight-gap-allot&quot; Flight.Score (ArrivalFraction(..))</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">++ import qualified Flight.Score.Valid as Gap (ReachToggle(..))</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ import Flight.Score.Allot (ArrivalFraction(..))</span></span></code></pre></div>
+<h1 id="experience-report">Experience Report</h1>
+<p>Putting related modules together and keeping unrelated modules apart by using finer grained packaging was worth it. The code base is better organised. It was easier to reanimate bit-rotten test-suites and have them pass continuous integration when the test surface is smaller. The compile times got a little better.</p>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Most packages in flare-timing have <code>flight-</code> prefixes to their name. I don’t show that here.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>From <a href="https://www.parsonsmatt.org/2019/11/27/keeping_compilation_fast.html">Keeping Compilation Fast</a> splitting up large modules will help compile times.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Actually one other module declaring one data type is exposed.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>On disk I don’t bother with adding a <code>flight-</code> prefix as most packages have this.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
         <div class="container">
             <div class="row">
-                <div id="side" class="col-3 card d-print-none">
+                <div id="nav-side" class="col-3 card d-print-none">
                     <div class="card-body">
     <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
 
@@ -83,8 +191,8 @@
 </header>
 
     
-        <div class="float-right">
-        <a class="badge badge-light" href="../tags/haskell.html">haskell</a> <a class="badge badge-light" href="../tags/build.html">build</a>
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
         </div>
         <div class="clearfix">
             <br />
@@ -147,5 +255,7 @@
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

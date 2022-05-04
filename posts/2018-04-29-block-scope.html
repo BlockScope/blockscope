@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Primary Meta Tags -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
 <meta name="description" content="Linking moves, deferring to the compilers.">
 
@@ -22,12 +23,12 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>What is Block Scope?</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
-        <link rel="stylesheet" type="text/css" href="../css/app.css" />
-        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <title>What is Block Scope?</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" type="text/css" href="../css/app.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="manifest" href="../site.webmanifest">
@@ -35,11 +36,85 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 
-    </head>
-    <body>
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+    </ul>
+</nav>
+
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">What is Block Scope?</h1>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/naming.html">naming</a> <a class="badge bg-light text-dark" href="../tags/compsci.html">compsci</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>It could be:</p>
+<ul>
+<li>scoping for boulders (blocs)</li>
+<li>scope restricted to a block (of code)</li>
+<li>a block of work (scoped to requirements)</li>
+<li>the scope of a project or subproject</li>
+</ul>
+<h4 id="blok">/blok/</h4>
+<ol type="1">
+<li><p>L’escalade de <a href="http://fr.wikipedia.org/wiki/Bloc_(escalade)">bloc</a> consistant à grimper des blocs de faible hauteur.</p></li>
+<li><p>A lexical structure of source code which is <a href="https://en.wikipedia.org/wiki/Block_(programming)">grouped together</a>.</p></li>
+</ol>
+<h1 id="skohp">/skohp/</h1>
+<ol type="1">
+<li><p>A <a href="http://en.wikipedia.org/wiki/Scope_(computer_science)">region</a> of a computer program where a name binding is valid.</p></li>
+<li><p>The <a href="https://en.oxforddictionaries.com/definition/scope">extent</a> of the area or subject matter that something deals with or to which it is relevant.</p></li>
+<li><p>Assess or investigate something.</p></li>
+</ol>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
         <div class="container">
             <div class="row">
-                <div id="side" class="col-3 card d-print-none">
+                <div id="nav-side" class="col-3 card d-print-none">
                     <div class="card-body">
     <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
 
@@ -81,8 +156,8 @@
 </header>
 
     
-        <div class="float-right">
-        <a class="badge badge-light" href="../tags/naming.html">naming</a> <a class="badge badge-light" href="../tags/compsci.html">compsci</a>
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/naming.html">naming</a> <a class="badge bg-light text-dark" href="../tags/compsci.html">compsci</a>
         </div>
         <div class="clearfix">
             <br />
@@ -114,5 +189,7 @@
                 </div>
             </div>
         </div>
-    </body>
+    </div>
+</body>
+
 </html>

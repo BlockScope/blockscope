@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Primary Meta Tags -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
 <meta name="description" content="Linking moves, deferring to the compilers.">
 
@@ -22,9 +23,9 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>Supporting Acts</title>
-        <link rel="stylesheet" href="../css/app.css">
-        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <title>Supporting Acts</title>
+    <link rel="stylesheet" href="../css/app.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="manifest" href="../site.webmanifest">
@@ -32,11 +33,70 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 
-    </head>
-    <body>
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/">projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/uom/">&nbsp;units</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/geodetics/">&nbsp;geodetics</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/fly/">&nbsp;flight</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/tooling/">&nbsp;tooling</a></li>
+    </ul>
+</nav>
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Supporting Acts</h1>
+                    
+                    <p class="lead">Contributions to projects that I use or want to succeed.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+    <p>I donate time to open source and am setup to <a href="https://github.com/sponsors/philderbeast">receive donations</a> (not that anybody has).</p>
+<p>I’m pushing for units of measure and functional programming. F# has units built in. I have contributed to adding units to Haskell via type checker plugins.</p>
+<p>To try out new and interesting programming languages, I’ve been adding geodetic library packages for F#, Haskell, Unison and Koka, and incidentally uncovering problems with newer compilers.</p>
+<p>I’ll take the time to report issues and contribute patches to compilers and tools I use. I’ve reported issues with <a href="https://gitlab.haskell.org/ghc/ghc/-/issues?scope=all&amp;state=all&amp;author_username=philderbeast">ghc</a>, <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">unison</a> and <a href="https://github.com/koka-lang/koka/issues/created_by/philderbeast">koka</a>. I first contributed to GHC when they were using phrabricator. It was quite the process to get started. Much easier now. Here’s my first contribution to GHC:</p>
+<ul>
+<li>For the newcomer labelled bug <a href="https://gitlab.haskell.org/ghc/ghc/issues/12441">12441</a>, fix pretty printing for <a href="https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d">explicit quantifiers</a>.</li>
+</ul>
+<p>I’ll use front end frameworks (especially those that change the paradigm or bring more type checking) to redo a portion of nose cone and get a feel for how they work in practice. At the <code>github</code>/<a href="https://github.com/NoseCone">nose-cone</a> organisation you’ll find rescript, svelte, feliz and sutil redos of the original reflex-frp single page app user interface. Each has an accompanying demo.</p>
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
         <div class="container">
             <div class="row">
-                <div id="side" class="col-3 card d-print-none">
+                <div id="nav-side" class="col-3 card d-print-none">
                     <div class="card-body">
     <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
 
@@ -97,5 +157,6 @@
                 </div>
             </div>
         </div>
-    </body>
+</body>
+
 </html>

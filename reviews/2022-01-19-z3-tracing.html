@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- Primary Meta Tags -->
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
 <meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
 <meta name="description" content="Linking moves, deferring to the compilers.">
 
@@ -22,12 +23,12 @@
 <meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
 <meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
 
-        <title>Z3 Tracing</title>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
-        <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
-        <link rel="stylesheet" type="text/css" href="../css/app.css" />
-        <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <title>Z3 Tracing</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" type="text/css" href="../css/app.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="manifest" href="../site.webmanifest">
@@ -35,11 +36,743 @@
 <meta name="msapplication-TileColor" content="#da532c">
 <meta name="theme-color" content="#ffffff">
 
-    </head>
-    <body>
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+        <li class="nav-item"><a class="nav-link" href="../projects/">projects</a></li>
+        <li class="nav-item"><a class="nav-link" href="../b/">&dollar;</a></li>
+        <li class="nav-item"><a class="nav-link" href="../p/">?</a></li>
+        <li class="nav-item"><a class="nav-link" href="../cv/">CV</a></li>
+    </ul>
+</nav>
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Z3 Tracing</h1>
+                    
+                    <p class="lead">Improving tracing of the Thoralf plugin.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        haskell, tcplugins, z3, tracing
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>The thoralf plugin is using <a href="https://hackage.haskell.org/package/simple-smt">simple-smt</a> to talk with Z3 to solve typechecking constraints. The communication format are <a href="https://smtlib.cs.uiowa.edu/language.shtml">smt-lib</a> s-expressions. This package is able to read and show these without needing to know much about them. It does recognize a few of these s-expressions from the smt-lib standard. The recursive data representation of these is simple, hence the name I guess.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SExpr</span> <span class="ot">=</span> <span class="dt">Atom</span> <span class="dt">String</span> <span class="op">|</span> <span class="dt">List</span> [<span class="dt">SExpr</span>]</span></code></pre></div>
+<h1 id="removing-extra-spaces">Removing Extra Spaces</h1>
+<p>I’ve been doing a lot of tracing and noticed extra spaces in the s-expressions.</p>
+<pre class="pre"><code>&gt; cabal build thoralf-plugin-uom:uom-diy &gt; thoralf-uom-diy.txt</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">; thoralf-uom-diy.txt</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span> ) )</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span> )</span></code></pre></div>
+<p>I’d like to have the s-expressions show up in the trace without those extra spaces, like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span>))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span></code></pre></div>
+<p>This the fix for that.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">--- SimpleSMT.hs</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ SimpleSMT.hs</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>   showsSExpr :: SExpr -&gt; ShowS</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>   showsSExpr ex =</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>     case ex of</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>       Atom x  -&gt; showString x</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">-       List es -&gt; showChar '(' .</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">-                   foldr (\e m -&gt; showsSExpr e . showChar ' ' . m)</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="st">-                   (showChar ')') es</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="va">+       List [] -&gt; showString &quot;()&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="va">+       List (e0 : es) -&gt; showChar '(' . showsSExpr e0 .</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="va">+                          foldr (\e m -&gt; showChar ' ' . showsSExpr e . m)</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">+                          (showChar ')') es</span></span></code></pre></div>
+<p>I contributed this fix upstream. It’s been merged.</p>
+<h1 id="choosing-an-s-expression-printer">Choosing an S-Expression Printer</h1>
+<p>Functions in simple-smt for showing s-expressions are <code>showsSExpr</code> and <code>ppSExpr</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Show an s-expression.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; let Just (e, _) = readSExpr &quot;(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; putStrLn $ showsSExpr e &quot;&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- (assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ot">showsSExpr ::</span> <span class="dt">SExpr</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Show an s-expression in a somewhat readable fashion.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; let Just (e, _) = readSExpr &quot;(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; putStrLn $ ppSExpr e &quot;&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- (assert</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">--    (=</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">--       (</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co">--         (_</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co">--            map</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">--            (-</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co">--               (Int Int)</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">--               Int))</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="co">--         a1Cl</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">--         a1Cm)</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">--       a1Cv))</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ot">ppSExpr ::</span> <span class="dt">SExpr</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span></span></code></pre></div>
+<p>I want to use the pretty printer <code>ppSExpr</code> but simple-smt itself uses the all-in-one-line printer <code>showsSExpr</code> and that is how the comms with Z3 are showing up while I’m tracing. To work on this I added simple-smt as a submodule after first forking it to the <em>BlockScope</em> organization on github.</p>
+<pre class="pre"><code>&gt; git submodule add https://github.com/BlockScope/simple-smt
+&gt; cd simple-smt
+&gt; git checkout -b wip/plugins-for-blobs</code></pre>
+<p>I need to add an entry to <code>cabal.project</code> to pick up this dependency locally rather than from hackage, all without changing any of the <code>*.cabal</code> files that mention <code>simple-smt</code> as a dependency.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- cabal.project</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>packages<span class="op">:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    simple<span class="op">-</span>smt</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    thoralf<span class="op">-</span>plugin</span></code></pre></div>
+<p>By passing an <code>SExpr -&gt; ShowsS</code> printer in as a parameter when setting up the solver and using this instead of <code>showsSExpr</code> I’m now getting nicely formatted and much easier to follow tracing. As a bonus, lines are all short enough so hat they won’t need scrolling when viewed in a narrow frame so as when showing up as code snippets on this blog.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Start a new solver process.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>newSolver</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    ::</span> <span class="dt">String</span> <span class="co">-- ^ Executable</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> [<span class="dt">String</span>] <span class="co">-- ^ Arguments</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> (<span class="dt">SExpr</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span>) <span class="co">-- ^ Function for showing s-expressions</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Logger</span> <span class="co">-- ^ Optional logging here</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Solver</span></span></code></pre></div>
+<h1 id="roundtripping">Roundtripping</h1>
+<p>I’d like to be able to take the output of tracing compilation of a package with modules using the thoralf plugin and then to take that output and use it as input to the Z3 solver as-is.</p>
+<p>The logging of simple-smt prefixes comms with <code>[send-&gt;]</code> and <code>[&lt;-recv]</code>. I’m able to filter that out before tracing by updating the logger to strip out those prefixes.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmtTalk</span> <span class="ot">=</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmtTalk</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceSend ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceRecv ::</span> <span class="dt">DebugSmtRecv</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceErr ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceOther ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceArrow ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceCtsComments ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmtRecv</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">DebugSmtRecvAll</span> <span class="dt">Bool</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">DebugSmtRecvSome</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceSuccess ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceCheckSat ::</span> <span class="dt">Bool</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> <span class="dt">Eq</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Flag for controlling the two-way conversation with the SMT solver.</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">TraceSmtTalk</span> <span class="ot">=</span> <span class="dt">TraceSmtTalk</span> <span class="dt">DebugSmtTalk</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">-- </span><span class="al">TODO</span><span class="co">: Contribute upstream to SimpleSMT to avoid matching on string prefixes.</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="ot">solverWithLevel ::</span> <span class="dt">TraceSmtTalk</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">SMT.Solver</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>solverWithLevel (<span class="dt">TraceSmtTalk</span> dbg)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> isSilencedTalk dbg <span class="ot">=</span> grabSMTsolver <span class="dt">Nothing</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        logger<span class="op">@</span><span class="dt">Logger</span>{logMessage <span class="ot">=</span> logMsg} <span class="ot">&lt;-</span> SMT.newLogger <span class="dv">0</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> logger' <span class="ot">=</span> logger{logMessage <span class="ot">=</span> \s <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> sends <span class="ot">=</span> split (dropBlanks <span class="op">$</span> onSublist <span class="st">&quot;[send-&gt;] &quot;</span>) s</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> recvs <span class="ot">=</span> split (dropBlanks <span class="op">$</span> onSublist <span class="st">&quot;[&lt;-recv] &quot;</span>) s</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> errs <span class="ot">=</span> split (dropBlanks <span class="op">$</span> onSublist <span class="st">&quot;[stderr] &quot;</span>) s</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> dbgArrow <span class="ot">=</span> traceArrow dbg</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> dbgSend <span class="ot">=</span> traceSend dbg</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> dbgRecvCheckSat <span class="ot">=</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">case</span> traceRecv dbg <span class="kw">of</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>                        <span class="dt">DebugSmtRecvSome</span>{traceCheckSat <span class="ot">=</span> b} <span class="ot">-&gt;</span> b</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>                        _ <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> dbgRecvSuccess <span class="ot">=</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">case</span> traceRecv dbg <span class="kw">of</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>                        <span class="dt">DebugSmtRecvSome</span>{traceSuccess <span class="ot">=</span> b} <span class="ot">-&gt;</span> b</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>                        _ <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> dbgRecvAll <span class="ot">=</span> <span class="dt">DebugSmtRecvAll</span> <span class="dt">True</span> <span class="op">==</span> traceRecv dbg</span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>            <span class="kw">case</span> (recvs, sends, errs) <span class="kw">of</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>                (_, <span class="st">&quot;[send-&gt;] &quot;</span> <span class="op">:</span> [msg], _) <span class="ot">-&gt;</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">if</span> <span class="op">|</span> dbgSend <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>                       <span class="op">|</span> dbgSend <span class="ot">-&gt;</span> logMsg msg</span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>                       <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>                <span class="co">-- </span><span class="al">NOTE</span><span class="co">: :print-success can print success | unsupported | error _.</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>                (<span class="st">&quot;[&lt;-recv] &quot;</span> <span class="op">:</span> msgContent, _, _) <span class="ot">-&gt;</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">case</span> msgContent <span class="kw">of</span></span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>                        [msg<span class="op">@</span><span class="st">&quot;sat&quot;</span>] <span class="ot">-&gt;</span></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvCheckSat <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvCheckSat <span class="ot">-&gt;</span> logMsg <span class="op">$</span> <span class="st">&quot;; &quot;</span> <span class="op">++</span> msg</span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>                        [msg<span class="op">@</span><span class="st">&quot;unsat&quot;</span>] <span class="ot">-&gt;</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvCheckSat <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvCheckSat <span class="ot">-&gt;</span> logMsg <span class="op">$</span> <span class="st">&quot;; &quot;</span> <span class="op">++</span> msg</span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>                        [msg<span class="op">@</span><span class="st">&quot;success&quot;</span>] <span class="ot">-&gt;</span></span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvSuccess <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvSuccess <span class="ot">-&gt;</span> logMsg msg</span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a>                        [msg<span class="op">@</span><span class="st">&quot;unsupported&quot;</span>] <span class="ot">-&gt;</span></span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvSuccess <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvSuccess <span class="ot">-&gt;</span> logMsg msg</span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;error&quot;</span> <span class="op">:</span> _ <span class="ot">-&gt;</span></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvSuccess <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvSuccess <span class="ot">-&gt;</span> logMsg <span class="op">$</span> <span class="fu">drop</span> (<span class="fu">length</span> <span class="st">&quot;[&lt;-recv] error &quot;</span>) s</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-81"><a href="#cb10-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-82"><a href="#cb10-82" aria-hidden="true" tabindex="-1"></a>                        _msgs <span class="ot">-&gt;</span></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a>                            <span class="kw">if</span> <span class="op">|</span> dbgRecvAll <span class="op">&amp;&amp;</span> dbgArrow <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> dbgRecvAll <span class="ot">-&gt;</span> logMsg s</span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a>                            <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a>                (_, _, <span class="st">&quot;[stderr] &quot;</span> <span class="op">:</span> _) <span class="ot">-&gt;</span></span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a>                    when (traceErr dbg) <span class="op">$</span> logMsg s</span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a>                (_, _, _) <span class="ot">-&gt;</span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a>                    when (traceOther dbg) <span class="op">$</span> logMsg s</span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>        grabSMTsolver (<span class="dt">Just</span> logger')</span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-96"><a href="#cb10-96" aria-hidden="true" tabindex="-1"></a><span class="ot">grabSMTsolver ::</span> <span class="dt">Maybe</span> <span class="dt">SMT.Logger</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">SMT.Solver</span></span>
+<span id="cb10-97"><a href="#cb10-97" aria-hidden="true" tabindex="-1"></a>grabSMTsolver <span class="ot">=</span></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- </span><span class="al">NOTE</span><span class="co">: If you don't want the s-expressions pretty printed then substitute</span></span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- SMT.showsSExpr for SMT.ppSExpr.</span></span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>    SMT.newSolver <span class="st">&quot;z3&quot;</span> [<span class="st">&quot;-smt2&quot;</span>, <span class="st">&quot;-in&quot;</span>] SMT.ppSExpr</span></code></pre></div>
+<p>What’s left to do for roundtripping is to prefix <code>"; "</code> before any tracing output that I don’t want left alive as input, to make it a comment, to deaden it.</p>
+<h1 id="constraints-encoding">Constraints Encoding</h1>
+<p>The whole point of the thoralf plugin is to encode a theory as s-expressions so that it can offload solving to Z3. When tracing I’d like to see the constraints passed in to the plugin by GHC. The uom-plugin is showing these, printed with GHC’s own pretty printing, but the thoralf-plugin is rolling its own printing. I’ve pulled that out and put it into its own package, <code>ghc-tcplugins-trace</code>.</p>
+<p>To help me work through solving, I traced output to a file that I then used as a scratch file for input to z3. Eventually I got to the point where I could use the trace output as input without any edits. Here are the changes I made:</p>
+<ul>
+<li>Don’t refresh (stop and restart) the solver.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">--- smt2/thoralf-plugin-uom.smt2</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">+++ smt2/thoralf-plugin-uom.smt2</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>   (set-option :print-success true)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-models true)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>   (set-option :interactive-mode true)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-assertions true)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-models true)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-assignments true)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-proofs true)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-unsat-assumptions true)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>   (set-option :produce-unsat-cores true)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="st">-   (push 1)</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="st">-   (exit)</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :print-success true)</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :produce-models true)</span></span></code></pre></div>
+<ul>
+<li>Echo the cycles of typechecking so that these will show up again when the log is rerun.</li>
+</ul>
+<div class="sourceCode" id="cb12"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-start-cycle-1&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;givens-start-cycle-1&quot;</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;givens-finish-cycle-1&quot;</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;wanteds-start-cycle-1&quot;</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;wanteds-finish-cycle-1&quot;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-finish-cycle-1&quot;</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-start-cycle-2&quot;</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">; ...</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-finish-cycle-10&quot;</span>)</span></code></pre></div>
+<ul>
+<li>Print the given and wanted constraints.</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (GHC style)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Bz {3}:: One ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1Bx {2}:: Base &quot;m&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BD {2}:: Base &quot;s&quot; ~ fsk0 (CFunEqCan)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BB {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BF {2}:: (fsk0 *: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BH {1}:: (fsk0 /: fsk1) ~ fsk2 (CFunEqCan)</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co">; [G] cobox_a1BL {1}:: fsk0 ~ mps (CTyEqCan)</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (GHC style)</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (Thoralf style)</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">; (One [],a1By)</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;m&quot;],a1Bw)</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">; (Base [&quot;s&quot;],a1BC)</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1Bw,a1By],a1BA)</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">; (*: [a1BC,a1By],a1BE)</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">; (/: [a1BA,a1BE],a1BG)</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">; (a1BG,a1u1)</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">; WANTEDS (Thoralf style)</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="co">; []</span></span></code></pre></div>
+<ul>
+<li>Print the source of the encoded names (they’re using uniques.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>).</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (conversions)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">; GIVENS (names)</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1u1  &lt;=  mps</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1Bw  &lt;=  fsk_a1Bw</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1By  &lt;=  fsk_a1By</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BA  &lt;=  fsk_a1BA</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BC  &lt;=  fsk_a1BC</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BE  &lt;=  fsk_a1BE</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BG  &lt;=  fsk_a1BG</span></span></code></pre></div>
+<ul>
+<li>Even though the thoralf-plugin is using the push/pop stack mode of incremental solving, I’d still like to know what declarations were previous seen so I show those too. Could be useful if we switch to using <a href="https://stackoverflow.com/a/40427658/1503186">assumptions</a> instead.</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (seen) </span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (unseen) </span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1BA (Array String Int))</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1BC (Array String Int))</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1BE (Array String Int))</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1BG (Array String Int))</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1Bw (Array String Int))</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1By (Array String Int))</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co">; (declare-const a1u1 (Array String Int))</span></span></code></pre></div>
+<ul>
+<li>Pretty print the declarations.</li>
+</ul>
+<div class="sourceCode" id="cb16"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1u1</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1Bw</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1By</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1BA</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1BC</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1BE</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>(declare-const</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    <span class="va">a1BG</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span></code></pre></div>
+<ul>
+<li>Pretty print and name the assertions.</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>            (</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>            (<span class="op">as</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                <span class="va">const</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                (<span class="dt">Array</span> <span class="dt">String</span> <span class="dt">Int</span>))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1By</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.1</span>))</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;m&quot;</span> <span class="va">one</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1Bw</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.2</span>))</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>            (<span class="fu">store</span> <span class="va">base</span> <span class="st">&quot;s&quot;</span> <span class="va">one</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BC</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.3</span>))</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>            (</span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>            (<span class="op">_</span></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>                <span class="va">map</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>                (<span class="op">+</span></span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Int</span>))</span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1Bw</span></span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1By</span>)</span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BA</span>)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.4</span>))</span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a>            (</span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>            (<span class="op">_</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>                <span class="va">map</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>                (<span class="op">+</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Int</span>))</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BC</span></span>
+<span id="cb17-50"><a href="#cb17-50" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1By</span>)</span>
+<span id="cb17-51"><a href="#cb17-51" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BE</span>)</span>
+<span id="cb17-52"><a href="#cb17-52" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-53"><a href="#cb17-53" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.5</span>))</span>
+<span id="cb17-54"><a href="#cb17-54" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-55"><a href="#cb17-55" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-56"><a href="#cb17-56" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span></span>
+<span id="cb17-57"><a href="#cb17-57" aria-hidden="true" tabindex="-1"></a>            (</span>
+<span id="cb17-58"><a href="#cb17-58" aria-hidden="true" tabindex="-1"></a>            (<span class="op">_</span></span>
+<span id="cb17-59"><a href="#cb17-59" aria-hidden="true" tabindex="-1"></a>                <span class="va">map</span></span>
+<span id="cb17-60"><a href="#cb17-60" aria-hidden="true" tabindex="-1"></a>                (<span class="op">-</span></span>
+<span id="cb17-61"><a href="#cb17-61" aria-hidden="true" tabindex="-1"></a>                    (<span class="dt">Int</span> <span class="dt">Int</span>)</span>
+<span id="cb17-62"><a href="#cb17-62" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">Int</span>))</span>
+<span id="cb17-63"><a href="#cb17-63" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BA</span></span>
+<span id="cb17-64"><a href="#cb17-64" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BE</span>)</span>
+<span id="cb17-65"><a href="#cb17-65" aria-hidden="true" tabindex="-1"></a>            <span class="va">a1BG</span>)</span>
+<span id="cb17-66"><a href="#cb17-66" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-67"><a href="#cb17-67" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.6</span>))</span>
+<span id="cb17-68"><a href="#cb17-68" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb17-69"><a href="#cb17-69" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span></span>
+<span id="cb17-70"><a href="#cb17-70" aria-hidden="true" tabindex="-1"></a>        (<span class="op">=</span> <span class="va">a1BG</span> <span class="va">a1u1</span>)</span>
+<span id="cb17-71"><a href="#cb17-71" aria-hidden="true" tabindex="-1"></a>        <span class="er">:named</span></span>
+<span id="cb17-72"><a href="#cb17-72" aria-hidden="true" tabindex="-1"></a>        <span class="va">given</span><span class="fl">-1.7</span>))</span></code></pre></div>
+<ul>
+<li>Show the check sat result as a comment.</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">; unsat</span></span></code></pre></div>
+<ul>
+<li>For <code>unsat</code> get the assertions and the unsat core.</li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">; unsat</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">get-assertions</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co">; (</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co">;   (= one 1)</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">;   (= enc base)</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co">;         (</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co">;           (as</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="co">;              const</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co">;              (Array String Int))</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="co">;           0)</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1H8)</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.1)</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co">;         (store base &quot;m&quot; one)</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1H6)</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.2)</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a><span class="co">;         (store base &quot;s&quot; one)</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1Hc)</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.3)</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="co">;         (</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="co">;           (_</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="co">;              map</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a><span class="co">;              (+</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (Int Int)</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="co">;                 Int))</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1H6</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1H8)</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1Ha)</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.4)</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co">;         (</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a><span class="co">;           (_</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="co">;              map</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="co">;              (+</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (Int Int)</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="co">;                 Int))</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1Hc</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1H8)</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1He)</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.5)</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a><span class="co">;      (=</span></span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a><span class="co">;         (</span></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a><span class="co">;           (_</span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a><span class="co">;              map</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="co">;              (-</span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (Int Int)</span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a><span class="co">;                 Int))</span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1Ha</span></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a><span class="co">;           a1He)</span></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a><span class="co">;         a1Hg)</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.6)</span></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a><span class="co">;      (= a1Hg a1Fi)</span></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a><span class="co">;      given-9.7)</span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a><span class="co">;   (!</span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a><span class="co">;      (or</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a><span class="co">;         false</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a><span class="co">;         (not</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a><span class="co">;            (=</span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a><span class="co">;               (</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (_</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a><span class="co">;                    map</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="co">;                    (+</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a><span class="co">;                       (Int Int)</span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a><span class="co">;                       Int))</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a><span class="co">;                 a1Fi</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a><span class="co">;                   (_</span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a><span class="co">;                      map</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a><span class="co">;                      (+</span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a><span class="co">;                         (Int Int)</span></span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a><span class="co">;                         Int))</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a><span class="co">;                   (store base &quot;s&quot; one)</span></span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a><span class="co">;                   (</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a><span class="co">;                     (as</span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a><span class="co">;                        const</span></span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a><span class="co">;                        (Array String Int))</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a><span class="co">;                     0)))</span></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="co">;               (</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (_</span></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="co">;                    map</span></span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a><span class="co">;                    (+</span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a><span class="co">;                       (Int Int)</span></span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a><span class="co">;                       Int))</span></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (store base &quot;m&quot; one)</span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a><span class="co">;                 (</span></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="co">;                   (as</span></span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a><span class="co">;                      const</span></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a><span class="co">;                      (Array String Int))</span></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a><span class="co">;                   0)))))</span></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a><span class="co">;      :named</span></span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a><span class="co">;      wanted-9))</span></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a>(<span class="kw">get-unsat-core</span>)</span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a><span class="co">; (given-9.6</span></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.5</span></span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.3</span></span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.7</span></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.1</span></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.4</span></span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a><span class="co">;    given-9.2</span></span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a><span class="co">;    wanted-9)</span></span></code></pre></div>
+<h1 id="re-running-a-trace">Re-running a Trace</h1>
+<p>It used to be the trace was quite uninformative.</p>
+<pre class="pre"><code>&gt; z3 smt2/thoralf-plugin-uom-diy.smt2
+success
+success
+success
+success</code></pre>
+<p>With the tracing additions we can follow along. With the echoed cycles and the named assertions, cross-referencing back into the trace is straight forward.</p>
+<pre class="pre"><code>&gt; z3 smt2/thoralf-plugin-uom-diy.smt2
+...
+givens-start-cycle-9
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+success
+sat
+givens-finish-cycle-9
+wanteds-start-cycle-9
+success
+unsat
+wanteds-finish-cycle-9
+((= one 1)
+(= enc base)
+(!
+    (=
+        (
+        (as
+            const
+            (Array String Int))
+        0)
+        a1H8)
+    :named
+    given-9.1)
+(!
+    (=
+        (store base &quot;m&quot; one)
+        a1H6)
+    :named
+    given-9.2)
+(!
+    (=
+        (store base &quot;s&quot; one)
+        a1Hc)
+    :named
+    given-9.3)
+(!
+    (=
+        (
+        (_
+            map
+            (+
+                (Int Int)
+                Int))
+        a1H6
+        a1H8)
+        a1Ha)
+    :named
+    given-9.4)
+(!
+    (=
+        (
+        (_
+            map
+            (+
+                (Int Int)
+                Int))
+        a1Hc
+        a1H8)
+        a1He)
+    :named
+    given-9.5)
+(!
+    (=
+        (
+        (_
+            map
+            (-
+                (Int Int)
+                Int))
+        a1Ha
+        a1He)
+        a1Hg)
+    :named
+    given-9.6)
+(!
+    (= a1Hg a1Fi)
+    :named
+    given-9.7)
+(!
+    (or
+        false
+        (not
+            (=
+            (
+                (_
+                    map
+                    (+
+                    (Int Int)
+                    Int))
+                a1Fi
+                (
+                (_
+                    map
+                    (+
+                        (Int Int)
+                        Int))
+                (store base &quot;s&quot; one)
+                (
+                    (as
+                        const
+                        (Array String Int))
+                    0)))
+            (
+                (_
+                    map
+                    (+
+                    (Int Int)
+                    Int))
+                (store base &quot;m&quot; one)
+                (
+                (as
+                    const
+                    (Array String Int))
+                0)))))
+    :named
+    wanted-9))
+(given-9.6 given-9.5 given-9.3 given-9.7 given-9.1 given-9.4 given-9.2 wanted-9)
+success
+solver-finish-cycle-9</code></pre>
+<h1 id="unexploded-atoms">Unexploded Atoms</h1>
+<p>To help get pretty printing going I replaced each call to <code>Atom</code> with a call to <code>justReadSExpr</code>, avoiding lists masquerading as atoms when the string within the atom is itself an s-expression.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ot">justReadSExpr ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">SExpr</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>justReadSExpr sexpr <span class="ot">=</span> <span class="kw">let</span> <span class="dt">Just</span> (e, _) <span class="ot">=</span> SMT.readSExpr sexpr <span class="kw">in</span> e</span></code></pre></div>
+<p>This is dangerous but something I can live with while this project is a work in progress and I want to get on with tracing rather than yak-shaving<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<pre class="pre"><code>src/ThoralfPlugin/Convert.hs: warning: [-Wincomplete-uni-patterns]
+    Pattern match(es) are non-exhaustive
+    In a pattern binding: Patterns not matched: Nothing
+    |
+___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
+    |</code></pre>
+<h1 id="no-wanted-constraints">No Wanted Constraints</h1>
+<p>With detailed tracing I noticed that there were some annoying wanteds in the trace.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span> <span class="dv">false</span> <span class="er">:named</span> <span class="va">wanted</span><span class="dv">-1</span>))</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">; unsat</span></span></code></pre></div>
+<p>This is the assertion we construct when there are zero wanteds.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- TcPlugin.hs</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> name <span class="ot">=</span> <span class="st">&quot;wanted-&quot;</span> <span class="op">++</span> <span class="fu">cycle</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>SMT.assert smtSolver <span class="op">$</span> SMT.named name (smtWanted wExprs)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>c <span class="ot">&lt;-</span> SMT.check smtSolver</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ot">smtWanted ::</span> [<span class="dt">ConvEq</span>] <span class="ot">-&gt;</span> <span class="dt">SMT.SExpr</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>smtWanted ws <span class="ot">=</span> foldl' SMT.or (<span class="dt">SMT.Atom</span> <span class="st">&quot;false&quot;</span>) (<span class="fu">map</span> (SMT.not <span class="op">.</span> eqSExpr) ws)</span></code></pre></div>
+<p>With no wanted constraints there’s no useful work to do. Checking the consistency of the givens without wanteds is not useful. I added a pattern match for an empty list of wanteds and threw the problem back to GHC in that case. The tracing logs drastically reduced in size with this change:</p>
+<pre><code>+--------------+--------+--------+
+| TEST SUITE   | BEFORE |  AFTER |
++==============+========+========+
+| uom-diy      |  1,742 |    733 |
++--------------+--------+--------+
+| uom-quantity |  1,693 |    872 |
++--------------+--------+--------+
+| defs         |    255 |    175 |
++--------------+--------+--------+
+| force        |  1,222 |    822 |
++--------------+--------+--------+
+| units        | 22,026 | 14,118 |
++--------------+--------+--------+
+| rows         | 26,322 | 12,915 |
++--------------+--------+--------+</code></pre>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>I’ve done a little yak-shaving, writing a Kate Highlighting XML file so that smt2 files show with highlighting on this blog.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Uniques are unique identifiers used for “fast ordering and equality tests” in GHC. The function used to get these when encoding is <code>getUnique :: a -&gt; Unique</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
         <div class="container">
             <div class="row">
-                <div id="side" class="col-3 card d-print-none">
+                <div id="nav-side" class="col-3 card d-print-none">
                     <div class="card-body">
     <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
 
@@ -83,7 +816,7 @@
 </header>
 
     
-        <div class="float-right">
+        <div class="float-end">
         haskell, tcplugins, z3, tracing
         </div>
         <div class="clearfix">
@@ -769,5 +1502,6 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
                 </div>
             </div>
         </div>
-    </body>
+</body>
+
 </html>
