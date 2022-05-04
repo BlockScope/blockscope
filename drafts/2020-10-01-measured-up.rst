@@ -53,12 +53,17 @@ Comparing Units
 
 A pair of monomorphic functions for explicitly converting between degrees and radians.
 
-.. warning:: This is a note admonition.
-    This is warning text. Use a warning for information the user must
-    understand to avoid negative consequences.
+.. hint::
+    This is hint text.
 
-    Warnings are formatted in the same way as notes. In the same way,
-    lines must be broken and indented under the warning tag.
+.. tip::
+    This is tip text.
+
+.. note::
+    This is note text.
+
+.. warning::
+    This is warning text.
 
 .. code-block:: fsharp
     :caption: conversion.fs

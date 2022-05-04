@@ -263,14 +263,51 @@ a
 dd
     margin-left: 2em
 
-.warning
-    background: #ffedcc
-    padding: 0.5em
+.hint, .tip, .note, .warning
     margin-bottom: 1em
 
-.warning > div.title > p:before
-    content: "> !"
-    display: inline-block
+.hint,
+.tip
+    background: #dbfaf4
 
+.note
+    background: #e7f2fa
+
+.warning
+    background:#ffedcc 
+
+.hint > div.title > p:before,
+.tip > div.title > p:before,
+.note > div.title > p:before
+    content: "✓"
+    display: inline-block
+    padding-left: 0.5em
+    padding-right: 0.2em
+
+.warning > div.title > p:before
+    content: "!"
+    display: inline-block
+    padding-left: 0.5em
+    padding-right: 0.2em
+
+.hint > div.title,
+.tip > div.title,
+.note > div.title,
 .warning > div.title
     font-family: 'B612 Mono', monospace
+
+.tip > div.title,
+.hint > div.title
+    background: #1abc9c
+
+.note > div.title
+    background: #6ab0de
+
+.warning > div.title
+    background: #f0b37e 
+
+.hint > p,
+.tip> p,
+.note> p,
+.warning > p
+    padding-left: 0.5em
