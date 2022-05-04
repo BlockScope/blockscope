@@ -122,11 +122,11 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 <pre>
 <code>
-                                                         <span class="cactus">CC</span>
-                                           <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
-                              <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
-    <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span>
- <span class="date">~~~|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+~~~</span>
- <span class="date">  1995           2000           2005           2010           2015           2020</span>
+                                                        <span class="cactus">CC</span>
+                                          <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
+                             <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
+   <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span>
+ <span class="date">~~|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+-~~</span>
+ <span class="date"> 1995           2000           2005           2010           2015           2020</span>
 </code>
 </pre>
