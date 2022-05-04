@@ -51,13 +51,23 @@ conversions that the GHC compiler can't solve without outside help.
 Comparing Units
 ---------------
 
-A pair of monomorphic functions for converting between degrees and radians.
+A pair of monomorphic functions for explicitly converting between degrees and radians.
+
+.. warning:: This is a note admonition.
+    This is warning text. Use a warning for information the user must
+    understand to avoid negative consequences.
+
+    Warnings are formatted in the same way as notes. In the same way,
+    lines must be broken and indented under the warning tag.
 
 .. code-block:: fsharp
+    :caption: conversion.fs
 
     open System
     open FSharp.Data.UnitSystems.SI.UnitSymbols
-    open Flight.Units
+
+    [<Measure>] type rad
+    [<Measure>] type deg
 
     let convertDegToRad (x : float<deg>) : float<rad> = x * Math.PI / 180.0<deg/rad>
     let convertRadToDeg (x : float<rad>) : float<deg> = x / Math.PI * 180.0<deg/rad> 

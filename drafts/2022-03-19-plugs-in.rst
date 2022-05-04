@@ -93,8 +93,8 @@ I was able to rewrite the counting plugin so that it used the passed args as a
 prefix when logging. Trouble is that all options are passed to all plugins
 whichever way they're wired up.
 
-So I need at least a unique module to get the arg to the plugin. Re-exports are
-sufficient.
+So I need at least a unique module to get the arg to the plugin I'm targetting.
+Re-exports are sufficient.
 
 .. code:: haskell
 
