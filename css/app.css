@@ -19323,9 +19323,14 @@ blockquote footer:before {
   color: #808080;
 }
 
+.blobs,
+.blobs > code {
+  color: #e66101;
+}
+
 .flaretiming,
 .flaretiming > code {
-  color: #b2df8a;
+  color: #5e3c99;
 }
 
 .cit,
@@ -19340,7 +19345,7 @@ blockquote footer:before {
 
 .aqualinc,
 .aqualinc > code {
-  color: #33a02c;
+  color: #b2df8a;
 }
 
 .cactus,
@@ -19350,17 +19355,17 @@ blockquote footer:before {
 
 .tagly,
 .tagly > code {
-  color: #fb9a99;
+  color: #33a02c;
 }
 
 .apress,
 .apress > code {
-  color: #e31a1c;
+  color: #fb9a99;
 }
 
 .travieo,
 .travieo > code {
-  color: #fdbf6f;
+  color: #e31a1c;
 }
 
 .croplogic,
@@ -19436,6 +19441,66 @@ a {
 
 dd {
   margin-left: 2em;
+}
+
+.hint, .tip, .note, .warning {
+  margin-bottom: 1em;
+}
+
+.hint,
+.tip {
+  background: #dbfaf4;
+}
+
+.note {
+  background: #e7f2fa;
+}
+
+.warning {
+  background: #ffedcc;
+}
+
+.hint > div.title > p:before,
+.tip > div.title > p:before,
+.note > div.title > p:before {
+  content: "✓";
+  display: inline-block;
+  padding-left: 0.5em;
+  padding-right: 0.2em;
+}
+
+.warning > div.title > p:before {
+  content: "!";
+  display: inline-block;
+  padding-left: 0.5em;
+  padding-right: 0.2em;
+}
+
+.hint > div.title,
+.tip > div.title,
+.note > div.title,
+.warning > div.title {
+  font-family: "B612 Mono", monospace;
+}
+
+.tip > div.title,
+.hint > div.title {
+  background: #1abc9c;
+}
+
+.note > div.title {
+  background: #6ab0de;
+}
+
+.warning > div.title {
+  background: #f0b37e;
+}
+
+.hint > p,
+.tip > p,
+.note > p,
+.warning > p {
+  padding-left: 0.5em;
 }
 
 /*# sourceMappingURL=app.css.map */

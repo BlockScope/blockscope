@@ -84,7 +84,11 @@
 </header>
 
     
-    <p>I’ve been quite interested in units of measure in programming languages since I worked on a 3-year project to commercialise a potato crop model. The model was in NZ customary units; kgs, hectares and litres. We stored the data in SI units but we also had to display in the user’s choice of units, such as acre and gallon and even some unusual units such as hundredweight. We used the <a href="https://en.wikipedia.org/wiki/Unified_Code_for_Units_of_Measure">unified code</a> for units of measure as XML.</p>
+    <p>Professionally, I develop software applications. When I most needed better types for units I didn’t know that types could help with checking unit conformance and conversion.</p>
+<p>At the time I joined a project<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> to commercialise a potato crop model it was coded in Borland Builder C++ and built one executable. This Windows GUI <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> desktop app, agronomists could use to setup and run the model. It had pickers for input files and a presentation layer for the results of the model run. I didn’t need the GUI elements as we would be delivering these via the web in the commercial product.</p>
+<p>The model itself was not a lot of code and within a couple of days I was able to port it to standard C++ and then to C#. There were comments in places that mentioned units, mostly on numeric properties of classes. Even with those comments, as a developer without prior experience in this domain, I couldn’t step through the code and know what a sensible range would be for any variable I’d drag into the watch pane. When I ran the model I was getting different outputs than expected.</p>
+<p>Familiar with the model, the research programmer at the institute had a good working knowledge of sensible ranges and pinpointed the problem quickly. Turned out to be a unit conversion error. A needle in a haystack problem for me, not a domain insider.</p>
+<p>Later on, we used the <a href="https://en.wikipedia.org/wiki/Unified_Code_for_Units_of_Measure">unified code</a> for units as XML. That was some help but not type level help.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode xml"><code class="sourceCode xml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span><span class="ot"> version=</span><span class="st">&quot;1.0&quot;</span><span class="ot"> encoding=</span><span class="st">&quot;ascii&quot;</span><span class="fu">?&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">root</span>&gt;</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>   &lt;<span class="kw">prefix</span><span class="ot"> Code=</span><span class="st">&quot;k&quot;</span><span class="ot"> CODE=</span><span class="st">&quot;K&quot;</span>&gt;</span>
@@ -136,6 +140,13 @@ After seeing a presentation on this compiler plugin at the Haskell symposium 201
 </blockquote>
 <p>This is my attempt to refactor the <a href="https://github.com/bgamari/the-thoralf-plugin">thoralf-plugin</a> and the <a href="https://github.com/adamgundry/uom-plugin">uom-plugin</a> so that they share something in common and so that the former reaches parity with the later in units of measure.</p></li>
 </ul>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Crop Logic, a now defunct startup spun out of a research institute.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>A graphical user interface.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </article>
 
                 </div>
