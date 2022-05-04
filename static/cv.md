@@ -10,12 +10,12 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <h2 class="work-section">&lt;Haskell&gt;</h2>
 <ul>
 <li>
-  <span class="blobs">`B` `?` ▩ </span><span class="date">`2021/12—2022/03`</span>
+  <span class="blobs">`B` `†` ▩ </span><span class="date">`2021/12—2022/03`</span>
   [**Plugins for Blobs**](https://github.com/BlockScope/plugins-for-blobs)
   ☞ Type check units of measure with SMT solving.
 </li>
 <li>
-  <span class="flaretiming">`F` `?` ▩ </span><span class="date">`2017/04—2020/12`</span>
+  <span class="flaretiming">`F` `†` ▩ </span><span class="date">`2017/04—2020/12`</span>
   [**Flare Timing**](http://www.flaretiming.com) scoring flying competitions
   ☞ Ask [how](https://github.com/BlockScope/CIVL-GAP/issues) how to interpret
   some [rules](https://github.com/BlockScope/CIVL-GAP#readme) typesetting them
