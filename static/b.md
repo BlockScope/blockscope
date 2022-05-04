@@ -1,6 +1,6 @@
 ---
 title: <pre>@blockscope</pre>
-subtitle: <pre>module BlockScope.Consulting.Services where</pre>
+subtitle: <pre>module Consulting.Services where</pre>
 ---
 
 I help managers, technicians, scientists and developers build quality software.

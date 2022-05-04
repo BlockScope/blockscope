@@ -196,7 +196,7 @@ main = do
             compile
                 $ pandoc Nothing
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
         match "static/projects/fly.md" $ do
@@ -205,7 +205,7 @@ main = do
             compile
                 $ pandoc Nothing
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
         match "static/projects/contrib.md" $ do
@@ -214,7 +214,7 @@ main = do
             compile
                 $ pandoc Nothing
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
         match "static/projects/index.md" $ do
@@ -223,7 +223,7 @@ main = do
             compile
                 $ pandoc Nothing
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
         -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
