@@ -170,7 +170,6 @@ main = do
         match "static/b.md" $ mkStatic "templates/blockscope"
         match "static/p.md" $ mkStatic "templates/philderbeast"
         match "static/cv.md" $ mkStatic "templates/cv"
-        match "static/tweets.md" $ mkStatic "templates/tweets"
 
         match "static/projects/uom.md" $ do
             route . customRoute $ const "projects/uom/index.html"
