@@ -1,16 +1,137 @@
 ---
-title: Pinning down.
-subtitle: What's hard with Cabal?
+title: Pinning Down
+subtitle: What's hard with Cabal. It is not stack.
 slug: Pinning down what's hard with Cabal.
 tags: haskell, build
 ---
-Back in the day it was quite hard to get going on Windows with Haskell. There
-was the Haskell Platform but I dropped this for minghc and then stack. Once
-there it has served me pretty well. I've tried to get things going with cabal,
-I really have but it never seems to be able to resolve dependencies for the projects
-I have. I don't want to be dicking around managing dependencies. There's a lot
-of work going on with cabal. Every once in a while I go back to try it again
-and I now have it working for flare-timing. Here's what I did.
 
-Went to stackage and grabbed the versions of each package that matched the
-version of GHC I'm compiling with, 8.2.2.
+My Command History
+==================
+
+I found it quite hard to get going with Haskell, not the language but with
+installation and managing dependencies. This was a decade ago and I was working
+in dotNet on Windows. In my spare time, I was weaning myself off of the one
+platform and editor, learning VIM and doing more on the command line. I'm a
+nervous programmer. The first work machine I had was a dud. I wanted
+reproducibility.  Inputs are easier to check from the command line or from input
+files than if they are coming from the state of a toggle switch buried somewhere
+deep in a `tools > options` menu of your IDE.
+
+I used the Haskell Platform, then minghc and then stack and that was a good way
+to get the Haskell compiler installed. These days I prefer ghcup to manage all
+my Haskell tooling, the compiler, the language server, stack and cabal.
+
+Early on, I tried building with cabal and failed. I never seems to be able to
+resolve dependencies and found the long dependency solver error messages kind of
+annoying, like a parent slowly repeating an explanation to a child as if it was
+obvious but I couldn't see it. These messages are much the same today but I find
+them helpful. The nix-style local builds with v2 cabal commands are much better
+than the old cabal commands with the global store or sandboxes and with a
+project I can group and tweak packages. It also helps to get compatible versions
+of dependencies from stackage whether using stack or cabal.
+
+I now use stack and cabal in equal measure. They each have their quirks and
+strengths. One gotcha to easily switching between them is the different
+phraseology of the commands. Let's unravel that.
+
+Phraseology
+===========
+
+    | /ˌfrāzēˈäləjē/ noun
+    | a mode of expression, especially one characteristic of a particular speaker or writer.
+
+Phraseology is the way we say things. It's the way we express ourselves. In
+aviation there's a way to talk on the radio with other pilots and with air
+traffic control. In commanding a tool like cabal or stack there is a command
+phraseology.
+
+.. code-block:: diff
+
+    - stack build
+    + cabal build all
+
+If you're building everything in a stack project you can do that implicitly by
+specifying no target but with cabal you'll have to use the `all` target. If you
+have more than one project or if you don't use the default names for these then
+the explicit option is different. The default option is equivalent to:
+
+.. code-block:: diff
+
+    - stack build --stack-yaml=stack.yaml
+    + cabal build all --project-file=cabal.project
+
+With cabal options (but not with stack options) prefixes of options still work
+if they're unique so ``--project`` can be used instead of ``--project-file``.
+
+Lets use [simple-pkg.cabal]_ created with ``cabal init`` with a library,
+executable and test-suite.
+
+Targets
+=======
+
+Not matter what you want to do you have to say what you're doing it too, right?
+
+| ``Cabal`` - Yes, always.  You can't do anything without a target (actually to be pedantic, a target "form").
+| ``Stack`` - Not if you're doing this thing to everything.
+
+When bringing up the REPL the target syntax differs between stack and
+`cabal's target forms<Cabal Target Forms>`_. In a stack project the target
+must always be scoped by package whereas with cabal in only needs to be scoped
+if there is ambiguity. The package name is optional and the way of using it is
+different.
+
+Cabal Target Forms
+------------------
+
+SOURCE: `https://cabal.readthedocs.io/en/stable/cabal-commands.html#target-forms`_
+
+
+.. code-block:: diff
+
+    - stack repl pkg:lib
+    + cabal repl all
+
+.. [cabal target forms]
+
+.. [simple-pkg.cabal]
+
+    .. code-block:: yaml
+
+        name:               simple-pkg
+        version:            0.1.0.0
+        license:            Apache-2.0
+        license-file:       LICENSE
+        author:             Phil de Joux
+        maintainer:         philderbeast@gmail.com
+        build-type:         Simple
+        extra-doc-files:    CHANGELOG.md
+
+        common warnings
+            ghc-options: -Wall
+
+        library
+            import:           warnings
+            exposed-modules:  MyLib
+            build-depends:    base ^>=4.17.0.0
+            hs-source-dirs:   src
+            default-language: GHC2021
+
+        executable simple-pkg
+            import:           warnings
+            main-is:          Main.hs
+            build-depends:
+                base ^>=4.17.0.0,
+                simple-pkg
+
+            hs-source-dirs:   app
+            default-language: GHC2021
+
+        test-suite simple-pkg-test
+            import:           warnings
+            default-language: GHC2021
+            type:             exitcode-stdio-1.0
+            hs-source-dirs:   test
+            main-is:          Main.hs
+            build-depends:
+                base ^>=4.17.0.0,
+                simple-pkg
