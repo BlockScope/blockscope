@@ -89,7 +89,11 @@
             <br />
         </div>
     
-    <p><a href="https://www.unisonweb.org/">Unison</a> is interesting. I got to know the language a bit coding up solutions to the direct and indirect problems of geodesy with it. It is a new language so small annoyances and problems are expected but none of the <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">bug reports</a> I made were show stoppers. Here I share my initial impressions of the developer experience.</p>
+    <p><a href="https://www.unisonweb.org/">Unison</a> is interesting. I got to know the language a bit coding up solutions
+to the direct and indirect problems of geodesy with it. It is a new language so
+small annoyances and problems are expected but none of the <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">bug reports</a>
+I made were show stoppers. Here I share my initial impressions of the developer
+experience.</p>
 <h1 id="geodesic-problems">Geodesic Problems</h1>
 <ol type="1">
 <li>The direct or forward problem:</li>
@@ -121,16 +125,50 @@
 <li><code>α₂</code> The azimuth at the arrival point.</li>
 </ul>
 </blockquote>
-<p>I’ve been working on a reference implementation for scoring free flight competitions. For this I need to be able to find the distance between two points on the Earth, the <code>s</code> of the indirect solution.</p>
+<p>I’ve been working on a reference implementation for scoring free flight
+competitions. For this I need to be able to find the distance between two
+points on the Earth, the <code>s</code> of the indirect solution.</p>
 <h1 id="flying-geodesics">Flying Geodesics</h1>
-<p>Pilots flying cross country competitions in hang gliders or paragliders carry flight computers with sensors for position and air pressure. The <a href="https://en.wikipedia.org/wiki/Variometer">vario</a> beeps vary in tone, rapidity and volume as we climb or sink. Sound really is the best way of taking in this information as the pilot is often too busy in active air to be glancing at or tapping a smallish screen. It is great to be climbing but worrying to be sinking and tones emitted by the vario match those moods.</p>
-<p>Except for respecting airspace, height is pretty much ignored when scoring. It is however used for stopped tasks to fairly reward pilots for being higher than others. A pilot that could have converted height to distance if time had allowed for the glide will get a bonus distance. Scoring is not simple but boils down to initially finding out when and where each pilot crossed the start, turnpoint cylinders and goal of the tasked course for the day and from there finding out how far a pilot flew and how much ahead of other pilots were they during the race.</p>
-<p>A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for scoring. For the sphere we’d likely calculate distance using haversines formula and for the ellipsoid we might use Vincenty’s formula or other faster but less accurate solutions. Solutions for the ellipsoid are iterative and do not work near the poles, not that we fly competitions in those regions. It is cold enough at cloudbase when scorching hot on the ground.</p>
+<p>Pilots flying cross country competitions in hang gliders or paragliders carry
+flight computers with sensors for position and air pressure. The <a href="https://en.wikipedia.org/wiki/Variometer">vario</a> beeps
+vary in tone, rapidity and volume as we climb or sink. Sound really is the
+best way of taking in this information as the pilot is often too busy in active
+air to be glancing at or tapping a smallish screen. It is great to be climbing
+but worrying to be sinking and tones emitted by the vario match those moods.</p>
+<p>Except for respecting airspace, height is pretty much ignored when scoring. It
+is however used for stopped tasks to fairly reward pilots for being higher than
+others. A pilot that could have converted height to distance if time had
+allowed for the glide will get a bonus distance. Scoring is not simple but
+boils down to initially finding out when and where each pilot crossed the
+start, turnpoint cylinders and goal of the tasked course for the day and from
+there finding out how far a pilot flew and how much ahead of other pilots were
+they during the race.</p>
+<p>A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the
+WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for
+scoring. For the sphere we’d likely calculate distance using haversines formula
+and for the ellipsoid we might use Vincenty’s formula or other faster but less
+accurate solutions. Solutions for the ellipsoid are iterative and do not work
+near the poles, not that we fly competitions in those regions. It is cold
+enough at cloudbase when scorching hot on the ground.</p>
 <h1 id="familiar-territory">Familiar Territory</h1>
-<p><a href="http://fs.fai.org">FS</a> is the official free flight competition scoring program of the world governing body for air sports (the FAI - Fédération Aéronautique Internationale). It will likely be retired and succeeded by <a href="https://github.com/FAI-CIVL/FAI-Airscore">Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. I’ve helped a little on both projects but have spent most of my energy on <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>. FS is a C# winforms Windows-only desktop app and Airscore is a python flask web app. Both roll some of their own geodetics code and I have too, in Haskell for flare-timing and in F#.</p>
+<p><a href="http://fs.fai.org">FS</a> is the official free flight competition scoring program of the world
+governing body for air sports (the FAI - Fédération Aéronautique
+Internationale). It will likely be retired and succeeded by <a href="https://github.com/FAI-CIVL/FAI-Airscore">Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.
+I’ve helped a little on both projects but have spent most of my energy on
+<a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>. FS is a C# winforms Windows-only desktop app and Airscore is
+a python flask web app. Both roll some of their own geodetics code and I have
+too, in Haskell for flare-timing and in F#.</p>
 <h1 id="unisons-development-environment">Unison’s Development Environment</h1>
-<p>The development environment is special. The code is stored in a database, parsed as an abstract syntax tree with nodes identified by hash and metadata attaching names to those hashes. What this means in practice is that neither you developing your code or someone browsing your repo will see anything that looks like code.</p>
-<p>In practice this is no big problem. There are ways to discover and browse the code. I’m used to working in a REPL with little more than syntax highlighting as a language specific aid in the editor. Unison’s code base manager watches for changes in a scratch file I’m editing and on start up provides a link where the code base can be browsed.</p>
+<p>The development environment is special. The code is stored in a database, parsed
+as an abstract syntax tree with nodes identified by hash and metadata attaching
+names to those hashes. What this means in practice is that neither you
+developing your code or someone browsing your repo will see anything that looks
+like code.</p>
+<p>In practice this is no big problem. There are ways to discover and browse the
+code. I’m used to working in a REPL with little more than syntax highlighting as
+a language specific aid in the editor. Unison’s code base manager watches for
+changes in a scratch file I’m editing and on start up provides a link where the
+code base can be browsed.</p>
 <pre class="pre"><code>&gt; unison
 
 The Unison Codebase UI is running at
@@ -141,7 +179,11 @@ Welcome to Unison!
 You are running version: release/M2g
 I'm currently watching for changes to .u files under ~/.../flat-earth
 Type help to get help. 😎</code></pre>
-<p>When code I’m working on in the scratch file compiles I can add it to or update it in the code base. Like git, I can choose to push my changes to a repo with builtin commands. The whole experience is quite sensitive to current namespace selected. We can move around namespaces with the <code>namespace</code> or <code>cd</code> commands and use <code>ls</code> to see what’s there:</p>
+<p>When code I’m working on in the scratch file compiles I can add it to or update
+it in the code base. Like git, I can choose to push my changes to a repo with
+builtin commands. The whole experience is quite sensitive to current namespace
+selected. We can move around namespaces with the <code>namespace</code> or <code>cd</code>
+commands and use <code>ls</code> to see what’s there:</p>
 <pre class="pre"><code>&gt; unison
 
 .&gt; cd flight
@@ -155,7 +197,9 @@ Type help to get help. 😎</code></pre>
 6. licenseTypes/ (1 definition)
 7. metadata/     (7 definitions)
 8. patch         (patch)</code></pre>
-<p>Using commands to navigate namespaces and definitions that have the same names as commands we’re used to for navigating the file system is great and could be taken further. Sadly a <code>cd ..</code> command doesn’t go up the namespace tree.</p>
+<p>Using commands to navigate namespaces and definitions that have the same names
+as commands we’re used to for navigating the file system is great and could be
+taken further. Sadly a <code>cd ..</code> command doesn’t go up the namespace tree.</p>
 <p>To work on an existing definition, find it and select it for editing:</p>
 <pre class="pre"><code>.&gt; find haversines
 
@@ -175,7 +219,10 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 
 You can edit them there, then do `update` to replace the definitions currently in this
 namespace.</code></pre>
-<p>To edit this definition, I’m better off navigating to its namespace first to avoid long namespace qualified names and to avoid a bug where fully qualified names cannot be added or updated if the current prompt is at <code>.&gt;</code>, the root namespace.</p>
+<p>To edit this definition, I’m better off navigating to its namespace first to
+avoid long namespace qualified names and to avoid a bug where fully qualified
+names cannot be added or updated if the current prompt is at <code>.&gt;</code>, the root
+namespace.</p>
 <pre class="pre"><code>.&gt; cd flight.Geodesy.Math
 .flight.Geodesy.Math&gt; edit EarthMath
 ☝️
@@ -189,7 +236,10 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
     | ForsytheAndoyerLambert
     | FsAndoyer</code></pre>
 <h1 id="teething-problems">Teething Problems</h1>
-<p>The pretty printing and parsing doesn’t roundtrip. Printed constructor parentheses were missed and indentation was offside. This was an inconvenience but I pretty quickly recognized the edits I’d need to make to dumped definitions to get them to compile again.</p>
+<p>The pretty printing and parsing doesn’t roundtrip. Printed constructor
+parentheses were missed and indentation was offside. This was an inconvenience
+but I pretty quickly recognized the edits I’d need to make to dumped definitions
+to get them to compile again.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aOfHaversine : LatLng -&gt; LatLng -&gt; Rad</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aOfHaversine x y =</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    use Float * +</span>
@@ -205,7 +255,8 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLatF) = haversine (Rad dLatF)</span></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLngF) = haversine (Rad dLngF)</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    Rad (hLatF + (cos xLatF * cos yLatF * hLngF))</span></code></pre></div>
-<p>It was easy to make updates that resulted in names coming unstuck from hashes especially when renaming things.</p>
+<p>It was easy to make updates that resulted in names coming unstuck from hashes
+especially when renaming things.</p>
 <pre class="pre"><code>.flight.Geodesy&gt; find InverseSolution
 
 1.  unique type InverseSolution s α
@@ -220,7 +271,9 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 10. InverseSolution.α₂ : #7l8qisp5pk s α -&gt; () α
 11. InverseSolution.α₂.modify : (() α -&gt;{g} () α) -&gt; #7l8qisp5pk s α -&gt;{g} #7l8qisp5pk s α
 12. InverseSolution.α₂.set : () α -&gt; #7l8qisp5pk s α -&gt; #7l8qisp5pk s α</code></pre>
-<p>Some very ordinary float functions are missing from the base library such as <code>Float.isNaN</code> and related predicates for testing infinity. I also encountered a bug in float comparison:</p>
+<p>Some very ordinary float functions are missing from the base library such as
+<code>Float.isNaN</code> and related predicates for testing infinity. I also encountered
+a bug in float comparison:</p>
 <pre class="pre"><code>Now evaluating any watch expressions (lines starting with `&gt;`)... Ctrl+C cancels.
 
 1 | &gt; 0.0 &lt; 0.0
@@ -254,12 +307,24 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 8 | &gt; -1.0 &lt; -2.0
     ⧩
     true</code></pre>
-<p>There’s no pattern matching or type deconstruction in arguments to functions. I have that in Haskell and F# and miss it.</p>
-<p>Some of the property tests I’d like to have added were not possible without float generators that are not yet included.</p>
-<p>I couldn’t get the code I wanted to write to compile with the trunk branch and ended up using the latest <code>release/M2g</code> branch but even there I had to backport an interpreter fix to prevent a <code>missing integral case</code> exception when using <em>less than</em> when comparing floats.</p>
+<p>There’s no pattern matching or type deconstruction in arguments to
+functions. I have that in Haskell and F# and miss it.</p>
+<p>Some of the property tests I’d like to have added were not possible without float
+generators that are not yet included.</p>
+<p>I couldn’t get the code I wanted to write to compile with the trunk branch and
+ended up using the latest <code>release/M2g</code> branch but even there I had to
+backport an interpreter fix to prevent a <code>missing integral case</code> exception
+when using
+<em>less than</em> when comparing floats.</p>
 <h1 id="overall-impression">Overall Impression</h1>
-<p>Unison is a new language with a distinctive and unusal development environment yet I was able to get what I wanted to do done, helped along by good documentation, excellent talks and quick feedback in the slack channel.</p>
-<p>The builtin <code>find</code> command and code base browsing web app are great but I still think I’d like to be able browse a subset of the codebase on disk as files in the appropriate branch of a namespace tree. Once I saw I could dump a lot of definitions to the scratch file then move them beneath the fold so that they were only visible to me I was happier.</p>
+<p>Unison is a new language with a distinctive and unusal development environment
+yet I was able to get what I wanted to do done, helped along by good
+documentation, excellent talks and quick feedback in the slack channel.</p>
+<p>The builtin <code>find</code> command and code base browsing web app are great but I
+still think I’d like to be able browse a subset of the codebase on disk as files
+in the appropriate branch of a namespace tree. Once I saw I could dump a lot of
+definitions to the scratch file then move them beneath the fold so that they
+were only visible to me I was happier.</p>
 <p>I really like transcripts.</p>
 <pre class="pre"><code>&gt; unison transcript.fork Haversine.md
 
@@ -272,7 +337,9 @@ Running the provided transcript file...
 &gt; unison transcript.fork Vincenty.md
 ⚙️   Processing stanza 5 of 5.
 💾  Wrote ~/.../flat-earth/Vincenty.output.md</code></pre>
-<p>I used transcripts to document what the code does for both the <a href="https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md">haversine solution</a> and <a href="https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md">Vincenty solution</a> to the geodetic inverse problem. Shown below is a snippet of the output of the transcript for the Vincenty solution:</p>
+<p>I used transcripts to document what the code does for both the <a href="https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md">haversine
+solution</a> and <a href="https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md">Vincenty solution</a> to the geodetic inverse problem. Shown below
+is a snippet of the output of the transcript for the Vincenty solution:</p>
 <pre class="pre"><code>✅
 
 ellipsoids.u changed.
@@ -287,15 +354,24 @@ Now evaluating any watch expressions (lines starting with
 2 | &gt; hayford
         ⧩
         Ellipsoid (Radius 6378388.0) 297.0</code></pre>
-<p>The code base manager works well as one tool with a command shell, a REPL and git-like code base actions.</p>
-<p>The cached tests and definitions seem to hold a lot of promise to save developer time. I can’t say I noticed but isn’t that the point!</p>
-<p>The task I was solving didn’t require anything fancy so I can’t say much about the unison language itself other than it is similar enough to Haskell or F# that it felt familiar already except I suspect I don’t quite understand when to use <code>let</code>.</p>
+<p>The code base manager works well as one tool with a command shell, a REPL and
+git-like code base actions.</p>
+<p>The cached tests and definitions seem to hold a lot of promise to save developer
+time. I can’t say I noticed but isn’t that the point!</p>
+<p>The task I was solving didn’t require anything fancy so I can’t say much about
+the unison language itself other than it is similar enough to Haskell or F# that
+it felt familiar already except I suspect I don’t quite understand when to use
+<code>let</code>.</p>
 <p>I enjoyed trying out unison and contributing a package<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>FAI-Airscore implements the <a href="https://en.wikipedia.org/wiki/Marie_Henri_Andoyer">Andoyer</a> method for solving geodesic distance on the ellipsoid but it can get distances by using package <a href="https://github.com/mapado/haversine">haversine</a> for the sphere and package <a href="https://geopy.readthedocs.io/">geopy</a> for the ellipsoid.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>The code in the <a href="https://github.com/BlockScope/flat-earth#readme">blockscope/flat-earth</a> repo can be found at <code>contrib/pdejoux</code> in unison share, the common code base, where we can link directly to definitions such as this one for <a href="https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0">InverseSolution</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>FAI-Airscore implements the <a href="https://en.wikipedia.org/wiki/Marie_Henri_Andoyer">Andoyer</a> method for solving geodesic distance
+on the ellipsoid but it can get distances by using package <a href="https://github.com/mapado/haversine">haversine</a> for the
+sphere and package <a href="https://geopy.readthedocs.io/">geopy</a> for the ellipsoid.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The code in the <a href="https://github.com/BlockScope/flat-earth#readme">blockscope/flat-earth</a> repo can be found at
+<code>contrib/pdejoux</code> in unison share, the common code base, where we can link
+directly to definitions such as this one for <a href="https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0">InverseSolution</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>
@@ -359,7 +435,11 @@ Now evaluating any watch expressions (lines starting with
             <br />
         </div>
     
-    <p><a href="https://www.unisonweb.org/">Unison</a> is interesting. I got to know the language a bit coding up solutions to the direct and indirect problems of geodesy with it. It is a new language so small annoyances and problems are expected but none of the <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">bug reports</a> I made were show stoppers. Here I share my initial impressions of the developer experience.</p>
+    <p><a href="https://www.unisonweb.org/">Unison</a> is interesting. I got to know the language a bit coding up solutions
+to the direct and indirect problems of geodesy with it. It is a new language so
+small annoyances and problems are expected but none of the <a href="https://github.com/unisonweb/unison/issues/created_by/philderbeast">bug reports</a>
+I made were show stoppers. Here I share my initial impressions of the developer
+experience.</p>
 <h1 id="geodesic-problems">Geodesic Problems</h1>
 <ol type="1">
 <li>The direct or forward problem:</li>
@@ -391,16 +471,50 @@ Now evaluating any watch expressions (lines starting with
 <li><code>α₂</code> The azimuth at the arrival point.</li>
 </ul>
 </blockquote>
-<p>I’ve been working on a reference implementation for scoring free flight competitions. For this I need to be able to find the distance between two points on the Earth, the <code>s</code> of the indirect solution.</p>
+<p>I’ve been working on a reference implementation for scoring free flight
+competitions. For this I need to be able to find the distance between two
+points on the Earth, the <code>s</code> of the indirect solution.</p>
 <h1 id="flying-geodesics">Flying Geodesics</h1>
-<p>Pilots flying cross country competitions in hang gliders or paragliders carry flight computers with sensors for position and air pressure. The <a href="https://en.wikipedia.org/wiki/Variometer">vario</a> beeps vary in tone, rapidity and volume as we climb or sink. Sound really is the best way of taking in this information as the pilot is often too busy in active air to be glancing at or tapping a smallish screen. It is great to be climbing but worrying to be sinking and tones emitted by the vario match those moods.</p>
-<p>Except for respecting airspace, height is pretty much ignored when scoring. It is however used for stopped tasks to fairly reward pilots for being higher than others. A pilot that could have converted height to distance if time had allowed for the glide will get a bonus distance. Scoring is not simple but boils down to initially finding out when and where each pilot crossed the start, turnpoint cylinders and goal of the tasked course for the day and from there finding out how far a pilot flew and how much ahead of other pilots were they during the race.</p>
-<p>A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for scoring. For the sphere we’d likely calculate distance using haversines formula and for the ellipsoid we might use Vincenty’s formula or other faster but less accurate solutions. Solutions for the ellipsoid are iterative and do not work near the poles, not that we fly competitions in those regions. It is cold enough at cloudbase when scorching hot on the ground.</p>
+<p>Pilots flying cross country competitions in hang gliders or paragliders carry
+flight computers with sensors for position and air pressure. The <a href="https://en.wikipedia.org/wiki/Variometer">vario</a> beeps
+vary in tone, rapidity and volume as we climb or sink. Sound really is the
+best way of taking in this information as the pilot is often too busy in active
+air to be glancing at or tapping a smallish screen. It is great to be climbing
+but worrying to be sinking and tones emitted by the vario match those moods.</p>
+<p>Except for respecting airspace, height is pretty much ignored when scoring. It
+is however used for stopped tasks to fairly reward pilots for being higher than
+others. A pilot that could have converted height to distance if time had
+allowed for the glide will get a bonus distance. Scoring is not simple but
+boils down to initially finding out when and where each pilot crossed the
+start, turnpoint cylinders and goal of the tasked course for the day and from
+there finding out how far a pilot flew and how much ahead of other pilots were
+they during the race.</p>
+<p>A comp can be scored against a sphere or an ellipsiod. The FAI sphere and the
+WGS84 ellipsoid are the only two models of the Earth sanctioned by the FAI for
+scoring. For the sphere we’d likely calculate distance using haversines formula
+and for the ellipsoid we might use Vincenty’s formula or other faster but less
+accurate solutions. Solutions for the ellipsoid are iterative and do not work
+near the poles, not that we fly competitions in those regions. It is cold
+enough at cloudbase when scorching hot on the ground.</p>
 <h1 id="familiar-territory">Familiar Territory</h1>
-<p><a href="http://fs.fai.org">FS</a> is the official free flight competition scoring program of the world governing body for air sports (the FAI - Fédération Aéronautique Internationale). It will likely be retired and succeeded by <a href="https://github.com/FAI-CIVL/FAI-Airscore">Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. I’ve helped a little on both projects but have spent most of my energy on <a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>. FS is a C# winforms Windows-only desktop app and Airscore is a python flask web app. Both roll some of their own geodetics code and I have too, in Haskell for flare-timing and in F#.</p>
+<p><a href="http://fs.fai.org">FS</a> is the official free flight competition scoring program of the world
+governing body for air sports (the FAI - Fédération Aéronautique
+Internationale). It will likely be retired and succeeded by <a href="https://github.com/FAI-CIVL/FAI-Airscore">Airscore</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.
+I’ve helped a little on both projects but have spent most of my energy on
+<a href="https://github.com/BlockScope/flare-timing#readme">flare-timing</a>. FS is a C# winforms Windows-only desktop app and Airscore is
+a python flask web app. Both roll some of their own geodetics code and I have
+too, in Haskell for flare-timing and in F#.</p>
 <h1 id="unisons-development-environment">Unison’s Development Environment</h1>
-<p>The development environment is special. The code is stored in a database, parsed as an abstract syntax tree with nodes identified by hash and metadata attaching names to those hashes. What this means in practice is that neither you developing your code or someone browsing your repo will see anything that looks like code.</p>
-<p>In practice this is no big problem. There are ways to discover and browse the code. I’m used to working in a REPL with little more than syntax highlighting as a language specific aid in the editor. Unison’s code base manager watches for changes in a scratch file I’m editing and on start up provides a link where the code base can be browsed.</p>
+<p>The development environment is special. The code is stored in a database, parsed
+as an abstract syntax tree with nodes identified by hash and metadata attaching
+names to those hashes. What this means in practice is that neither you
+developing your code or someone browsing your repo will see anything that looks
+like code.</p>
+<p>In practice this is no big problem. There are ways to discover and browse the
+code. I’m used to working in a REPL with little more than syntax highlighting as
+a language specific aid in the editor. Unison’s code base manager watches for
+changes in a scratch file I’m editing and on start up provides a link where the
+code base can be browsed.</p>
 <pre class="pre"><code>&gt; unison
 
 The Unison Codebase UI is running at
@@ -411,7 +525,11 @@ Welcome to Unison!
 You are running version: release/M2g
 I'm currently watching for changes to .u files under ~/.../flat-earth
 Type help to get help. 😎</code></pre>
-<p>When code I’m working on in the scratch file compiles I can add it to or update it in the code base. Like git, I can choose to push my changes to a repo with builtin commands. The whole experience is quite sensitive to current namespace selected. We can move around namespaces with the <code>namespace</code> or <code>cd</code> commands and use <code>ls</code> to see what’s there:</p>
+<p>When code I’m working on in the scratch file compiles I can add it to or update
+it in the code base. Like git, I can choose to push my changes to a repo with
+builtin commands. The whole experience is quite sensitive to current namespace
+selected. We can move around namespaces with the <code>namespace</code> or <code>cd</code>
+commands and use <code>ls</code> to see what’s there:</p>
 <pre class="pre"><code>&gt; unison
 
 .&gt; cd flight
@@ -425,7 +543,9 @@ Type help to get help. 😎</code></pre>
 6. licenseTypes/ (1 definition)
 7. metadata/     (7 definitions)
 8. patch         (patch)</code></pre>
-<p>Using commands to navigate namespaces and definitions that have the same names as commands we’re used to for navigating the file system is great and could be taken further. Sadly a <code>cd ..</code> command doesn’t go up the namespace tree.</p>
+<p>Using commands to navigate namespaces and definitions that have the same names
+as commands we’re used to for navigating the file system is great and could be
+taken further. Sadly a <code>cd ..</code> command doesn’t go up the namespace tree.</p>
 <p>To work on an existing definition, find it and select it for editing:</p>
 <pre class="pre"><code>.&gt; find haversines
 
@@ -445,7 +565,10 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 
 You can edit them there, then do `update` to replace the definitions currently in this
 namespace.</code></pre>
-<p>To edit this definition, I’m better off navigating to its namespace first to avoid long namespace qualified names and to avoid a bug where fully qualified names cannot be added or updated if the current prompt is at <code>.&gt;</code>, the root namespace.</p>
+<p>To edit this definition, I’m better off navigating to its namespace first to
+avoid long namespace qualified names and to avoid a bug where fully qualified
+names cannot be added or updated if the current prompt is at <code>.&gt;</code>, the root
+namespace.</p>
 <pre class="pre"><code>.&gt; cd flight.Geodesy.Math
 .flight.Geodesy.Math&gt; edit EarthMath
 ☝️
@@ -459,7 +582,10 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
     | ForsytheAndoyerLambert
     | FsAndoyer</code></pre>
 <h1 id="teething-problems">Teething Problems</h1>
-<p>The pretty printing and parsing doesn’t roundtrip. Printed constructor parentheses were missed and indentation was offside. This was an inconvenience but I pretty quickly recognized the edits I’d need to make to dumped definitions to get them to compile again.</p>
+<p>The pretty printing and parsing doesn’t roundtrip. Printed constructor
+parentheses were missed and indentation was offside. This was an inconvenience
+but I pretty quickly recognized the edits I’d need to make to dumped definitions
+to get them to compile again.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>aOfHaversine : LatLng -&gt; LatLng -&gt; Rad</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>aOfHaversine x y =</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    use Float * +</span>
@@ -475,7 +601,8 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLatF) = haversine (Rad dLatF)</span></span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="va">++  (Rad hLngF) = haversine (Rad dLngF)</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    Rad (hLatF + (cos xLatF * cos yLatF * hLngF))</span></code></pre></div>
-<p>It was easy to make updates that resulted in names coming unstuck from hashes especially when renaming things.</p>
+<p>It was easy to make updates that resulted in names coming unstuck from hashes
+especially when renaming things.</p>
 <pre class="pre"><code>.flight.Geodesy&gt; find InverseSolution
 
 1.  unique type InverseSolution s α
@@ -490,7 +617,9 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 10. InverseSolution.α₂ : #7l8qisp5pk s α -&gt; () α
 11. InverseSolution.α₂.modify : (() α -&gt;{g} () α) -&gt; #7l8qisp5pk s α -&gt;{g} #7l8qisp5pk s α
 12. InverseSolution.α₂.set : () α -&gt; #7l8qisp5pk s α -&gt; #7l8qisp5pk s α</code></pre>
-<p>Some very ordinary float functions are missing from the base library such as <code>Float.isNaN</code> and related predicates for testing infinity. I also encountered a bug in float comparison:</p>
+<p>Some very ordinary float functions are missing from the base library such as
+<code>Float.isNaN</code> and related predicates for testing infinity. I also encountered
+a bug in float comparison:</p>
 <pre class="pre"><code>Now evaluating any watch expressions (lines starting with `&gt;`)... Ctrl+C cancels.
 
 1 | &gt; 0.0 &lt; 0.0
@@ -524,12 +653,24 @@ I added these definitions to the top of ~/.../flat-earth/scratch.u
 8 | &gt; -1.0 &lt; -2.0
     ⧩
     true</code></pre>
-<p>There’s no pattern matching or type deconstruction in arguments to functions. I have that in Haskell and F# and miss it.</p>
-<p>Some of the property tests I’d like to have added were not possible without float generators that are not yet included.</p>
-<p>I couldn’t get the code I wanted to write to compile with the trunk branch and ended up using the latest <code>release/M2g</code> branch but even there I had to backport an interpreter fix to prevent a <code>missing integral case</code> exception when using <em>less than</em> when comparing floats.</p>
+<p>There’s no pattern matching or type deconstruction in arguments to
+functions. I have that in Haskell and F# and miss it.</p>
+<p>Some of the property tests I’d like to have added were not possible without float
+generators that are not yet included.</p>
+<p>I couldn’t get the code I wanted to write to compile with the trunk branch and
+ended up using the latest <code>release/M2g</code> branch but even there I had to
+backport an interpreter fix to prevent a <code>missing integral case</code> exception
+when using
+<em>less than</em> when comparing floats.</p>
 <h1 id="overall-impression">Overall Impression</h1>
-<p>Unison is a new language with a distinctive and unusal development environment yet I was able to get what I wanted to do done, helped along by good documentation, excellent talks and quick feedback in the slack channel.</p>
-<p>The builtin <code>find</code> command and code base browsing web app are great but I still think I’d like to be able browse a subset of the codebase on disk as files in the appropriate branch of a namespace tree. Once I saw I could dump a lot of definitions to the scratch file then move them beneath the fold so that they were only visible to me I was happier.</p>
+<p>Unison is a new language with a distinctive and unusal development environment
+yet I was able to get what I wanted to do done, helped along by good
+documentation, excellent talks and quick feedback in the slack channel.</p>
+<p>The builtin <code>find</code> command and code base browsing web app are great but I
+still think I’d like to be able browse a subset of the codebase on disk as files
+in the appropriate branch of a namespace tree. Once I saw I could dump a lot of
+definitions to the scratch file then move them beneath the fold so that they
+were only visible to me I was happier.</p>
 <p>I really like transcripts.</p>
 <pre class="pre"><code>&gt; unison transcript.fork Haversine.md
 
@@ -542,7 +683,9 @@ Running the provided transcript file...
 &gt; unison transcript.fork Vincenty.md
 ⚙️   Processing stanza 5 of 5.
 💾  Wrote ~/.../flat-earth/Vincenty.output.md</code></pre>
-<p>I used transcripts to document what the code does for both the <a href="https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md">haversine solution</a> and <a href="https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md">Vincenty solution</a> to the geodetic inverse problem. Shown below is a snippet of the output of the transcript for the Vincenty solution:</p>
+<p>I used transcripts to document what the code does for both the <a href="https://github.com/BlockScope/flat-earth/blob/main/Haversine.output.md">haversine
+solution</a> and <a href="https://github.com/BlockScope/flat-earth/blob/main/Vincenty.output.md">Vincenty solution</a> to the geodetic inverse problem. Shown below
+is a snippet of the output of the transcript for the Vincenty solution:</p>
 <pre class="pre"><code>✅
 
 ellipsoids.u changed.
@@ -557,15 +700,24 @@ Now evaluating any watch expressions (lines starting with
 2 | &gt; hayford
         ⧩
         Ellipsoid (Radius 6378388.0) 297.0</code></pre>
-<p>The code base manager works well as one tool with a command shell, a REPL and git-like code base actions.</p>
-<p>The cached tests and definitions seem to hold a lot of promise to save developer time. I can’t say I noticed but isn’t that the point!</p>
-<p>The task I was solving didn’t require anything fancy so I can’t say much about the unison language itself other than it is similar enough to Haskell or F# that it felt familiar already except I suspect I don’t quite understand when to use <code>let</code>.</p>
+<p>The code base manager works well as one tool with a command shell, a REPL and
+git-like code base actions.</p>
+<p>The cached tests and definitions seem to hold a lot of promise to save developer
+time. I can’t say I noticed but isn’t that the point!</p>
+<p>The task I was solving didn’t require anything fancy so I can’t say much about
+the unison language itself other than it is similar enough to Haskell or F# that
+it felt familiar already except I suspect I don’t quite understand when to use
+<code>let</code>.</p>
 <p>I enjoyed trying out unison and contributing a package<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>FAI-Airscore implements the <a href="https://en.wikipedia.org/wiki/Marie_Henri_Andoyer">Andoyer</a> method for solving geodesic distance on the ellipsoid but it can get distances by using package <a href="https://github.com/mapado/haversine">haversine</a> for the sphere and package <a href="https://geopy.readthedocs.io/">geopy</a> for the ellipsoid.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>The code in the <a href="https://github.com/BlockScope/flat-earth#readme">blockscope/flat-earth</a> repo can be found at <code>contrib/pdejoux</code> in unison share, the common code base, where we can link directly to definitions such as this one for <a href="https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0">InverseSolution</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>FAI-Airscore implements the <a href="https://en.wikipedia.org/wiki/Marie_Henri_Andoyer">Andoyer</a> method for solving geodesic distance
+on the ellipsoid but it can get distances by using package <a href="https://github.com/mapado/haversine">haversine</a> for the
+sphere and package <a href="https://geopy.readthedocs.io/">geopy</a> for the ellipsoid.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>The code in the <a href="https://github.com/BlockScope/flat-earth#readme">blockscope/flat-earth</a> repo can be found at
+<code>contrib/pdejoux</code> in unison share, the common code base, where we can link
+directly to definitions such as this one for <a href="https://share.unison-lang.org/latest/types/@gtl0lqo99gd558dvadhpv2d4vsl0bei7kdern03h6jml2jmjo8pffrk3d5nt95q1ft3ui79aats93pfabmjbttl9pd4ljd07r482ut0">InverseSolution</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>

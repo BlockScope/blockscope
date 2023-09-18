@@ -93,7 +93,8 @@
         </div>
     
     <h1 id="tracing-plugins">Tracing Plugins</h1>
-<p>I’d like to get the test suite <code>uom-plugin:force</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> working in full with the <code>thoralf-plugin</code>.</p>
+<p>I’d like to get the test suite <code>uom-plugin:force</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> working in full with
+the <code>thoralf-plugin</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- test-suite-force/UnitDefs.hs</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">UnitDefs</span> () <span class="kw">where</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -119,7 +120,9 @@
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
 <h1 id="option-tracing">Option Tracing</h1>
-<p>To help me understand, I’m tracing typechecking by adding the ghc option <code>-ddump-tc-trace</code>. Compiling this program logged 70,000 lines of tracing, the unique first words<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of which are:</p>
+<p>To help me understand, I’m tracing typechecking by adding the ghc option
+<code>-ddump-tc-trace</code>. Compiling this program logged 70,000 lines of tracing, the
+unique first words<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of which are:</p>
 <p class="mono-flow">
 About addFamInsts addInertCan addInertEq Adding addLocalFamInst addTcEvBind alfi
 Ambiguity Application applyDefaultingRules Bindings can_eq_nc can_pred Can't
@@ -205,12 +208,24 @@ zonkSimples
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                    (text <span class="st">&quot;bad =&quot;</span> <span class="op">&lt;+&gt;</span> ppr bad)</span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span> r</span></code></pre></div>
 <h1 id="unit-equations-to-solve">Unit Equations to Solve</h1>
-<p>Counting the hits for “tcPluginSolve start uom-simplify-plugin”, I see the plugin was called on 16 times to help with typechecking this small program. Here is the complete set of constraints and unit equations the program needs solved in order<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. I found this sequence twice in the log, we’re typechecking the same thing, once for each module we’re compiling.</p>
-<p>\[\begin{align}IsCanonical(s)\\ 1&amp;=\frac{s}{s}\\ IsCanonical(kg)\\ 1&amp;=\frac{kg}{kg}\\ IsCanonical(m)\\ 1&amp;=\frac{m}{m}\\ \frac{kg \cdot m}{s^2} &amp;= \frac{m}{s^2} \cdot kg\\ \end{align}\]</p>
+<p>Counting the hits for “tcPluginSolve start uom-simplify-plugin”, I see the
+plugin was called on 16 times to help with typechecking this small program.
+Here is the complete set of constraints and unit equations the program needs
+solved in order<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. I found this sequence twice in the log, we’re typechecking
+the same thing, once for each module we’re compiling.</p>
+<p>\[\begin{align}IsCanonical(s)\\
+1&amp;=\frac{s}{s}\\
+IsCanonical(kg)\\
+1&amp;=\frac{kg}{kg}\\
+IsCanonical(m)\\
+1&amp;=\frac{m}{m}\\
+\frac{kg \cdot m}{s^2} &amp;= \frac{m}{s^2} \cdot kg\\
+\end{align}\]</p>
 <pre class="pre"><code>tcPluginSolve start uom-simplify-plugin
 wanted  = [[WD] hole{aaGE} {2}::
             (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
-<p>The uom-plugin and the thoralf-plugin can both solve simple single unit equations.</p>
+<p>The uom-plugin and the thoralf-plugin can both solve simple single unit
+equations.</p>
 <pre class="pre"><code>tcPluginSolve ok uom-simplify-plugin
 solved = [(CO U(plugin:uom-solve, One, Base &quot;s&quot; /: Base &quot;s&quot;)_N,
             [WD] hole{aaGE} {2}::
@@ -251,7 +266,8 @@ solved = [(Eq# @[Unit, Unit,
                                ~~ ((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;)
                                (CNonCanonical))]</code></pre>
 <h1 id="abbreviations">Abbreviations</h1>
-<p>The solved output is cryptic but there are only a few key strings like <code>CO</code> to lookup in GHC source to find out what’s being pretty printed.</p>
+<p>The solved output is cryptic but there are only a few key strings like <code>CO</code> to
+lookup in GHC source to find out what’s being pretty printed.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- OccName.hs</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- These derived variables have a prefix that no Haskell value could have</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mkDictOcc <span class="ot">=</span> mk_simple_deriv varName <span class="st">&quot;$d&quot;</span></span>
@@ -315,44 +331,60 @@ solved = [(Eq# @[Unit, Unit,
 <p>So we can say that:</p>
 <dl>
 <dt><code>CO</code></dt>
-<dd><p>is evidence of coercion.</p>
+<dd>
+<p>is evidence of coercion.</p>
 </dd>
 <dt><code>~#</code></dt>
-<dd><p>is primitive type constructor equality.</p>
+<dd>
+<p>is primitive type constructor equality.</p>
 </dd>
 <dt><code>Eq#</code></dt>
-<dd><p>is data constructor equality.</p>
+<dd>
+<p>is data constructor equality.</p>
 </dd>
 <dt><code>~~</code></dt>
-<dd><p>is type constructor equality.</p>
+<dd>
+<p>is type constructor equality.</p>
 </dd>
 <dt><code>cast</code></dt>
-<dd><p>is evidence of a cast.</p>
+<dd>
+<p>is evidence of a cast.</p>
 </dd>
 <dt><code>[WD]</code></dt>
-<dd><p>are wanted and derived constraints.</p>
+<dd>
+<p>are wanted and derived constraints.</p>
 </dd>
 <dt><code>cobox</code></dt>
-<dd><p>is an equality predicate.</p>
+<dd>
+<p>is an equality predicate.</p>
 </dd>
 <dt><code>irred</code></dt>
-<dd><p>is an irreducible predicate.</p>
+<dd>
+<p>is an irreducible predicate.</p>
 </dd>
 <dt><code>CDictCan</code></dt>
-<dd><p>is a typeclass canonical constraint.</p>
+<dd>
+<p>is a typeclass canonical constraint.</p>
 </dd>
 <dt><code>CNonCanonical</code></dt>
-<dd><p>is a non-canonical constraint.</p>
+<dd>
+<p>is a non-canonical constraint.</p>
 </dd>
 <dt><code>{_}::</code></dt>
-<dd><p>the sub-goal depth to prevent constraint solver looping.</p>
+<dd>
+<p>the sub-goal depth to prevent constraint solver looping.</p>
 </dd>
 </dl>
-<p>I’m pretty sure that the <code>_N</code> and <code>_R</code> indicate equivalence as nominal or representational. A <code>$d</code> prefix, like <code>$dKnownUnit</code>, is a type class. Re-reading the first simple wanted; it is a wanted and derived type hole, the subgoal depth is 2 and we’re seeking a non-canonical constraint equating primitives.</p>
+<p>I’m pretty sure that the <code>_N</code> and <code>_R</code> indicate equivalence as nominal or
+representational. A <code>$d</code> prefix, like <code>$dKnownUnit</code>, is a type class.
+Re-reading the first simple wanted; it is a wanted and derived type hole, the
+subgoal depth is 2 and we’re seeking a non-canonical constraint equating
+primitives.</p>
 <pre class="pre"><code>wanted  = [[WD] hole{aaGE} {2}::
             (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
 <h1 id="unwrapped-tracing">Unwrapped Tracing</h1>
-<p>This plugin also does its own tracing with calls to <code>tcPluginTrace</code> such as when it is unifying normalized units.</p>
+<p>This plugin also does its own tracing with calls to <code>tcPluginTrace</code> such as
+when it is unifying normalized units.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | An atom in the normal form is either a base unit, a variable or a</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- stuck type family application (but not one of the built-in type</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- families that correspond to group operations).</span></span>
@@ -375,7 +407,11 @@ solved = [(Eq# @[Unit, Unit,
     [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]
     [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]</code></pre>
 <h1 id="tracing-in-io">Tracing in IO</h1>
-<p>It is good to be able to see the conversation the <code>thoralf-plugin</code> has with the SMT solver. The code for <a href="https://richarde.dev/papers/2018/thoralf/thoralf.pdf">the Thoralf plugin paper</a> used <code>tcPluginIO</code> to write to stout with <code>putStrLn</code>. I find that useful too as I can pick just what I want to trace uninterrupted by copious other tracing. I have a small package for doing this, <a href="https://github.com/BlockScope/ghc-tcplugins-trace">ghc-tcplugins-trace</a>.</p>
+<p>It is good to be able to see the conversation the <code>thoralf-plugin</code> has with
+the SMT solver. The code for <a href="https://richarde.dev/papers/2018/thoralf/thoralf.pdf">the Thoralf plugin paper</a> used <code>tcPluginIO</code> to
+write to stout with <code>putStrLn</code>. I find that useful too as I can pick just what
+I want to trace uninterrupted by copious other tracing. I have a small package
+for doing this, <a href="https://github.com/BlockScope/ghc-tcplugins-trace">ghc-tcplugins-trace</a>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugCt</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugCt</span> </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceCallCount ::</span> <span class="dt">TraceCallCount</span></span>
@@ -867,7 +903,8 @@ solved = [(Eq# @[Unit, Unit,
     new-wanted = []</code></pre>
 </blockquote></li>
 </ul>
-<p>I’m using this with both plugins and have another for tracing SMT conversion and conversation.</p>
+<p>I’m using this with both plugins and have another for tracing SMT conversion and
+conversation.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmt</span> <span class="ot">=</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmt</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceConvertCtsToSmt ::</span> <span class="dt">TraceConvertCtsToSmt</span></span>
@@ -875,7 +912,8 @@ solved = [(Eq# @[Unit, Unit,
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceSmtConversation ::</span> <span class="dt">TraceSmtConversation</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace the conversation with the SMT solver</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
-<p>After commenting out the parts of the program that don’t compile with the <code>thoralf-plugin</code> let’s see how it traces SMT:</p>
+<p>After commenting out the parts of the program that don’t compile with the
+<code>thoralf-plugin</code> let’s see how it traces SMT:</p>
 <ul>
 <li>Converting constraints to SMT</li>
 </ul>
@@ -897,12 +935,14 @@ solved = [(Eq# @[Unit, Unit,
 </ul>
 <pre class="pre"><code>[send-&gt;] (declare-const base (Array String Int))
 [&lt;-recv] success</code></pre>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>I’ve removed pragmas, most imports and type signatures from the program listing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>With a regex I grabbed the first word <code>s/^(\S+).*$/$1/</code>, deleted lines with leading spaces with <code>s/ .*\n/\n/</code> and deleted multiple blank lines with <code>s/\n\n+/\n/</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Not shown are calls to the plugin want to solve constraints for <code>?callStack</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>I’ve removed pragmas, most imports and type signatures from the program listing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>With a regex I grabbed the first word <code>s/^(\S+).*$/$1/</code>, deleted lines with
+leading spaces with <code>s/ .*\n/\n/</code> and deleted multiple blank lines with
+<code>s/\n\n+/\n/</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Not shown are calls to the plugin want to solve constraints for <code>?callStack</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>
@@ -967,7 +1007,8 @@ solved = [(Eq# @[Unit, Unit,
         </div>
     
     <h1 id="tracing-plugins">Tracing Plugins</h1>
-<p>I’d like to get the test suite <code>uom-plugin:force</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> working in full with the <code>thoralf-plugin</code>.</p>
+<p>I’d like to get the test suite <code>uom-plugin:force</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> working in full with
+the <code>thoralf-plugin</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- test-suite-force/UnitDefs.hs</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">UnitDefs</span> () <span class="kw">where</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -993,7 +1034,9 @@ solved = [(Eq# @[Unit, Unit,
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    ]</span>
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
 <h1 id="option-tracing">Option Tracing</h1>
-<p>To help me understand, I’m tracing typechecking by adding the ghc option <code>-ddump-tc-trace</code>. Compiling this program logged 70,000 lines of tracing, the unique first words<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of which are:</p>
+<p>To help me understand, I’m tracing typechecking by adding the ghc option
+<code>-ddump-tc-trace</code>. Compiling this program logged 70,000 lines of tracing, the
+unique first words<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> of which are:</p>
 <p class="mono-flow">
 About addFamInsts addInertCan addInertEq Adding addLocalFamInst addTcEvBind alfi
 Ambiguity Application applyDefaultingRules Bindings can_eq_nc can_pred Can't
@@ -1079,12 +1122,24 @@ zonkSimples
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>                    (text <span class="st">&quot;bad =&quot;</span> <span class="op">&lt;+&gt;</span> ppr bad)</span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">return</span> r</span></code></pre></div>
 <h1 id="unit-equations-to-solve">Unit Equations to Solve</h1>
-<p>Counting the hits for “tcPluginSolve start uom-simplify-plugin”, I see the plugin was called on 16 times to help with typechecking this small program. Here is the complete set of constraints and unit equations the program needs solved in order<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. I found this sequence twice in the log, we’re typechecking the same thing, once for each module we’re compiling.</p>
-<p>\[\begin{align}IsCanonical(s)\\ 1&amp;=\frac{s}{s}\\ IsCanonical(kg)\\ 1&amp;=\frac{kg}{kg}\\ IsCanonical(m)\\ 1&amp;=\frac{m}{m}\\ \frac{kg \cdot m}{s^2} &amp;= \frac{m}{s^2} \cdot kg\\ \end{align}\]</p>
+<p>Counting the hits for “tcPluginSolve start uom-simplify-plugin”, I see the
+plugin was called on 16 times to help with typechecking this small program.
+Here is the complete set of constraints and unit equations the program needs
+solved in order<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. I found this sequence twice in the log, we’re typechecking
+the same thing, once for each module we’re compiling.</p>
+<p>\[\begin{align}IsCanonical(s)\\
+1&amp;=\frac{s}{s}\\
+IsCanonical(kg)\\
+1&amp;=\frac{kg}{kg}\\
+IsCanonical(m)\\
+1&amp;=\frac{m}{m}\\
+\frac{kg \cdot m}{s^2} &amp;= \frac{m}{s^2} \cdot kg\\
+\end{align}\]</p>
 <pre class="pre"><code>tcPluginSolve start uom-simplify-plugin
 wanted  = [[WD] hole{aaGE} {2}::
             (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
-<p>The uom-plugin and the thoralf-plugin can both solve simple single unit equations.</p>
+<p>The uom-plugin and the thoralf-plugin can both solve simple single unit
+equations.</p>
 <pre class="pre"><code>tcPluginSolve ok uom-simplify-plugin
 solved = [(CO U(plugin:uom-solve, One, Base &quot;s&quot; /: Base &quot;s&quot;)_N,
             [WD] hole{aaGE} {2}::
@@ -1125,7 +1180,8 @@ solved = [(Eq# @[Unit, Unit,
                                ~~ ((Base &quot;m&quot; /: (Base &quot;s&quot; *: Base &quot;s&quot;)) *: Base &quot;kg&quot;)
                                (CNonCanonical))]</code></pre>
 <h1 id="abbreviations">Abbreviations</h1>
-<p>The solved output is cryptic but there are only a few key strings like <code>CO</code> to lookup in GHC source to find out what’s being pretty printed.</p>
+<p>The solved output is cryptic but there are only a few key strings like <code>CO</code> to
+lookup in GHC source to find out what’s being pretty printed.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- OccName.hs</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- These derived variables have a prefix that no Haskell value could have</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>mkDictOcc <span class="ot">=</span> mk_simple_deriv varName <span class="st">&quot;$d&quot;</span></span>
@@ -1189,44 +1245,60 @@ solved = [(Eq# @[Unit, Unit,
 <p>So we can say that:</p>
 <dl>
 <dt><code>CO</code></dt>
-<dd><p>is evidence of coercion.</p>
+<dd>
+<p>is evidence of coercion.</p>
 </dd>
 <dt><code>~#</code></dt>
-<dd><p>is primitive type constructor equality.</p>
+<dd>
+<p>is primitive type constructor equality.</p>
 </dd>
 <dt><code>Eq#</code></dt>
-<dd><p>is data constructor equality.</p>
+<dd>
+<p>is data constructor equality.</p>
 </dd>
 <dt><code>~~</code></dt>
-<dd><p>is type constructor equality.</p>
+<dd>
+<p>is type constructor equality.</p>
 </dd>
 <dt><code>cast</code></dt>
-<dd><p>is evidence of a cast.</p>
+<dd>
+<p>is evidence of a cast.</p>
 </dd>
 <dt><code>[WD]</code></dt>
-<dd><p>are wanted and derived constraints.</p>
+<dd>
+<p>are wanted and derived constraints.</p>
 </dd>
 <dt><code>cobox</code></dt>
-<dd><p>is an equality predicate.</p>
+<dd>
+<p>is an equality predicate.</p>
 </dd>
 <dt><code>irred</code></dt>
-<dd><p>is an irreducible predicate.</p>
+<dd>
+<p>is an irreducible predicate.</p>
 </dd>
 <dt><code>CDictCan</code></dt>
-<dd><p>is a typeclass canonical constraint.</p>
+<dd>
+<p>is a typeclass canonical constraint.</p>
 </dd>
 <dt><code>CNonCanonical</code></dt>
-<dd><p>is a non-canonical constraint.</p>
+<dd>
+<p>is a non-canonical constraint.</p>
 </dd>
 <dt><code>{_}::</code></dt>
-<dd><p>the sub-goal depth to prevent constraint solver looping.</p>
+<dd>
+<p>the sub-goal depth to prevent constraint solver looping.</p>
 </dd>
 </dl>
-<p>I’m pretty sure that the <code>_N</code> and <code>_R</code> indicate equivalence as nominal or representational. A <code>$d</code> prefix, like <code>$dKnownUnit</code>, is a type class. Re-reading the first simple wanted; it is a wanted and derived type hole, the subgoal depth is 2 and we’re seeking a non-canonical constraint equating primitives.</p>
+<p>I’m pretty sure that the <code>_N</code> and <code>_R</code> indicate equivalence as nominal or
+representational. A <code>$d</code> prefix, like <code>$dKnownUnit</code>, is a type class.
+Re-reading the first simple wanted; it is a wanted and derived type hole, the
+subgoal depth is 2 and we’re seeking a non-canonical constraint equating
+primitives.</p>
 <pre class="pre"><code>wanted  = [[WD] hole{aaGE} {2}::
             (One :: Unit) ~# ((Base &quot;s&quot; /: Base &quot;s&quot;) :: Unit) (CNonCanonical)]</code></pre>
 <h1 id="unwrapped-tracing">Unwrapped Tracing</h1>
-<p>This plugin also does its own tracing with calls to <code>tcPluginTrace</code> such as when it is unifying normalized units.</p>
+<p>This plugin also does its own tracing with calls to <code>tcPluginTrace</code> such as
+when it is unifying normalized units.</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | An atom in the normal form is either a base unit, a variable or a</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- stuck type family application (but not one of the built-in type</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- families that correspond to group operations).</span></span>
@@ -1249,7 +1321,11 @@ solved = [(Eq# @[Unit, Unit,
     [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]
     [(&quot;kg&quot;, [1]), (&quot;m&quot;, [1]), (&quot;s&quot;, [-, 2])]</code></pre>
 <h1 id="tracing-in-io">Tracing in IO</h1>
-<p>It is good to be able to see the conversation the <code>thoralf-plugin</code> has with the SMT solver. The code for <a href="https://richarde.dev/papers/2018/thoralf/thoralf.pdf">the Thoralf plugin paper</a> used <code>tcPluginIO</code> to write to stout with <code>putStrLn</code>. I find that useful too as I can pick just what I want to trace uninterrupted by copious other tracing. I have a small package for doing this, <a href="https://github.com/BlockScope/ghc-tcplugins-trace">ghc-tcplugins-trace</a>.</p>
+<p>It is good to be able to see the conversation the <code>thoralf-plugin</code> has with
+the SMT solver. The code for <a href="https://richarde.dev/papers/2018/thoralf/thoralf.pdf">the Thoralf plugin paper</a> used <code>tcPluginIO</code> to
+write to stout with <code>putStrLn</code>. I find that useful too as I can pick just what
+I want to trace uninterrupted by copious other tracing. I have a small package
+for doing this, <a href="https://github.com/BlockScope/ghc-tcplugins-trace">ghc-tcplugins-trace</a>.</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugCt</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugCt</span> </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceCallCount ::</span> <span class="dt">TraceCallCount</span></span>
@@ -1741,7 +1817,8 @@ solved = [(Eq# @[Unit, Unit,
     new-wanted = []</code></pre>
 </blockquote></li>
 </ul>
-<p>I’m using this with both plugins and have another for tracing SMT conversion and conversation.</p>
+<p>I’m using this with both plugins and have another for tracing SMT conversion and
+conversation.</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode Haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmt</span> <span class="ot">=</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmt</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceConvertCtsToSmt ::</span> <span class="dt">TraceConvertCtsToSmt</span></span>
@@ -1749,7 +1826,8 @@ solved = [(Eq# @[Unit, Unit,
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        ,<span class="ot"> traceSmtConversation ::</span> <span class="dt">TraceSmtConversation</span></span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- ^ Trace the conversation with the SMT solver</span></span>
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        }</span></code></pre></div>
-<p>After commenting out the parts of the program that don’t compile with the <code>thoralf-plugin</code> let’s see how it traces SMT:</p>
+<p>After commenting out the parts of the program that don’t compile with the
+<code>thoralf-plugin</code> let’s see how it traces SMT:</p>
 <ul>
 <li>Converting constraints to SMT</li>
 </ul>
@@ -1771,12 +1849,14 @@ solved = [(Eq# @[Unit, Unit,
 </ul>
 <pre class="pre"><code>[send-&gt;] (declare-const base (Array String Int))
 [&lt;-recv] success</code></pre>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>I’ve removed pragmas, most imports and type signatures from the program listing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>With a regex I grabbed the first word <code>s/^(\S+).*$/$1/</code>, deleted lines with leading spaces with <code>s/ .*\n/\n/</code> and deleted multiple blank lines with <code>s/\n\n+/\n/</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Not shown are calls to the plugin want to solve constraints for <code>?callStack</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>I’ve removed pragmas, most imports and type signatures from the program listing.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>With a regex I grabbed the first word <code>s/^(\S+).*$/$1/</code>, deleted lines with
+leading spaces with <code>s/ .*\n/\n/</code> and deleted multiple blank lines with
+<code>s/\n\n+/\n/</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Not shown are calls to the plugin want to solve constraints for <code>?callStack</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>

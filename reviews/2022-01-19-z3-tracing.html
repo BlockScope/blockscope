@@ -92,7 +92,11 @@
             <br />
         </div>
     
-    <p>The thoralf plugin is using <a href="https://hackage.haskell.org/package/simple-smt">simple-smt</a> to talk with Z3 to solve typechecking constraints. The communication format are <a href="https://smtlib.cs.uiowa.edu/language.shtml">smt-lib</a> s-expressions. This package is able to read and show these without needing to know much about them. It does recognize a few of these s-expressions from the smt-lib standard. The recursive data representation of these is simple, hence the name I guess.</p>
+    <p>The thoralf plugin is using <a href="https://hackage.haskell.org/package/simple-smt">simple-smt</a> to talk with Z3 to solve typechecking
+constraints. The communication format are <a href="https://smtlib.cs.uiowa.edu/language.shtml">smt-lib</a> s-expressions. This package
+is able to read and show these without needing to know much about them. It does
+recognize a few of these s-expressions from the smt-lib standard. The recursive
+data representation of these is simple, hence the name I guess.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SExpr</span> <span class="ot">=</span> <span class="dt">Atom</span> <span class="dt">String</span> <span class="op">|</span> <span class="dt">List</span> [<span class="dt">SExpr</span>]</span></code></pre></div>
 <h1 id="removing-extra-spaces">Removing Extra Spaces</h1>
 <p>I’ve been doing a lot of tracing and noticed extra spaces in the s-expressions.</p>
@@ -100,7 +104,8 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">; thoralf-uom-diy.txt</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span> ) )</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span> )</span></code></pre></div>
-<p>I’d like to have the s-expressions show up in the trace without those extra spaces, like this:</p>
+<p>I’d like to have the s-expressions show up in the trace without those extra
+spaces, like this:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span></code></pre></div>
 <p>This the fix for that.</p>
@@ -119,7 +124,8 @@
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">+                          (showChar ')') es</span></span></code></pre></div>
 <p>I contributed this fix upstream. It’s been merged.</p>
 <h1 id="choosing-an-s-expression-printer">Choosing an S-Expression Printer</h1>
-<p>Functions in simple-smt for showing s-expressions are <code>showsSExpr</code> and <code>ppSExpr</code>.</p>
+<p>Functions in simple-smt for showing s-expressions are <code>showsSExpr</code> and
+<code>ppSExpr</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Show an s-expression.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; let Just (e, _) = readSExpr &quot;(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))&quot;</span></span>
@@ -143,16 +149,25 @@
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">--         a1Cm)</span></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">--       a1Cv))</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ot">ppSExpr ::</span> <span class="dt">SExpr</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span></span></code></pre></div>
-<p>I want to use the pretty printer <code>ppSExpr</code> but simple-smt itself uses the all-in-one-line printer <code>showsSExpr</code> and that is how the comms with Z3 are showing up while I’m tracing. To work on this I added simple-smt as a submodule after first forking it to the <em>BlockScope</em> organization on github.</p>
+<p>I want to use the pretty printer <code>ppSExpr</code> but simple-smt itself uses the
+all-in-one-line printer <code>showsSExpr</code> and that is how the comms with Z3 are
+showing up while I’m tracing. To work on this I added simple-smt as a submodule
+after first forking it to the <em>BlockScope</em> organization on github.</p>
 <pre class="pre"><code>&gt; git submodule add https://github.com/BlockScope/simple-smt
 &gt; cd simple-smt
 &gt; git checkout -b wip/plugins-for-blobs</code></pre>
-<p>I need to add an entry to <code>cabal.project</code> to pick up this dependency locally rather than from hackage, all without changing any of the <code>*.cabal</code> files that mention <code>simple-smt</code> as a dependency.</p>
+<p>I need to add an entry to <code>cabal.project</code> to pick up this dependency locally
+rather than from hackage, all without changing any of the <code>*.cabal</code> files that
+mention <code>simple-smt</code> as a dependency.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- cabal.project</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>packages<span class="op">:</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    simple<span class="op">-</span>smt</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    thoralf<span class="op">-</span>plugin</span></code></pre></div>
-<p>By passing an <code>SExpr -&gt; ShowsS</code> printer in as a parameter when setting up the solver and using this instead of <code>showsSExpr</code> I’m now getting nicely formatted and much easier to follow tracing. As a bonus, lines are all short enough so hat they won’t need scrolling when viewed in a narrow frame so as when showing up as code snippets on this blog.</p>
+<p>By passing an <code>SExpr -&gt; ShowsS</code> printer in as a parameter when setting up the
+solver and using this instead of <code>showsSExpr</code> I’m now getting nicely formatted
+and much easier to follow tracing. As a bonus, lines are all short enough so hat
+they won’t need scrolling when viewed in a narrow frame so as when showing up as
+code snippets on this blog.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Start a new solver process.</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>newSolver</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    ::</span> <span class="dt">String</span> <span class="co">-- ^ Executable</span></span>
@@ -161,8 +176,12 @@
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Logger</span> <span class="co">-- ^ Optional logging here</span></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Solver</span></span></code></pre></div>
 <h1 id="roundtripping">Roundtripping</h1>
-<p>I’d like to be able to take the output of tracing compilation of a package with modules using the thoralf plugin and then to take that output and use it as input to the Z3 solver as-is.</p>
-<p>The logging of simple-smt prefixes comms with <code>[send-&gt;]</code> and <code>[&lt;-recv]</code>. I’m able to filter that out before tracing by updating the logger to strip out those prefixes.</p>
+<p>I’d like to be able to take the output of tracing compilation of a package with
+modules using the thoralf plugin and then to take that output and use it as
+input to the Z3 solver as-is.</p>
+<p>The logging of simple-smt prefixes comms with <code>[send-&gt;]</code> and <code>[&lt;-recv]</code>. I’m
+able to filter that out before tracing by updating the logger to strip out those
+prefixes.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmtTalk</span> <span class="ot">=</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmtTalk</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceSend ::</span> <span class="dt">Bool</span></span>
@@ -263,10 +282,18 @@
 <span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- </span><span class="al">NOTE</span><span class="co">: If you don't want the s-expressions pretty printed then substitute</span></span>
 <span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- SMT.showsSExpr for SMT.ppSExpr.</span></span>
 <span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>    SMT.newSolver <span class="st">&quot;z3&quot;</span> [<span class="st">&quot;-smt2&quot;</span>, <span class="st">&quot;-in&quot;</span>] SMT.ppSExpr</span></code></pre></div>
-<p>What’s left to do for roundtripping is to prefix <code>"; "</code> before any tracing output that I don’t want left alive as input, to make it a comment, to deaden it.</p>
+<p>What’s left to do for roundtripping is to prefix <code>"; "</code> before any tracing
+output that I don’t want left alive as input, to make it a comment, to deaden
+it.</p>
 <h1 id="constraints-encoding">Constraints Encoding</h1>
-<p>The whole point of the thoralf plugin is to encode a theory as s-expressions so that it can offload solving to Z3. When tracing I’d like to see the constraints passed in to the plugin by GHC. The uom-plugin is showing these, printed with GHC’s own pretty printing, but the thoralf-plugin is rolling its own printing. I’ve pulled that out and put it into its own package, <code>ghc-tcplugins-trace</code>.</p>
-<p>To help me work through solving, I traced output to a file that I then used as a scratch file for input to z3. Eventually I got to the point where I could use the trace output as input without any edits. Here are the changes I made:</p>
+<p>The whole point of the thoralf plugin is to encode a theory as s-expressions so
+that it can offload solving to Z3. When tracing I’d like to see the constraints
+passed in to the plugin by GHC. The uom-plugin is showing these, printed with
+GHC’s own pretty printing, but the thoralf-plugin is rolling its own printing.
+I’ve pulled that out and put it into its own package, <code>ghc-tcplugins-trace</code>.</p>
+<p>To help me work through solving, I traced output to a file that I then used as a
+scratch file for input to z3. Eventually I got to the point where I could use
+the trace output as input without any edits. Here are the changes I made:</p>
 <ul>
 <li>Don’t refresh (stop and restart) the solver.</li>
 </ul>
@@ -286,7 +313,8 @@
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :print-success true)</span></span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :produce-models true)</span></span></code></pre></div>
 <ul>
-<li>Echo the cycles of typechecking so that these will show up again when the log is rerun.</li>
+<li>Echo the cycles of typechecking so that these will show up again when the log
+is rerun.</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-start-cycle-1&quot;</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;givens-start-cycle-1&quot;</span>)</span>
@@ -336,7 +364,9 @@
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BE  &lt;=  fsk_a1BE</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BG  &lt;=  fsk_a1BG</span></span></code></pre></div>
 <ul>
-<li>Even though the thoralf-plugin is using the push/pop stack mode of incremental solving, I’d still like to know what declarations were previous seen so I show those too. Could be useful if we switch to using <a href="https://stackoverflow.com/a/40427658/1503186">assumptions</a> instead.</li>
+<li>Even though the thoralf-plugin is using the push/pop stack mode of incremental
+solving, I’d still like to know what declarations were previous seen so I show
+those too. Could be useful if we switch to using <a href="https://stackoverflow.com/a/40427658/1503186">assumptions</a> instead.</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (seen) </span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (unseen) </span></span>
@@ -579,7 +609,8 @@ success
 success
 success
 success</code></pre>
-<p>With the tracing additions we can follow along. With the echoed cycles and the named assertions, cross-referencing back into the trace is straight forward.</p>
+<p>With the tracing additions we can follow along. With the echoed cycles and the
+named assertions, cross-referencing back into the trace is straight forward.</p>
 <pre class="pre"><code>&gt; z3 smt2/thoralf-plugin-uom-diy.smt2
 ...
 givens-start-cycle-9
@@ -713,12 +744,15 @@ wanteds-finish-cycle-9
 success
 solver-finish-cycle-9</code></pre>
 <h1 id="unexploded-atoms">Unexploded Atoms</h1>
-<p>To help get pretty printing going I replaced each call to <code>Atom</code> with a call to <code>justReadSExpr</code>, avoiding lists masquerading as atoms when the string within the atom is itself an s-expression.</p>
+<p>To help get pretty printing going I replaced each call to <code>Atom</code> with a call
+to <code>justReadSExpr</code>, avoiding lists masquerading as atoms when the string
+within the atom is itself an s-expression.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ot">justReadSExpr ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">SExpr</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>justReadSExpr sexpr <span class="ot">=</span> <span class="kw">let</span> <span class="dt">Just</span> (e, _) <span class="ot">=</span> SMT.readSExpr sexpr <span class="kw">in</span> e</span></code></pre></div>
-<p>This is dangerous but something I can live with while this project is a work in progress and I want to get on with tracing rather than yak-shaving<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>This is dangerous but something I can live with while this project is a work in
+progress and I want to get on with tracing rather than yak-shaving<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 <pre class="pre"><code>src/ThoralfPlugin/Convert.hs: warning: [-Wincomplete-uni-patterns]
     Pattern match(es) are non-exhaustive
     In a pattern binding: Patterns not matched: Nothing
@@ -726,7 +760,8 @@ solver-finish-cycle-9</code></pre>
 ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
     |</code></pre>
 <h1 id="no-wanted-constraints">No Wanted Constraints</h1>
-<p>With detailed tracing I noticed that there were some annoying wanteds in the trace.</p>
+<p>With detailed tracing I noticed that there were some annoying wanteds in the
+trace.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span> <span class="dv">false</span> <span class="er">:named</span> <span class="va">wanted</span><span class="dv">-1</span>))</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
@@ -740,7 +775,10 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ot">smtWanted ::</span> [<span class="dt">ConvEq</span>] <span class="ot">-&gt;</span> <span class="dt">SMT.SExpr</span></span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>smtWanted ws <span class="ot">=</span> foldl' SMT.or (<span class="dt">SMT.Atom</span> <span class="st">&quot;false&quot;</span>) (<span class="fu">map</span> (SMT.not <span class="op">.</span> eqSExpr) ws)</span></code></pre></div>
-<p>With no wanted constraints there’s no useful work to do. Checking the consistency of the givens without wanteds is not useful. I added a pattern match for an empty list of wanteds and threw the problem back to GHC in that case. The tracing logs drastically reduced in size with this change:</p>
+<p>With no wanted constraints there’s no useful work to do. Checking the
+consistency of the givens without wanteds is not useful. I added a pattern match
+for an empty list of wanteds and threw the problem back to GHC in that case. The
+tracing logs drastically reduced in size with this change:</p>
 <pre><code>+--------------+--------+--------+
 | TEST SUITE   | BEFORE |  AFTER |
 +==============+========+========+
@@ -756,11 +794,13 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 +--------------+--------+--------+
 | rows         | 26,322 | 12,915 |
 +--------------+--------+--------+</code></pre>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>I’ve done a little yak-shaving, writing a Kate Highlighting XML file so that smt2 files show with highlighting on this blog.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Uniques are unique identifiers used for “fast ordering and equality tests” in GHC. The function used to get these when encoding is <code>getUnique :: a -&gt; Unique</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>I’ve done a little yak-shaving, writing a Kate Highlighting XML file so
+that smt2 files show with highlighting on this blog.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Uniques are unique identifiers used for “fast ordering and equality
+tests” in GHC. The function used to get these when encoding is <code>getUnique :: a -&gt; Unique</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>
@@ -824,7 +864,11 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
             <br />
         </div>
     
-    <p>The thoralf plugin is using <a href="https://hackage.haskell.org/package/simple-smt">simple-smt</a> to talk with Z3 to solve typechecking constraints. The communication format are <a href="https://smtlib.cs.uiowa.edu/language.shtml">smt-lib</a> s-expressions. This package is able to read and show these without needing to know much about them. It does recognize a few of these s-expressions from the smt-lib standard. The recursive data representation of these is simple, hence the name I guess.</p>
+    <p>The thoralf plugin is using <a href="https://hackage.haskell.org/package/simple-smt">simple-smt</a> to talk with Z3 to solve typechecking
+constraints. The communication format are <a href="https://smtlib.cs.uiowa.edu/language.shtml">smt-lib</a> s-expressions. This package
+is able to read and show these without needing to know much about them. It does
+recognize a few of these s-expressions from the smt-lib standard. The recursive
+data representation of these is simple, hence the name I guess.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SExpr</span> <span class="ot">=</span> <span class="dt">Atom</span> <span class="dt">String</span> <span class="op">|</span> <span class="dt">List</span> [<span class="dt">SExpr</span>]</span></code></pre></div>
 <h1 id="removing-extra-spaces">Removing Extra Spaces</h1>
 <p>I’ve been doing a lot of tracing and noticed extra spaces in the s-expressions.</p>
@@ -832,7 +876,8 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <div class="sourceCode" id="cb3"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">; thoralf-uom-diy.txt</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span> ) )</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span> )</span></code></pre></div>
-<p>I’d like to have the s-expressions show up in the trace without those extra spaces, like this:</p>
+<p>I’d like to have the s-expressions show up in the trace without those extra
+spaces, like this:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span> (<span class="op">=</span> <span class="va">a1Cv</span> <span class="va">a1Cn</span>))</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span></code></pre></div>
 <p>This the fix for that.</p>
@@ -851,7 +896,8 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="va">+                          (showChar ')') es</span></span></code></pre></div>
 <p>I contributed this fix upstream. It’s been merged.</p>
 <h1 id="choosing-an-s-expression-printer">Choosing an S-Expression Printer</h1>
-<p>Functions in simple-smt for showing s-expressions are <code>showsSExpr</code> and <code>ppSExpr</code>.</p>
+<p>Functions in simple-smt for showing s-expressions are <code>showsSExpr</code> and
+<code>ppSExpr</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Show an s-expression.</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- &gt;&gt;&gt; let Just (e, _) = readSExpr &quot;(assert (= ((_ map (- (Int Int) Int)) a1Cl a1Cm) a1Cv))&quot;</span></span>
@@ -875,16 +921,25 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">--         a1Cm)</span></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">--       a1Cv))</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="ot">ppSExpr ::</span> <span class="dt">SExpr</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span></span></code></pre></div>
-<p>I want to use the pretty printer <code>ppSExpr</code> but simple-smt itself uses the all-in-one-line printer <code>showsSExpr</code> and that is how the comms with Z3 are showing up while I’m tracing. To work on this I added simple-smt as a submodule after first forking it to the <em>BlockScope</em> organization on github.</p>
+<p>I want to use the pretty printer <code>ppSExpr</code> but simple-smt itself uses the
+all-in-one-line printer <code>showsSExpr</code> and that is how the comms with Z3 are
+showing up while I’m tracing. To work on this I added simple-smt as a submodule
+after first forking it to the <em>BlockScope</em> organization on github.</p>
 <pre class="pre"><code>&gt; git submodule add https://github.com/BlockScope/simple-smt
 &gt; cd simple-smt
 &gt; git checkout -b wip/plugins-for-blobs</code></pre>
-<p>I need to add an entry to <code>cabal.project</code> to pick up this dependency locally rather than from hackage, all without changing any of the <code>*.cabal</code> files that mention <code>simple-smt</code> as a dependency.</p>
+<p>I need to add an entry to <code>cabal.project</code> to pick up this dependency locally
+rather than from hackage, all without changing any of the <code>*.cabal</code> files that
+mention <code>simple-smt</code> as a dependency.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- cabal.project</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>packages<span class="op">:</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    simple<span class="op">-</span>smt</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    thoralf<span class="op">-</span>plugin</span></code></pre></div>
-<p>By passing an <code>SExpr -&gt; ShowsS</code> printer in as a parameter when setting up the solver and using this instead of <code>showsSExpr</code> I’m now getting nicely formatted and much easier to follow tracing. As a bonus, lines are all short enough so hat they won’t need scrolling when viewed in a narrow frame so as when showing up as code snippets on this blog.</p>
+<p>By passing an <code>SExpr -&gt; ShowsS</code> printer in as a parameter when setting up the
+solver and using this instead of <code>showsSExpr</code> I’m now getting nicely formatted
+and much easier to follow tracing. As a bonus, lines are all short enough so hat
+they won’t need scrolling when viewed in a narrow frame so as when showing up as
+code snippets on this blog.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Start a new solver process.</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>newSolver</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    ::</span> <span class="dt">String</span> <span class="co">-- ^ Executable</span></span>
@@ -893,8 +948,12 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Logger</span> <span class="co">-- ^ Optional logging here</span></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Solver</span></span></code></pre></div>
 <h1 id="roundtripping">Roundtripping</h1>
-<p>I’d like to be able to take the output of tracing compilation of a package with modules using the thoralf plugin and then to take that output and use it as input to the Z3 solver as-is.</p>
-<p>The logging of simple-smt prefixes comms with <code>[send-&gt;]</code> and <code>[&lt;-recv]</code>. I’m able to filter that out before tracing by updating the logger to strip out those prefixes.</p>
+<p>I’d like to be able to take the output of tracing compilation of a package with
+modules using the thoralf plugin and then to take that output and use it as
+input to the Z3 solver as-is.</p>
+<p>The logging of simple-smt prefixes comms with <code>[send-&gt;]</code> and <code>[&lt;-recv]</code>. I’m
+able to filter that out before tracing by updating the logger to strip out those
+prefixes.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DebugSmtTalk</span> <span class="ot">=</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">DebugSmtTalk</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>        {<span class="ot"> traceSend ::</span> <span class="dt">Bool</span></span>
@@ -995,10 +1054,18 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- </span><span class="al">NOTE</span><span class="co">: If you don't want the s-expressions pretty printed then substitute</span></span>
 <span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- SMT.showsSExpr for SMT.ppSExpr.</span></span>
 <span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a>    SMT.newSolver <span class="st">&quot;z3&quot;</span> [<span class="st">&quot;-smt2&quot;</span>, <span class="st">&quot;-in&quot;</span>] SMT.ppSExpr</span></code></pre></div>
-<p>What’s left to do for roundtripping is to prefix <code>"; "</code> before any tracing output that I don’t want left alive as input, to make it a comment, to deaden it.</p>
+<p>What’s left to do for roundtripping is to prefix <code>"; "</code> before any tracing
+output that I don’t want left alive as input, to make it a comment, to deaden
+it.</p>
 <h1 id="constraints-encoding">Constraints Encoding</h1>
-<p>The whole point of the thoralf plugin is to encode a theory as s-expressions so that it can offload solving to Z3. When tracing I’d like to see the constraints passed in to the plugin by GHC. The uom-plugin is showing these, printed with GHC’s own pretty printing, but the thoralf-plugin is rolling its own printing. I’ve pulled that out and put it into its own package, <code>ghc-tcplugins-trace</code>.</p>
-<p>To help me work through solving, I traced output to a file that I then used as a scratch file for input to z3. Eventually I got to the point where I could use the trace output as input without any edits. Here are the changes I made:</p>
+<p>The whole point of the thoralf plugin is to encode a theory as s-expressions so
+that it can offload solving to Z3. When tracing I’d like to see the constraints
+passed in to the plugin by GHC. The uom-plugin is showing these, printed with
+GHC’s own pretty printing, but the thoralf-plugin is rolling its own printing.
+I’ve pulled that out and put it into its own package, <code>ghc-tcplugins-trace</code>.</p>
+<p>To help me work through solving, I traced output to a file that I then used as a
+scratch file for input to z3. Eventually I got to the point where I could use
+the trace output as input without any edits. Here are the changes I made:</p>
 <ul>
 <li>Don’t refresh (stop and restart) the solver.</li>
 </ul>
@@ -1018,7 +1085,8 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :print-success true)</span></span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="st">-   (set-option :produce-models true)</span></span></code></pre></div>
 <ul>
-<li>Echo the cycles of typechecking so that these will show up again when the log is rerun.</li>
+<li>Echo the cycles of typechecking so that these will show up again when the log
+is rerun.</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;solver-start-cycle-1&quot;</span>)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>(<span class="va">echo</span> <span class="st">&quot;givens-start-cycle-1&quot;</span>)</span>
@@ -1068,7 +1136,9 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BE  &lt;=  fsk_a1BE</span></span>
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">;  a1BG  &lt;=  fsk_a1BG</span></span></code></pre></div>
 <ul>
-<li>Even though the thoralf-plugin is using the push/pop stack mode of incremental solving, I’d still like to know what declarations were previous seen so I show those too. Could be useful if we switch to using <a href="https://stackoverflow.com/a/40427658/1503186">assumptions</a> instead.</li>
+<li>Even though the thoralf-plugin is using the push/pop stack mode of incremental
+solving, I’d still like to know what declarations were previous seen so I show
+those too. Could be useful if we switch to using <a href="https://stackoverflow.com/a/40427658/1503186">assumptions</a> instead.</li>
 </ul>
 <div class="sourceCode" id="cb15"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (seen) </span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co">; DECS1 (unseen) </span></span>
@@ -1311,7 +1381,8 @@ success
 success
 success
 success</code></pre>
-<p>With the tracing additions we can follow along. With the echoed cycles and the named assertions, cross-referencing back into the trace is straight forward.</p>
+<p>With the tracing additions we can follow along. With the echoed cycles and the
+named assertions, cross-referencing back into the trace is straight forward.</p>
 <pre class="pre"><code>&gt; z3 smt2/thoralf-plugin-uom-diy.smt2
 ...
 givens-start-cycle-9
@@ -1445,12 +1516,15 @@ wanteds-finish-cycle-9
 success
 solver-finish-cycle-9</code></pre>
 <h1 id="unexploded-atoms">Unexploded Atoms</h1>
-<p>To help get pretty printing going I replaced each call to <code>Atom</code> with a call to <code>justReadSExpr</code>, avoiding lists masquerading as atoms when the string within the atom is itself an s-expression.</p>
+<p>To help get pretty printing going I replaced each call to <code>Atom</code> with a call
+to <code>justReadSExpr</code>, avoiding lists masquerading as atoms when the string
+within the atom is itself an s-expression.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -fwarn-incomplete-uni-patterns #-}</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ot">justReadSExpr ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">SExpr</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>justReadSExpr sexpr <span class="ot">=</span> <span class="kw">let</span> <span class="dt">Just</span> (e, _) <span class="ot">=</span> SMT.readSExpr sexpr <span class="kw">in</span> e</span></code></pre></div>
-<p>This is dangerous but something I can live with while this project is a work in progress and I want to get on with tracing rather than yak-shaving<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>This is dangerous but something I can live with while this project is a work in
+progress and I want to get on with tracing rather than yak-shaving<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
 <pre class="pre"><code>src/ThoralfPlugin/Convert.hs: warning: [-Wincomplete-uni-patterns]
     Pattern match(es) are non-exhaustive
     In a pattern binding: Patterns not matched: Nothing
@@ -1458,7 +1532,8 @@ solver-finish-cycle-9</code></pre>
 ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
     |</code></pre>
 <h1 id="no-wanted-constraints">No Wanted Constraints</h1>
-<p>With detailed tracing I noticed that there were some annoying wanteds in the trace.</p>
+<p>With detailed tracing I noticed that there were some annoying wanteds in the
+trace.</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode smt2"><code class="sourceCode smt2"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">assert</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    (<span class="op">!</span> <span class="dv">false</span> <span class="er">:named</span> <span class="va">wanted</span><span class="dv">-1</span>))</span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>(<span class="kw">check-sat</span>)</span>
@@ -1472,7 +1547,10 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="ot">smtWanted ::</span> [<span class="dt">ConvEq</span>] <span class="ot">-&gt;</span> <span class="dt">SMT.SExpr</span></span>
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>smtWanted ws <span class="ot">=</span> foldl' SMT.or (<span class="dt">SMT.Atom</span> <span class="st">&quot;false&quot;</span>) (<span class="fu">map</span> (SMT.not <span class="op">.</span> eqSExpr) ws)</span></code></pre></div>
-<p>With no wanted constraints there’s no useful work to do. Checking the consistency of the givens without wanteds is not useful. I added a pattern match for an empty list of wanteds and threw the problem back to GHC in that case. The tracing logs drastically reduced in size with this change:</p>
+<p>With no wanted constraints there’s no useful work to do. Checking the
+consistency of the givens without wanteds is not useful. I added a pattern match
+for an empty list of wanteds and threw the problem back to GHC in that case. The
+tracing logs drastically reduced in size with this change:</p>
 <pre><code>+--------------+--------+--------+
 | TEST SUITE   | BEFORE |  AFTER |
 +==============+========+========+
@@ -1488,11 +1566,13 @@ ___ | justReadSExpr sexpr = let Just (e, _) = SMT.readSExpr sexpr in e
 +--------------+--------+--------+
 | rows         | 26,322 | 12,915 |
 +--------------+--------+--------+</code></pre>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>I’ve done a little yak-shaving, writing a Kate Highlighting XML file so that smt2 files show with highlighting on this blog.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Uniques are unique identifiers used for “fast ordering and equality tests” in GHC. The function used to get these when encoding is <code>getUnique :: a -&gt; Unique</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>I’ve done a little yak-shaving, writing a Kate Highlighting XML file so
+that smt2 files show with highlighting on this blog.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Uniques are unique identifiers used for “fast ordering and equality
+tests” in GHC. The function used to get these when encoding is <code>getUnique :: a -&gt; Unique</code>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>

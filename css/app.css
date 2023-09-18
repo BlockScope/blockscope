@@ -21602,14 +21602,19 @@ blockquote footer:before {
   color: #808080;
 }
 
+.updo,
+.updo > code {
+  color: #8dd3c7;
+}
+
 .blobs,
 .blobs > code {
-  color: #e66101;
+  color: #bebada;
 }
 
 .flaretiming,
 .flaretiming > code {
-  color: #5e3c99;
+  color: #fb8072;
 }
 
 .cit,

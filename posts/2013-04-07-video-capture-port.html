@@ -87,17 +87,35 @@
             <br />
         </div>
     
-    <p>I’ve been watching the play for apps from the sidelines. Had I’d missed the boat by not getting in early with the first wave of farting and beer swilling apps for mobile? Was the development experience raw and retrograde, like back to the ’90s before virtual machines with many build targets and <code>#pragma</code> hell? <a href="http://xamarin.com/">Xamarin</a> helps ease that cross-platform pain? With the recent release of F# 3.0 came another open source drop of the compiler and tools and a language binding for F# 3.0 has been added to <a href="http://xamarin.com/studio">Xamarin Studio</a>.</p>
+    <p>I’ve been watching the play for apps from the sidelines. Had I’d missed the
+boat by not getting in early with the first wave of farting and beer swilling
+apps for mobile? Was the development experience raw and retrograde, like back
+to the ’90s before virtual machines with many build targets and <code>#pragma</code>
+hell? <a href="http://xamarin.com/">Xamarin</a> helps ease that cross-platform pain? With
+the recent release of F# 3.0 came another open source drop of the compiler and
+tools and a language binding for F# 3.0 has been added to <a href="http://xamarin.com/studio">Xamarin
+Studio</a>.</p>
 <blockquote class="twitter-tweet">
 <p>
-Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the error handling: <a href="https://t.co/bGuDdcyxPV" title="https://gist.github.com/lobrien/5250556">gist.github.com/lobrien/5250556</a>
+Beloved F# istas, how would you do this in
+idiomatic F# to be shorter, ex: the error handling: <a href="https://t.co/bGuDdcyxPV" title="https://gist.github.com/lobrien/5250556">gist.github.com/lobrien/5250556</a>
 </p>
-— Miguel de Icaza (<span class="citation" data-cites="migueldeicaza">@migueldeicaza</span>) <a href="https://twitter.com/migueldeicaza/status/316729282124709889">March 27, 2013</a>
+—
+Miguel de Icaza (<span class="citation" data-cites="migueldeicaza">@migueldeicaza</span>) <a href="https://twitter.com/migueldeicaza/status/316729282124709889">March 27,
+2013</a>
 </blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>In response to this tweet, I set about converting the C# in that gist to F#, figuring it would be a good way to take the Xamarin tooling for a test drive. To get started, I created a new F# project in Visual Studio but changed the default references to the mono assemblies. After a transcription from C# to F#, the code changes I made were …</p>
+<p>In response to this tweet, I set about converting the C# in that gist to F#,
+figuring it would be a good way to take the Xamarin tooling for a test drive.
+To get started, I created a new F# project in Visual Studio but changed the
+default references to the mono assemblies. After a transcription from C# to F#,
+the code changes I made were …</p>
 <ul>
-<li>Put the moving bits inside an auto-opening private module. This is something like an anonymous namespace in C++, a place to put stuff that is local to the source file but otherwise hidden. What was left to the class members was to unwrap a <code>Choice&lt;_, _&gt;</code>, possibly fire an alert off and return an <code>Option&lt;_&gt;</code> …</li>
+<li>Put the moving bits inside an auto-opening private module. This is something
+like an anonymous namespace in C++, a place to put stuff that is local to the
+source file but otherwise hidden. What was left to the class members was to
+unwrap a <code>Choice&lt;_, _&gt;</code>, possibly fire an alert off and return an
+<code>Option&lt;_&gt;</code> …</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>        <span class="op">[&lt;</span>AutoOpen<span class="op">&gt;]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        <span class="ot">module</span> <span class="kw">private</span> __ =</span>
@@ -112,12 +130,15 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                | Choice1Of2<span class="op">(</span>s<span class="op">)</span> -&gt; Some<span class="op">(</span>s<span class="op">)</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                | Choice2Of2<span class="op">(</span>m<span class="op">)</span> -&gt; alert<span class="op">(</span>m<span class="op">)</span>; None</span></code></pre></div>
 <ul>
-<li>I stopped naming things I didn’t care about using underscore, the discard binding from pattern matches. Note that I cannot use a single underscore for the this binding of a method so I use two.</li>
+<li>I stopped naming things I didn’t care about using underscore, the discard
+binding from pattern matches. Note that I cannot use a single underscore for
+the this binding of a method so I use two.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">override</span> __.FinishedLaunching<span class="op">(</span>_, _<span class="op">)</span> = ...</span></code></pre></div>
 <ul>
 <li>Replaced nulls with options and choices.</li>
-<li>Dropped the use of new when constructing object except when the class implements IDisposable.</li>
+<li>Dropped the use of new when constructing object except when the class
+implements IDisposable.</li>
 <li>Collected related fields into records going with immutability where possible.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>        //<span class="co"> From this ...</span></span>
@@ -136,9 +157,11 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <div class="sourceCode" id="cb4"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">match</span> labelledView <span class="kw">with</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        | <span class="op">{</span>Label = l; View = v<span class="op">}</span> -&gt;</span></code></pre></div>
 <ul>
-<li>Dropped the <code>Maybe-</code> prefix on methods that were returning null but were now returning <code>Option&lt;_&gt;</code>.</li>
+<li>Dropped the <code>Maybe-</code> prefix on methods that were returning null but were now
+returning <code>Option&lt;_&gt;</code>.</li>
 <li>I preferred to use <code>Ref&lt;_&gt;</code> for the few remaining mutations of fields.</li>
-<li>Encoded the same information in fewer fields by seeing that recording was tied to the existence of the capture.</li>
+<li>Encoded the same information in fewer fields by seeing that recording was
+tied to the existence of the capture.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> VideoCaptureController<span class="op">(</span>viewColor, title<span class="op">)</span> =</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="kw">inherit</span> UIViewController<span class="op">()</span></span>
@@ -150,7 +173,9 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            //<span class="co"> to this ...</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> capture : Ref&lt;VideoCapture <span class="dt">option</span>&gt; = <span class="kw">ref</span> None</span></code></pre></div>
-<p>The <a href="https://github.com/philderbeast/XamarinVideoCapture">complete solution</a> and <a href="https://gist.github.com/philderbeast/5253070">gist</a> are up at github. I coded this blind, aiming only to get it compiling and don’t know if it runs.</p>
+<p>The <a href="https://github.com/philderbeast/XamarinVideoCapture">complete solution</a>
+and <a href="https://gist.github.com/philderbeast/5253070">gist</a> are up at github.
+I coded this blind, aiming only to get it compiling and don’t know if it runs.</p>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>
 
 </article>
@@ -210,17 +235,35 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
             <br />
         </div>
     
-    <p>I’ve been watching the play for apps from the sidelines. Had I’d missed the boat by not getting in early with the first wave of farting and beer swilling apps for mobile? Was the development experience raw and retrograde, like back to the ’90s before virtual machines with many build targets and <code>#pragma</code> hell? <a href="http://xamarin.com/">Xamarin</a> helps ease that cross-platform pain? With the recent release of F# 3.0 came another open source drop of the compiler and tools and a language binding for F# 3.0 has been added to <a href="http://xamarin.com/studio">Xamarin Studio</a>.</p>
+    <p>I’ve been watching the play for apps from the sidelines. Had I’d missed the
+boat by not getting in early with the first wave of farting and beer swilling
+apps for mobile? Was the development experience raw and retrograde, like back
+to the ’90s before virtual machines with many build targets and <code>#pragma</code>
+hell? <a href="http://xamarin.com/">Xamarin</a> helps ease that cross-platform pain? With
+the recent release of F# 3.0 came another open source drop of the compiler and
+tools and a language binding for F# 3.0 has been added to <a href="http://xamarin.com/studio">Xamarin
+Studio</a>.</p>
 <blockquote class="twitter-tweet">
 <p>
-Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the error handling: <a href="https://t.co/bGuDdcyxPV" title="https://gist.github.com/lobrien/5250556">gist.github.com/lobrien/5250556</a>
+Beloved F# istas, how would you do this in
+idiomatic F# to be shorter, ex: the error handling: <a href="https://t.co/bGuDdcyxPV" title="https://gist.github.com/lobrien/5250556">gist.github.com/lobrien/5250556</a>
 </p>
-— Miguel de Icaza (<span class="citation" data-cites="migueldeicaza">@migueldeicaza</span>) <a href="https://twitter.com/migueldeicaza/status/316729282124709889">March 27, 2013</a>
+—
+Miguel de Icaza (<span class="citation" data-cites="migueldeicaza">@migueldeicaza</span>) <a href="https://twitter.com/migueldeicaza/status/316729282124709889">March 27,
+2013</a>
 </blockquote>
 <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
-<p>In response to this tweet, I set about converting the C# in that gist to F#, figuring it would be a good way to take the Xamarin tooling for a test drive. To get started, I created a new F# project in Visual Studio but changed the default references to the mono assemblies. After a transcription from C# to F#, the code changes I made were …</p>
+<p>In response to this tweet, I set about converting the C# in that gist to F#,
+figuring it would be a good way to take the Xamarin tooling for a test drive.
+To get started, I created a new F# project in Visual Studio but changed the
+default references to the mono assemblies. After a transcription from C# to F#,
+the code changes I made were …</p>
 <ul>
-<li>Put the moving bits inside an auto-opening private module. This is something like an anonymous namespace in C++, a place to put stuff that is local to the source file but otherwise hidden. What was left to the class members was to unwrap a <code>Choice&lt;_, _&gt;</code>, possibly fire an alert off and return an <code>Option&lt;_&gt;</code> …</li>
+<li>Put the moving bits inside an auto-opening private module. This is something
+like an anonymous namespace in C++, a place to put stuff that is local to the
+source file but otherwise hidden. What was left to the class members was to
+unwrap a <code>Choice&lt;_, _&gt;</code>, possibly fire an alert off and return an
+<code>Option&lt;_&gt;</code> …</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>        <span class="op">[&lt;</span>AutoOpen<span class="op">&gt;]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>        <span class="ot">module</span> <span class="kw">private</span> __ =</span>
@@ -235,12 +278,15 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>                | Choice1Of2<span class="op">(</span>s<span class="op">)</span> -&gt; Some<span class="op">(</span>s<span class="op">)</span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                | Choice2Of2<span class="op">(</span>m<span class="op">)</span> -&gt; alert<span class="op">(</span>m<span class="op">)</span>; None</span></code></pre></div>
 <ul>
-<li>I stopped naming things I didn’t care about using underscore, the discard binding from pattern matches. Note that I cannot use a single underscore for the this binding of a method so I use two.</li>
+<li>I stopped naming things I didn’t care about using underscore, the discard
+binding from pattern matches. Note that I cannot use a single underscore for
+the this binding of a method so I use two.</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">override</span> __.FinishedLaunching<span class="op">(</span>_, _<span class="op">)</span> = ...</span></code></pre></div>
 <ul>
 <li>Replaced nulls with options and choices.</li>
-<li>Dropped the use of new when constructing object except when the class implements IDisposable.</li>
+<li>Dropped the use of new when constructing object except when the class
+implements IDisposable.</li>
 <li>Collected related fields into records going with immutability where possible.</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>        //<span class="co"> From this ...</span></span>
@@ -259,9 +305,11 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <div class="sourceCode" id="cb4"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">match</span> labelledView <span class="kw">with</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        | <span class="op">{</span>Label = l; View = v<span class="op">}</span> -&gt;</span></code></pre></div>
 <ul>
-<li>Dropped the <code>Maybe-</code> prefix on methods that were returning null but were now returning <code>Option&lt;_&gt;</code>.</li>
+<li>Dropped the <code>Maybe-</code> prefix on methods that were returning null but were now
+returning <code>Option&lt;_&gt;</code>.</li>
 <li>I preferred to use <code>Ref&lt;_&gt;</code> for the few remaining mutations of fields.</li>
-<li>Encoded the same information in fewer fields by seeing that recording was tied to the existence of the capture.</li>
+<li>Encoded the same information in fewer fields by seeing that recording was
+tied to the existence of the capture.</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode fsharp"><code class="sourceCode fsharp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>        <span class="kw">type</span> VideoCaptureController<span class="op">(</span>viewColor, title<span class="op">)</span> =</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="kw">inherit</span> UIViewController<span class="op">()</span></span>
@@ -273,7 +321,9 @@ Beloved F# istas, how would you do this in idiomatic F# to be shorter, ex: the e
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            //<span class="co"> to this ...</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> capture : Ref&lt;VideoCapture <span class="dt">option</span>&gt; = <span class="kw">ref</span> None</span></code></pre></div>
-<p>The <a href="https://github.com/philderbeast/XamarinVideoCapture">complete solution</a> and <a href="https://gist.github.com/philderbeast/5253070">gist</a> are up at github. I coded this blind, aiming only to get it compiling and don’t know if it runs.</p>
+<p>The <a href="https://github.com/philderbeast/XamarinVideoCapture">complete solution</a>
+and <a href="https://gist.github.com/philderbeast/5253070">gist</a> are up at github.
+I coded this blind, aiming only to get it compiling and don’t know if it runs.</p>
     <div id="copyright">&copy; 2013-2022 Block Scope</div>
 
 </article>
