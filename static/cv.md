@@ -10,6 +10,13 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <h2 class="work-section">&lt;Haskell&gt;</h2>
 <ul>
 <li>
+  <span class="updo">`U` `$` ▩ </span><span class="date">`2022/07—2023/08`</span>
+  [**FPComplete**](https://www.fpcomplete.com/).
+  ☞ Maintain a large Haskell codebase with
+  [**Updo**](https://github.com/cabalism/updo#readme), tooling I developed for
+  generating projects and progressive upgrading.
+</li>
+<li>
   <span class="blobs">`B` `†` ▩ </span><span class="date">`2021/12—2022/03`</span>
   [**Plugins for Blobs**](https://github.com/BlockScope/plugins-for-blobs)
   ☞ Type check units of measure with SMT solving.
@@ -122,11 +129,11 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <ul>
 <pre>
 <code>
-                                                        <span class="cactus">CC</span>
-                                          <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
-                             <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
-   <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span>
- <span class="date">~~|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+-~~</span>
- <span class="date"> 1995           2000           2005           2010           2015           2020</span>
+                                                      <span class="cactus">CC</span>
+                                        <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
+                           <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
+ <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span><span class="updo">UUU</span>
+<span class="date">-|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|-</span>
+<span class="date"> 1995           2000           2005           2010           2015           2020           2025</span>
 </code>
 </pre>
