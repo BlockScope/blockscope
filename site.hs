@@ -47,26 +47,34 @@ import qualified Text.Blaze.Html5.Attributes as A
 import System.FilePath
 import System.Environment (getArgs)
 
-pandocReaderOptions :: Maybe Syntax -> ReaderOptions
-pandocReaderOptions Nothing = defaultHakyllReaderOptions
-pandocReaderOptions (Just _) =
-        defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2"] }
+data Syntaxes =
+    Syntaxes
+        { syntaxSMT2 :: Maybe Syntax
+        , syntaxDhall :: Maybe Syntax
+        }
 
-pandocWriterOptions :: Maybe Syntax -> WriterOptions
-pandocWriterOptions Nothing = defaultHakyllWriterOptions { writerHTMLMathMethod = MathJax "" }
-pandocWriterOptions (Just syntax) =
+nullSyntaxes :: Syntaxes
+nullSyntaxes = Syntaxes Nothing Nothing
+
+pandocReaderOptions :: Syntaxes -> ReaderOptions
+pandocReaderOptions Syntaxes{syntaxSMT2 = Nothing, syntaxDhall = Nothing} = defaultHakyllReaderOptions
+pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Just _} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2", "dhall"] }
+pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Nothing} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2"] }
+pandocReaderOptions Syntaxes{syntaxSMT2 = Nothing, syntaxDhall = Just _} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["dhall"] }
+
+pandocWriterOptions :: Syntaxes -> WriterOptions
+pandocWriterOptions Syntaxes{syntaxSMT2 = smt2, syntaxDhall = dhall} =
         defaultHakyllWriterOptions
             { writerHTMLMathMethod = MathJax ""
-            , writerSyntaxMap = syntaxMap
-            }
-        where
-            syntaxMap =
-                Map.insert "smt2" syntax
+            , writerSyntaxMap =
+                maybe id (Map.insert "smt2") smt2
+                . maybe id (Map.insert "dhall") dhall
                 $ writerSyntaxMap defaultHakyllWriterOptions
+            }
 
-pandoc :: Maybe Syntax -> Compiler (Item String)
-pandoc syntax =
-    pandocCompilerWith (pandocReaderOptions syntax) (pandocWriterOptions syntax)
+pandoc :: Syntaxes -> Compiler (Item String)
+pandoc syntaxes =
+    pandocCompilerWith (pandocReaderOptions syntaxes) (pandocWriterOptions syntaxes)
 
 static :: Pattern -> Rules ()
 static f = match f $ do
@@ -88,25 +96,25 @@ mkStatic template = do
         customRoute ((</> "index.html") . fst . splitExtension . toFilePath)
 
     compile $ do
-        pandoc Nothing
+        pandoc nullSyntaxes
             >>= loadAndApplyTemplate "templates/about.html" postCtx
             >>= loadAndApplyTemplate (fromFilePath $ template <.> ".html") postCtx
             >>= relativizeUrls
 
-mkArticle :: Identifier -> Maybe Syntax -> Context String -> Compiler (Item String)
-mkArticle articleTemplate syntax ctx =
-    pandoc syntax
+mkArticle :: Identifier -> Syntaxes -> Context String -> Compiler (Item String)
+mkArticle articleTemplate syntaxes ctx =
+    pandoc syntaxes
         >>= loadAndApplyTemplate "templates/posts/post.html" ctx
         >>= loadAndApplyTemplate articleTemplate ctx
         >>= relativizeUrls
 
-mkPost :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkPost :: Syntaxes -> Context String -> Compiler (Item String)
 mkPost = mkArticle "templates/posts/default.html"
 
-mkReview :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkReview :: Syntaxes -> Context String -> Compiler (Item String)
 mkReview = mkArticle "templates/reviews/default.html"
 
-mkDraft :: Maybe Syntax -> Context String -> Compiler (Item String)
+mkDraft :: Syntaxes -> Context String -> Compiler (Item String)
 mkDraft = mkArticle "templates/drafts/default.html"
 
 mkPostsCtx :: String -> String -> [Item String] -> Context String
@@ -141,7 +149,9 @@ main = do
     args <- getArgs
 
     -- SEE: https://github.com/diku-dk/futhark-website/blob/4ebf2c19b8f9260124ab418ec82b951e28407241/site.hs#L30-L32
-    syntax <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
+    syntaxSMT2 <- either (error . show) return =<< parseSyntaxDefinition "syntax/smt2.xml"
+    syntaxDhall <- either (error . show) return =<< parseSyntaxDefinition "syntax/dhall.xml"
+    let syntaxes = Syntaxes (Just syntaxSMT2) (Just syntaxDhall)
 
     hakyllWith config $ do
 
@@ -175,7 +185,7 @@ main = do
             route . customRoute $ const "projects/uom/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -184,7 +194,7 @@ main = do
             route . customRoute $ const "projects/geodetics/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -193,7 +203,7 @@ main = do
             route . customRoute $ const "projects/tooling/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -202,7 +212,7 @@ main = do
             route . customRoute $ const "projects/fly/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -211,7 +221,7 @@ main = do
             route . customRoute $ const "projects/contrib/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -220,7 +230,7 @@ main = do
             route . customRoute $ const "projects/index.html"
 
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/about.html" postCtx
                 >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
@@ -230,18 +240,18 @@ main = do
 
         match draftsPattern $ do
             route $ setExtension "html"
-            compile $ do mkDraft (Just syntax) postCtx
+            compile $ do mkDraft syntaxes postCtx
 
         match reviewsPattern $ do
             route $ setExtension "html"
-            compile $ do mkReview (Just syntax) postCtx
+            compile $ do mkReview syntaxes postCtx
 
         match postsPattern $ do
             route $ setExtension "html"
             compile $ do
                 -- SEE: https://github.com/robwhitaker/hakyll-portfolio-blog/blob/729f2d51a1ff0d4f63e6a5cf4fc1b42cd6468d0b/site.hs#L146
                 let ctx = tagsFieldNonEmpty "tags" tags <> postCtx
-                mkPost (Just syntax) ctx
+                mkPost syntaxes ctx
 
         tagsRules tags $ \tag tagPattern -> do
             route idRoute
@@ -273,7 +283,7 @@ main = do
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
             compile
-                $ pandoc Nothing
+                $ pandoc nullSyntaxes
                 >>= loadAndApplyTemplate "templates/index.html" postCtx
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
