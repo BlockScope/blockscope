@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+    <title>Announcing Updo</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" type="text/css" href="../css/app.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+    </ul>
+</nav>
+
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Announcing Updo</h1>
+                    
+                    <p class="lead">Make projects from packages, versions and commits.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <h1 id="lightweight-fast-generator">Lightweight &amp; Fast Generator</h1>
+<p>Updo is lightweight tooling for generating Haskell projects, a low-tech
+solution, made up of Makefiles, Dhall text templates and very short Haskell
+scripts that can optionally be installed as executables.</p>
+<p>In the <code>make</code> way of only doing as much as needed, it takes seconds to
+generate projects with a large number of packages and dependencies.</p>
+<p>It runs locally. Alternative tools that do project mirroring can take minutes
+bringing down repositories of source dependencies but Updo doesn’t need to do
+this because it has all the needed information at hand in the configuration.</p>
+<p>You’ll still need another tool to actually build the packages in these projects,
+tools like <a href="https://cabal.readthedocs.io">Cabal</a> or <a href="https://docs.haskellstack.org">Stack</a> or <a href="https://input-output-hk.github.io/haskell.nix">haskell.nix</a>.</p>
+<h1 id="simple-bootstrapping">Simple Bootstrapping</h1>
+<p>Updo expects one entry point, a <code>project-files.mk</code> (or other named) Makefile.
+This short file includes a recipe to bootstrap Updo, adding it to your project
+from hackage or its own source repository. Distributing Updo as a Haskell
+package makes this easy.</p>
+<blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Makefile"><code class="sourceCode makefile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># project-files.mk</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_VERSION </span><span class="ch">?=</span><span class="st"> 1.0.0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">HACKAGE </span><span class="ch">:=</span><span class="st"> http://hackage.haskell.org/package</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_URL </span><span class="ch">:=</span><span class="st"> </span><span class="ch">${</span><span class="dt">HACKAGE</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">.tar.gz</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dv">updo/Makefile:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    rm -rf updo</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    curl -sSL <span class="ch">${</span><span class="dt">UPDO_URL</span><span class="ch">}</span> | tar -xz</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    mv updo-* updo</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    chmod +x <span class="ch">$$</span>(grep -RIl <span class="st">'^#!'</span> updo)</span></code></pre></div>
+</blockquote>
+<p>We recommend to <code>.gitignore</code> its <code>updo</code> folder for itself and its <code>.updo</code>
+working folder.</p>
+<h1 id="one-configuration">One Configuration</h1>
+<p>One set of configuration is used for all project types. You can use Updo to
+exclusively generate Cabal projects or exclusively generate Stack projects or do
+both at the same time. It can also generate a <a href="https://input-output-hk.github.io/haskell.nix/tutorials/source-repository-hashes.html?highlight=sha256map#avoiding-modifying-cabalproject-and-stackyaml">sha256map</a> for safely grabbing
+packages from source repositories with haskell.nix. Different Makefile targets
+say what to generate. For the default <code>.PHONY all</code> rule in examples, we build
+everything for the current project but nothing else. You’re free to do whatever
+you want with your entry Makefile.</p>
+<blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk cabal.project</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk stack.yaml</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk</span></code></pre></div>
+</blockquote>
+<h1 id="copy-that">Copy That!</h1>
+<p>Updo is stackage-centric. If you don’t want to use stackage, this is probably
+not the tool for you but the dependency configuration is flexible enough to use
+versions other than those stackage provides in its resolver package sets.</p>
+<p>By default, generated Cabal and Stack projects are as close to copies as we can
+get but why have two copies?</p>
+<ul>
+<li><dl>
+<dt>Personal Preference</dt>
+<dd>
+<p>Enables team members who prefer one build tool over the other to pick one.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Get to Know Both</dt>
+<dd>
+<p>Cabal and Stack have different command phraseologies. Have a project
+ready-to-go for trying out or learning the other tool.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Pick the Better Tool</dt>
+<dd>
+<p>Enables switching when a build feature is better in one tool or missing in
+the other.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Tool Breakage Fallback</dt>
+<dd>
+<p>When something breaks with one tool we have a fallback.</p>
+</dd>
+</dl></li>
+</ul>
+<h1 id="progressive-upgrades">Progressive Upgrades</h1>
+<p>Updo is also for upgrading projects. By upgrading we usually mean upgrading to a
+new version of GHC and a new version of stackage but progressive upgrading can
+also be used for upgrading a dependency that has significantly changed or
+swapping one dependency for another with a different API.</p>
+<p>It can work with one “current” project and one or more “upgrade” projects. The
+“current” target is the default. The active “upgrade” project is the
+<code>upgrade-projects</code> target, plural because it generates both Cabal and Stack
+projects. Configuration in <code>project-dhall/ghc-x.y.z</code> where <code>x.y.z /= ${GHC_VERSION|GHC_UPGRADE}</code> is ignored by Updo but “current” and “active”
+versions can be changed on the fly with environment variables.</p>
+<blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk upgrade-projects</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> GHC_UPGRADE=9.6.3 STACKAGE_UPGRADE=nightly-2023-11-15 <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    make <span class="at">-f</span> project-files.mk upgrade-projects</span></code></pre></div>
+</blockquote>
+<p>Local packages of the active upgrade project can be brought in progressively by
+keeping a <code>project-dhall/pkgs-upgrade-todo.dhall</code> to do list. This is best
+done in dependency order. The generated upgrade projects will include packages
+not in the to do list. That way we can compile the already upgraded packages
+along with packages just added, one or a few at a time for upgrade that may fail
+to compile. In the generated project files, the to do list is shown commented
+out.</p>
+<p>Projects are versioned by their stackage package set resolver and matching GHC
+compiler version, first specified in <code>project-versions.mk</code> and then followed
+up in STACKAGE-versioned files and GHC-versioned folders for setup
+configuration.</p>
+<blockquote>
+<div class="sourceCode" id="cb4"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Versions of GHC and stackage resolver, the ones we're on and the next</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ones we're upgrading to.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_VERSION </span><span class="ch">?=</span><span class="st"> 9.2.7</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_VERSION </span><span class="ch">?=</span><span class="st"> lts-20.23</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For the upgrade, pick a matching pair of ghc-version and stack</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># resolver.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_UPGRADE </span><span class="ch">?=</span><span class="st"> 9.4.5</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_UPGRADE </span><span class="ch">?=</span><span class="st"> lts-21.4</span></span></code></pre></div>
+</blockquote>
+<p>For the set up, we specify paths to local packages, version constraints for
+external packages and source repository commits for forked or unpublished
+packages. Other free-form configuration in snippets can be injected into the
+generated projects too so all configuration options are possible. The Dhall text
+templates can be very simple by calling the default templates we provide or you
+can do whatever you want with your templates. Not all configuration is
+necessary. Everything except the text templates can be left out.</p>
+<pre class="pre"><code>project-dhall
+└── ghc-x.y.z
+    ├── constraints.dhall      ▨ List { dep : Text, ver : Text }
+    ├── deps-external.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── deps-internal.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── forks-external.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── forks-internal.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+    └── text-templates
+        ├── dhall2config.dhall ▨ template for cabal.project
+        ├── cabalsnippet.dhall ▨ snippet  for cabal.project
+        ├── dhall2stack.dhall  ▨ template for stack.yaml
+        └── stacksnippet.dhall ▨ snippet  for stack.yaml</code></pre>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>When did Stack and Cabal get projects and what is the default project file name
+of each?</p>
+<ul>
+<li>In May 2015<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <a href="https://github.com/commercialhaskell/stack/blob/master/stack.yaml">commercialhaskell/stack</a> added <code>stack.yaml</code></li>
+<li>In Apr 2016<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <a href="https://github.com/haskell/cabal/blob/master/cabal.project">haskell/cabal</a> added <code>cabal.project</code></li>
+</ul>
+<p>A project is a file, typically but not necessarily, placed at the root of
+directory tree of packages<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Any file name you like can be used as
+project by these tools, located anywhere with a <code>--stack-yaml</code> or
+<code>--project-file</code> option but if not at the root then care must be taken to
+use relative paths to local packages of the project.</p>
+<p>Haskell.nix can use either kind of project file.</p>
+</div>
+<h1 id="conventions">Conventions</h1>
+<p>Updo is a convention over configuration tool. It expects a certain minimal
+structure. Aside from the <code>project-files.mk</code> entry point, the Dhall
+configuration mostly goes into a <code>project-dhall/ghc-x.y.z</code> folder. Cabal
+configuration from stackage will likely need to be downloaded to a
+<code>project-stackage/${STACKAGE-VERSION}.config</code> file so that we can comment out
+any conflicting versions in the <code>constraints</code> field. We can skip the download
+and import this configuration directly from stackage when there are no version
+conflicts.</p>
+<p>Configuration of constraints (dependency package version equalities) and source
+repository package dependencies can be kept sorted using editor functionality
+because each file is a list of records. We’ve split source repository
+dependencies into a two-by-two matrix of original <strong>dep</strong>endency or <strong>fork</strong> and
+<strong>internal</strong> or <strong>external</strong> package. Any of these configuration files can be
+omitted if not needed.</p>
+<p>In records, the <strong>loc</strong>ation is the source repository URL, the <strong>tag</strong> is the
+git tag or branch name and the <strong>sub</strong> is a list of subdirectories to package
+<code>.cabal</code> files. The <strong>ver</strong>sion is the version equality constraint for a
+package <strong>dep</strong>endency that can include Stack’s <code>@rev</code> syntax for revisions.</p>
+<p>After sorting or editing we recommend using <code>dhall format</code> on any <code>*.dhall</code>
+file you’ve touched.</p>
+<h1 id="experience-report">Experience Report</h1>
+<p>Updo grew to fill a need after every other way I could find to maintain projects
+was unsatisfactory for the specific problem I had, herding hundreds of packages
+and their dependencies into buildable projects over two compiler versions for
+both cabal and stack. The more I use it, the more I love it as a fast, simple
+and appropriate solution for maintaining Haskell projects.</p>
+<p>You can find examples of Updo in use as forked repositories within the
+<a href="https://github.com/orgs/up-do/repositories">github/up-do</a> organization, including:</p>
+<ul>
+<li><a href="https://github.com/up-do/cabal">cabal</a></li>
+<li><a href="https://github.com/up-do/stack">stack</a></li>
+<li><a href="https://github.com/up-do/dex-lang">dex-lang</a></li>
+</ul>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Use these commands to view the history of stack’s default project file:</p>
+<pre class="pre"><code>$ git log -p -- stack.yaml
+$ git log -p -- stack.config
+$ git log -p -- stackage.config</code></pre>
+<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn2"><p>Use these commands to view the history of cabal’s default project file:</p>
+<pre class="pre"><code>$ git log -p -- cabal.project</code></pre>
+<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn3"><p>A common pattern for stack projects is to have a default <code>stack.yaml</code>
+project in the root and then other projects for each compiler version that
+the project is tested against, either also in the root or in a folder. These
+will then be named by resolver or GHC version, e.g.
+<code>./stack/stack-8.6.5.yaml</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div id="nav-side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Announcing Updo</h1>
+                    
+                    <p class="lead">Make projects from packages, versions and commits.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <h1 id="lightweight-fast-generator">Lightweight &amp; Fast Generator</h1>
+<p>Updo is lightweight tooling for generating Haskell projects, a low-tech
+solution, made up of Makefiles, Dhall text templates and very short Haskell
+scripts that can optionally be installed as executables.</p>
+<p>In the <code>make</code> way of only doing as much as needed, it takes seconds to
+generate projects with a large number of packages and dependencies.</p>
+<p>It runs locally. Alternative tools that do project mirroring can take minutes
+bringing down repositories of source dependencies but Updo doesn’t need to do
+this because it has all the needed information at hand in the configuration.</p>
+<p>You’ll still need another tool to actually build the packages in these projects,
+tools like <a href="https://cabal.readthedocs.io">Cabal</a> or <a href="https://docs.haskellstack.org">Stack</a> or <a href="https://input-output-hk.github.io/haskell.nix">haskell.nix</a>.</p>
+<h1 id="simple-bootstrapping">Simple Bootstrapping</h1>
+<p>Updo expects one entry point, a <code>project-files.mk</code> (or other named) Makefile.
+This short file includes a recipe to bootstrap Updo, adding it to your project
+from hackage or its own source repository. Distributing Updo as a Haskell
+package makes this easy.</p>
+<blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Makefile"><code class="sourceCode makefile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># project-files.mk</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_VERSION </span><span class="ch">?=</span><span class="st"> 1.0.0</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">HACKAGE </span><span class="ch">:=</span><span class="st"> http://hackage.haskell.org/package</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_URL </span><span class="ch">:=</span><span class="st"> </span><span class="ch">${</span><span class="dt">HACKAGE</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">.tar.gz</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dv">updo/Makefile:</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    rm -rf updo</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    curl -sSL <span class="ch">${</span><span class="dt">UPDO_URL</span><span class="ch">}</span> | tar -xz</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    mv updo-* updo</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    chmod +x <span class="ch">$$</span>(grep -RIl <span class="st">'^#!'</span> updo)</span></code></pre></div>
+</blockquote>
+<p>We recommend to <code>.gitignore</code> its <code>updo</code> folder for itself and its <code>.updo</code>
+working folder.</p>
+<h1 id="one-configuration">One Configuration</h1>
+<p>One set of configuration is used for all project types. You can use Updo to
+exclusively generate Cabal projects or exclusively generate Stack projects or do
+both at the same time. It can also generate a <a href="https://input-output-hk.github.io/haskell.nix/tutorials/source-repository-hashes.html?highlight=sha256map#avoiding-modifying-cabalproject-and-stackyaml">sha256map</a> for safely grabbing
+packages from source repositories with haskell.nix. Different Makefile targets
+say what to generate. For the default <code>.PHONY all</code> rule in examples, we build
+everything for the current project but nothing else. You’re free to do whatever
+you want with your entry Makefile.</p>
+<blockquote>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk cabal.project</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk stack.yaml</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk</span></code></pre></div>
+</blockquote>
+<h1 id="copy-that">Copy That!</h1>
+<p>Updo is stackage-centric. If you don’t want to use stackage, this is probably
+not the tool for you but the dependency configuration is flexible enough to use
+versions other than those stackage provides in its resolver package sets.</p>
+<p>By default, generated Cabal and Stack projects are as close to copies as we can
+get but why have two copies?</p>
+<ul>
+<li><dl>
+<dt>Personal Preference</dt>
+<dd>
+<p>Enables team members who prefer one build tool over the other to pick one.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Get to Know Both</dt>
+<dd>
+<p>Cabal and Stack have different command phraseologies. Have a project
+ready-to-go for trying out or learning the other tool.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Pick the Better Tool</dt>
+<dd>
+<p>Enables switching when a build feature is better in one tool or missing in
+the other.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Tool Breakage Fallback</dt>
+<dd>
+<p>When something breaks with one tool we have a fallback.</p>
+</dd>
+</dl></li>
+</ul>
+<h1 id="progressive-upgrades">Progressive Upgrades</h1>
+<p>Updo is also for upgrading projects. By upgrading we usually mean upgrading to a
+new version of GHC and a new version of stackage but progressive upgrading can
+also be used for upgrading a dependency that has significantly changed or
+swapping one dependency for another with a different API.</p>
+<p>It can work with one “current” project and one or more “upgrade” projects. The
+“current” target is the default. The active “upgrade” project is the
+<code>upgrade-projects</code> target, plural because it generates both Cabal and Stack
+projects. Configuration in <code>project-dhall/ghc-x.y.z</code> where <code>x.y.z /= ${GHC_VERSION|GHC_UPGRADE}</code> is ignored by Updo but “current” and “active”
+versions can be changed on the fly with environment variables.</p>
+<blockquote>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> make <span class="at">-f</span> project-files.mk upgrade-projects</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> GHC_UPGRADE=9.6.3 STACKAGE_UPGRADE=nightly-2023-11-15 <span class="dt">\</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    make <span class="at">-f</span> project-files.mk upgrade-projects</span></code></pre></div>
+</blockquote>
+<p>Local packages of the active upgrade project can be brought in progressively by
+keeping a <code>project-dhall/pkgs-upgrade-todo.dhall</code> to do list. This is best
+done in dependency order. The generated upgrade projects will include packages
+not in the to do list. That way we can compile the already upgraded packages
+along with packages just added, one or a few at a time for upgrade that may fail
+to compile. In the generated project files, the to do list is shown commented
+out.</p>
+<p>Projects are versioned by their stackage package set resolver and matching GHC
+compiler version, first specified in <code>project-versions.mk</code> and then followed
+up in STACKAGE-versioned files and GHC-versioned folders for setup
+configuration.</p>
+<blockquote>
+<div class="sourceCode" id="cb4"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Versions of GHC and stackage resolver, the ones we're on and the next</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># ones we're upgrading to.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_VERSION </span><span class="ch">?=</span><span class="st"> 9.2.7</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_VERSION </span><span class="ch">?=</span><span class="st"> lts-20.23</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># For the upgrade, pick a matching pair of ghc-version and stack</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># resolver.</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_UPGRADE </span><span class="ch">?=</span><span class="st"> 9.4.5</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_UPGRADE </span><span class="ch">?=</span><span class="st"> lts-21.4</span></span></code></pre></div>
+</blockquote>
+<p>For the set up, we specify paths to local packages, version constraints for
+external packages and source repository commits for forked or unpublished
+packages. Other free-form configuration in snippets can be injected into the
+generated projects too so all configuration options are possible. The Dhall text
+templates can be very simple by calling the default templates we provide or you
+can do whatever you want with your templates. Not all configuration is
+necessary. Everything except the text templates can be left out.</p>
+<pre class="pre"><code>project-dhall
+└── ghc-x.y.z
+    ├── constraints.dhall      ▨ List { dep : Text, ver : Text }
+    ├── deps-external.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── deps-internal.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── forks-external.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+    ├── forks-internal.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+    └── text-templates
+        ├── dhall2config.dhall ▨ template for cabal.project
+        ├── cabalsnippet.dhall ▨ snippet  for cabal.project
+        ├── dhall2stack.dhall  ▨ template for stack.yaml
+        └── stacksnippet.dhall ▨ snippet  for stack.yaml</code></pre>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>When did Stack and Cabal get projects and what is the default project file name
+of each?</p>
+<ul>
+<li>In May 2015<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <a href="https://github.com/commercialhaskell/stack/blob/master/stack.yaml">commercialhaskell/stack</a> added <code>stack.yaml</code></li>
+<li>In Apr 2016<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <a href="https://github.com/haskell/cabal/blob/master/cabal.project">haskell/cabal</a> added <code>cabal.project</code></li>
+</ul>
+<p>A project is a file, typically but not necessarily, placed at the root of
+directory tree of packages<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>. Any file name you like can be used as
+project by these tools, located anywhere with a <code>--stack-yaml</code> or
+<code>--project-file</code> option but if not at the root then care must be taken to
+use relative paths to local packages of the project.</p>
+<p>Haskell.nix can use either kind of project file.</p>
+</div>
+<h1 id="conventions">Conventions</h1>
+<p>Updo is a convention over configuration tool. It expects a certain minimal
+structure. Aside from the <code>project-files.mk</code> entry point, the Dhall
+configuration mostly goes into a <code>project-dhall/ghc-x.y.z</code> folder. Cabal
+configuration from stackage will likely need to be downloaded to a
+<code>project-stackage/${STACKAGE-VERSION}.config</code> file so that we can comment out
+any conflicting versions in the <code>constraints</code> field. We can skip the download
+and import this configuration directly from stackage when there are no version
+conflicts.</p>
+<p>Configuration of constraints (dependency package version equalities) and source
+repository package dependencies can be kept sorted using editor functionality
+because each file is a list of records. We’ve split source repository
+dependencies into a two-by-two matrix of original <strong>dep</strong>endency or <strong>fork</strong> and
+<strong>internal</strong> or <strong>external</strong> package. Any of these configuration files can be
+omitted if not needed.</p>
+<p>In records, the <strong>loc</strong>ation is the source repository URL, the <strong>tag</strong> is the
+git tag or branch name and the <strong>sub</strong> is a list of subdirectories to package
+<code>.cabal</code> files. The <strong>ver</strong>sion is the version equality constraint for a
+package <strong>dep</strong>endency that can include Stack’s <code>@rev</code> syntax for revisions.</p>
+<p>After sorting or editing we recommend using <code>dhall format</code> on any <code>*.dhall</code>
+file you’ve touched.</p>
+<h1 id="experience-report">Experience Report</h1>
+<p>Updo grew to fill a need after every other way I could find to maintain projects
+was unsatisfactory for the specific problem I had, herding hundreds of packages
+and their dependencies into buildable projects over two compiler versions for
+both cabal and stack. The more I use it, the more I love it as a fast, simple
+and appropriate solution for maintaining Haskell projects.</p>
+<p>You can find examples of Updo in use as forked repositories within the
+<a href="https://github.com/orgs/up-do/repositories">github/up-do</a> organization, including:</p>
+<ul>
+<li><a href="https://github.com/up-do/cabal">cabal</a></li>
+<li><a href="https://github.com/up-do/stack">stack</a></li>
+<li><a href="https://github.com/up-do/dex-lang">dex-lang</a></li>
+</ul>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Use these commands to view the history of stack’s default project file:</p>
+<pre class="pre"><code>$ git log -p -- stack.yaml
+$ git log -p -- stack.config
+$ git log -p -- stackage.config</code></pre>
+<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn2"><p>Use these commands to view the history of cabal’s default project file:</p>
+<pre class="pre"><code>$ git log -p -- cabal.project</code></pre>
+<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn3"><p>A common pattern for stack projects is to have a default <code>stack.yaml</code>
+project in the root and then other projects for each compiler version that
+the project is tested against, either also in the root or in a folder. These
+will then be named by resolver or GHC version, e.g.
+<code>./stack/stack-8.6.5.yaml</code>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

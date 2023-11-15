@@ -366,17 +366,17 @@ src-ghc-flat/GhcApi/Constraint.hs:11:1: error:
 <h1 id="simpler-with-dhall">Simpler with Dhall</h1>
 <p>Tweaking the cabal file with all these conditionals and mixins is a bit too much
 repetitive work but with <a href="https://github.com/cabalism/hpack-dhall#readme">hpack-dhall</a> we can simplify this chore.</p>
-<pre class="dhall"><code>λ(low : Text) →
-λ(high : Text) →
-λ(srcs : List Text) →
-λ(ghc : { name : Text, mixin : List Text }) →
-λ(mods : List Text) →
-  { condition = &quot;impl(ghc &gt;= ${low}) &amp;&amp; impl(ghc &lt; ${high})&quot;
-  , source-dirs =
-      Prelude/List/map Text Text (λ(x : Text) → &quot;src-ghc-${x}&quot;) srcs
-  , dependencies = [ ghc ⫽ { version = &quot;&gt;=${low} &amp;&amp; &lt;${high}&quot; } ]
-  , other-modules = mods
-  }</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>low : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>high : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>srcs : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>ghc : <span class="op">{</span> name : <span class="dt">Text</span>, mixin : <span class="dt">List</span> <span class="dt">Text</span> <span class="op">})</span> <span class="fu">→</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>mods : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> condition = <span class="st">&quot;impl(ghc &gt;= ${low}) &amp;&amp; impl(ghc &lt; ${high})&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  , source-dirs =</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      Prelude/<span class="dt">List</span>/map <span class="dt">Text</span> <span class="dt">Text</span> <span class="op">(</span><span class="fu">λ</span><span class="op">(</span>x : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span> <span class="st">&quot;src-ghc-${x}&quot;</span><span class="op">)</span> srcs</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  , dependencies = <span class="op">[</span> ghc <span class="fu">⫽</span> <span class="op">{</span> version = <span class="st">&quot;&gt;=${low} &amp;&amp; &lt;${high}&quot;</span> <span class="op">}</span> <span class="op">]</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  , other-modules = mods</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <h1 id="why-do-this">Why do this?</h1>
 <p>I feel that copying code files this way is better than using CPP. We can single
 thread our thoughts looking at plain Haskell code uninterrupted by C prepocessor
@@ -734,17 +734,17 @@ src-ghc-flat/GhcApi/Constraint.hs:11:1: error:
 <h1 id="simpler-with-dhall">Simpler with Dhall</h1>
 <p>Tweaking the cabal file with all these conditionals and mixins is a bit too much
 repetitive work but with <a href="https://github.com/cabalism/hpack-dhall#readme">hpack-dhall</a> we can simplify this chore.</p>
-<pre class="dhall"><code>λ(low : Text) →
-λ(high : Text) →
-λ(srcs : List Text) →
-λ(ghc : { name : Text, mixin : List Text }) →
-λ(mods : List Text) →
-  { condition = &quot;impl(ghc &gt;= ${low}) &amp;&amp; impl(ghc &lt; ${high})&quot;
-  , source-dirs =
-      Prelude/List/map Text Text (λ(x : Text) → &quot;src-ghc-${x}&quot;) srcs
-  , dependencies = [ ghc ⫽ { version = &quot;&gt;=${low} &amp;&amp; &lt;${high}&quot; } ]
-  , other-modules = mods
-  }</code></pre>
+<div class="sourceCode" id="cb9"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>low : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>high : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>srcs : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>ghc : <span class="op">{</span> name : <span class="dt">Text</span>, mixin : <span class="dt">List</span> <span class="dt">Text</span> <span class="op">})</span> <span class="fu">→</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">λ</span><span class="op">(</span>mods : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">{</span> condition = <span class="st">&quot;impl(ghc &gt;= ${low}) &amp;&amp; impl(ghc &lt; ${high})&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  , source-dirs =</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      Prelude/<span class="dt">List</span>/map <span class="dt">Text</span> <span class="dt">Text</span> <span class="op">(</span><span class="fu">λ</span><span class="op">(</span>x : <span class="dt">Text</span><span class="op">)</span> <span class="fu">→</span> <span class="st">&quot;src-ghc-${x}&quot;</span><span class="op">)</span> srcs</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  , dependencies = <span class="op">[</span> ghc <span class="fu">⫽</span> <span class="op">{</span> version = <span class="st">&quot;&gt;=${low} &amp;&amp; &lt;${high}&quot;</span> <span class="op">}</span> <span class="op">]</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  , other-modules = mods</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span></code></pre></div>
 <h1 id="why-do-this">Why do this?</h1>
 <p>I feel that copying code files this way is better than using CPP. We can single
 thread our thoughts looking at plain Haskell code uninterrupted by C prepocessor
