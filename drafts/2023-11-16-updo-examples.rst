@@ -486,8 +486,11 @@ The steps of converting a project to Updo, using conversion of Cabal for example
 .. [#] The ``project-versions.mk`` filename is a convention we've used so far
     but you can use any name for this file.
 
-.. [#] ``updo-1.0.0`` doesn't use a default empty list when a configuration file
-    is missing but that feature is in the works.
+.. [#] ``updo-1.0.0`` doesn't use a `default empty list <empty-list-default_>`_
+    when a configuration file is missing but that feature is in the works,
+    implemented but not yet published.
+
+.. _empty-list-default: https://github.com/cabalism/updo/issues/9
 
 .. [#] ``dhall2caball`` is not shown here as it's very similar to ``dhall2stack``.
 

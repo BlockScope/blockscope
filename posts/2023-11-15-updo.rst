@@ -4,19 +4,24 @@ subtitle: Make projects from packages, versions and commits.
 tags: haskell, build
 ---
 
-Lightweight & Fast Generator
-============================
+.. image:: https://raw.githubusercontent.com/cabalism/updo/main/updo-offset.svg
+    :alt: Updo Logo
 
-Updo is lightweight tooling for generating Haskell projects, a low-tech
-solution, made up of Makefiles, Dhall text templates and very short Haskell
-scripts that can optionally be installed as executables.
+Make Projects Fast
+==================
+
+`Updo <cabalism-updo_>`_ is **lightweight** tooling for generating Haskell
+projects
+**fast**.
 
 In the ``make`` way of only doing as much as needed, it takes seconds to
-generate projects with a large number of packages and dependencies.
+generate projects with a large number of packages and dependencies. It runs
+locally. Alternative tools that do project mirroring can take minutes bringing
+down repositories of source dependencies but Updo doesn't need to do this
+because it has all the needed information at hand in `one configuration`_.
 
-It runs locally. Alternative tools that do project mirroring can take minutes
-bringing down repositories of source dependencies but Updo doesn't need to do
-this because it has all the needed information at hand in the configuration.
+It is low-tech, made up of Makefiles, Dhall text templates and very short
+Haskell scripts that can optionally be installed as executables.
 
 You'll still need another tool to actually build the packages in these projects,
 tools like `Cabal <cabal-docs_>`_ or `Stack <stack-docs_>`_ or `haskell.nix
@@ -63,101 +68,6 @@ you want with your entry Makefile.
         $ make -f project-files.mk stack.yaml
         $ make -f project-files.mk
 
-Copy That!
-==========
-
-Updo is stackage-centric. If you don't want to use stackage, this is probably
-not the tool for you but the dependency configuration is flexible enough to use
-versions other than those stackage provides in its resolver package sets.
-
-By default, generated Cabal and Stack projects are as close to copies as we can
-get but why have two copies?
-
-* Personal Preference
-    Enables team members who prefer one build tool over the other to pick one.
-* Get to Know Both
-    Cabal and Stack have different command phraseologies. Have a project
-    ready-to-go for trying out or learning the other tool.
-* Pick the Better Tool
-    Enables switching when a build feature is better in one tool or missing in
-    the other.
-* Tool Breakage Fallback
-    When something breaks with one tool we have a fallback.
-
-
-
-
-
-Progressive Upgrades
-====================
-
-Updo is also for upgrading projects. By upgrading we usually mean upgrading to a
-new version of GHC and a new version of stackage but progressive upgrading can
-also be used for upgrading a dependency that has significantly changed or
-swapping one dependency for another with a different API.
-
-It can work with one "current" project and one or more "upgrade" projects. The
-"current" target is the default. The active "upgrade" project is the
-``upgrade-projects`` target, plural because it generates both Cabal and Stack
-projects. Configuration in ``project-dhall/ghc-x.y.z`` where ``x.y.z /=
-${GHC_VERSION|GHC_UPGRADE}`` is ignored by Updo but "current" and "active"
-versions can be changed on the fly with environment variables.
-
-    .. code-block:: bash
-
-        $ make -f project-files.mk
-        $ make -f project-files.mk upgrade-projects
-        $ GHC_UPGRADE=9.6.3 STACKAGE_UPGRADE=nightly-2023-11-15 \
-            make -f project-files.mk upgrade-projects
-
-Local packages of the active upgrade project can be brought in progressively by
-keeping a ``project-dhall/pkgs-upgrade-todo.dhall`` to do list. This is best
-done in dependency order. The generated upgrade projects will include packages
-not in the to do list. That way we can compile the already upgraded packages
-along with packages just added, one or a few at a time for upgrade that may fail
-to compile. In the generated project files, the to do list is shown commented
-out.
-
-Projects are versioned by their stackage package set resolver and matching GHC
-compiler version, first specified in ``project-versions.mk`` and then followed
-up in STACKAGE-versioned files and GHC-versioned folders for setup
-configuration.
-
-    .. code-block:: makefile
-
-        # Versions of GHC and stackage resolver, the ones we're on and the next
-        # ones we're upgrading to.
-        GHC_VERSION ?= 9.2.7
-        STACKAGE_VERSION ?= lts-20.23
-
-        # For the upgrade, pick a matching pair of ghc-version and stack
-        # resolver.
-        GHC_UPGRADE ?= 9.4.5
-        STACKAGE_UPGRADE ?= lts-21.4
-
-For the set up, we specify paths to local packages, version constraints for
-external packages and source repository commits for forked or unpublished
-packages. Other free-form configuration in snippets can be injected into the
-generated projects too so all configuration options are possible. The Dhall text
-templates can be very simple by calling the default templates we provide or you
-can do whatever you want with your templates. Not all configuration is
-necessary.  Everything except the text templates can be left out.
-
-.. code-block:: pre
-
-    project-dhall
-    └── ghc-x.y.z
-        ├── constraints.dhall      ▨ List { dep : Text, ver : Text }
-        ├── deps-external.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
-        ├── deps-internal.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
-        ├── forks-external.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
-        ├── forks-internal.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
-        └── text-templates
-            ├── dhall2config.dhall ▨ template for cabal.project
-            ├── cabalsnippet.dhall ▨ snippet  for cabal.project
-            ├── dhall2stack.dhall  ▨ template for stack.yaml
-            └── stacksnippet.dhall ▨ snippet  for stack.yaml
-
 .. note::
 
     When did Stack and Cabal get projects and what is the default project file name
@@ -194,56 +104,191 @@ necessary.  Everything except the text templates can be left out.
     will then be named by resolver or GHC version, e.g.
     ``./stack/stack-8.6.5.yaml``.
 
+Projects are versioned by their stackage package set resolver and matching GHC
+compiler version, first specified in ``project-versions.mk`` and then followed
+up in STACKAGE-versioned files and GHC-versioned folders for setup
+configuration.
+
+    .. code-block:: makefile
+
+        # Versions of GHC and stackage resolver, the ones we're on and the next
+        # ones we're upgrading to.
+        GHC_VERSION ?= 9.2.7
+        STACKAGE_VERSION ?= lts-20.23
+
+        # For the upgrade, pick a matching pair of ghc-version and stack
+        # resolver.
+        GHC_UPGRADE ?= 9.4.5
+        STACKAGE_UPGRADE ?= lts-21.4
+
+.. note::
+
+    We put version ``make`` variable assignments in ``project-versions.mk``.
+    These variables have to be set but how you do that is up to you.
+
+        .. code-block:: Makefile
+
+            # project-files.mk
+            include project-versions.mk
+            include updo/Makefile
+
+For the set up, we specify paths to local packages, version constraints for
+external published packages and source repository commits for forked or
+unpublished packages. Other free-form configuration in snippets can be injected
+into the generated projects too so all configuration options are possible. The
+Dhall text templates can be very simple by calling the default templates we
+provide or you can do whatever you want with your templates. Not all
+configuration is necessary.  Everything except the text templates can be left
+out[#empty]_.
+
+.. [#empty] ``updo-1.0.0`` doesn't use a `default empty list <empty-list-default_>`_
+    when a configuration file is missing but that feature is in the works,
+    implemented but not yet published.
+
+.. _empty-list-default: https://github.com/cabalism/updo/issues/9
+
+.. code-block:: pre
+
+    project-dhall
+    └── ghc-x.y.z
+        ├── constraints.dhall      ▨ List { dep : Text, ver : Text }
+        ├── deps-external.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+        ├── deps-internal.dhall    ▨ List { loc : Text, tag : Text, sub : List Text }
+        ├── forks-external.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+        ├── forks-internal.dhall   ▨ List { loc : Text, tag : Text, sub : List Text }
+        └── text-templates
+            ├── dhall2config.dhall ▨ template for cabal.project
+            ├── cabalsnippet.dhall ▨ snippet  for cabal.project
+            ├── dhall2stack.dhall  ▨ template for stack.yaml
+            └── stacksnippet.dhall ▨ snippet  for stack.yaml
+
+To explain the short 3-letter field names in records for:
+
+- constraints
+    .. code-block:: dhall
+
+        { dep : Text, ver : Text }
+
+    The **ver**sion is the version equality constraint for a package
+    **dep**endency that can include Stack's ``@rev`` syntax for revisions.
+
+- source-repository-packages
+    .. code-block:: dhall
+
+        { loc : Text, tag : Text, sub : List Text }
+
+    The **loc**ation is the source repository URL, the **tag** is the git tag or
+    branch name and the **sub** is a list of subdirectories to package
+    ``.cabal`` files.
+
+Copy That!
+==========
+
+Updo is stackage-centric. If you don't want to use stackage, this is probably
+not the tool for you but the dependency configuration is flexible enough to use
+versions other than those stackage provides in its resolver package sets.
+
+By default, generated Cabal and Stack projects are as close to copies as we can
+get but why have two copies?
+
+* Personal Preference
+    Enables team members who prefer one build tool over the other to pick one.
+* Get to Know Both
+    Cabal and Stack have different command phraseologies. Have a project
+    ready-to-go for trying out or learning the other tool.
+* Pick the Better Tool
+    Enables switching when a build feature is better in one tool or missing in
+    the other.
+* Tool Breakage Fallback
+    When something breaks with one tool we have a fallback.
+
+Progressive Upgrades
+====================
+
+Updo is also for upgrading projects. By upgrading we usually mean upgrading to a
+new version of GHC and a new version of stackage but progressive upgrading can
+also be used for upgrading a dependency that has significantly changed or
+swapping one dependency for another with a different API.
+
+Updo can work to generate one set of "current" (Cabal and Stack) projects and
+one set of "upgrade" projects at a time.
+
+The "current" projects are generated by the default ``.PHONY all`` target. The
+active "upgrade" projects are generated by the ``upgrade-projects`` target,
+plural because it generates both Cabal and Stack projects. Configuration in
+``project-dhall/ghc-x.y.z`` where ``x.y.z /= ${GHC_VERSION|GHC_UPGRADE}`` is
+ignored by Updo but "current" and active "upgrade" versions can be changed on
+the fly with environment variables.
+
+    .. code-block:: bash
+
+        $ make -f project-files.mk
+        $ make -f project-files.mk upgrade-projects
+        $ GHC_UPGRADE=9.6.3 STACKAGE_UPGRADE=nightly-2023-11-15 \
+            make -f project-files.mk upgrade-projects
+
+Local packages of the active upgrade project can be brought in progressively by
+keeping a ``project-dhall/pkgs-upgrade-todo.dhall`` to do list. This is best
+done in dependency order. The generated upgrade projects will include packages
+not in the to do list. That way we can compile the already upgraded packages
+along with packages just added, one or a few at a time for upgrade that may fail
+to compile. In the generated project files, the to do list is shown commented
+out.
+
 Conventions
 ===========
 
-Updo is a convention over configuration tool. It expects a certain minimal
-structure. Aside from the ``project-files.mk`` entry point, the Dhall
-configuration mostly goes into a ``project-dhall/ghc-x.y.z`` folder. Cabal
-configuration from stackage will likely need to be downloaded to a
-``project-stackage/${STACKAGE-VERSION}.config`` file so that we can comment out
-any conflicting versions in the ``constraints`` field. We can skip the download
-and import this configuration directly from stackage when there are no version
-conflicts.
+Updo is a convention over configuration tool that expects a certain minimal
+structure. Aside from the root level ``project-files.mk`` entry point, 
+configuration goes into a ``project-dhall/ghc-x.y.z`` folder (it is all
+``.dhall`` files). Cabal configuration from stackage will likely need to be
+downloaded to a ``project-stackage/${STACKAGE-VERSION}.config`` file so that we
+can comment out any conflicting versions in the ``constraints`` field. We can
+skip the download and import this configuration directly from stackage when
+there are no version conflicts.
 
 Configuration of constraints (dependency package version equalities) and source
 repository package dependencies can be kept sorted using editor functionality
-because each file is a list of records. We've split source repository
-dependencies into a two-by-two matrix of original **dep**endency or **fork** and
-**internal** or **external** package. Any of these configuration files can be
-omitted if not needed.
+because each file is a list of records.  After sorting or editing we recommend
+using ``dhall format`` on any ``*.dhall`` file you've touched.
 
-In records, the **loc**ation is the source repository URL, the **tag** is the
-git tag or branch name and the **sub** is a list of subdirectories to package
-``.cabal`` files.  The **ver**sion is the version equality constraint for a
-package **dep**endency that can include Stack's ``@rev`` syntax for revisions.
+We've split source repository dependencies into a two-by-two matrix of original
+**dep**endency or **fork** and **internal** or **external** package. Any of
+these configuration files can be omitted if not needed[#empty]_.
 
-After sorting or editing we recommend using ``dhall format`` on any ``*.dhall``
-file you've touched.
+    .. code-block:: bash
+
+        $ tree
+        ...
+        ├── deps-external.dhall
+        ├── deps-internal.dhall
+        ├── forks-external.dhall
+        ├── forks-internal.dhall
 
 Experience Report
 =================
 
 Updo grew to fill a need after every other way I could find to maintain projects
 was unsatisfactory for the specific problem I had, herding hundreds of packages
-and their dependencies into buildable projects over two compiler versions for
-both cabal and stack. The more I use it, the more I love it as a fast, simple
-and appropriate solution for maintaining Haskell projects.
+and their dependencies into buildable projects over multiple compiler versions
+for both Cabal and Stack. The more I use it, the more I love it as a fast,
+simple and appropriate solution for maintaining Haskell projects.
 
 You can find examples of Updo in use as forked repositories within the
-`github/up-do <up-do_>`_ organization, including:
+`github/up-do <up-do-repos_>`_ organization, including:
 
 * `cabal <cabal_>`_
 * `stack <stack_>`_
 * `dex-lang <dex_>`_
 
+.. _cabalism-updo: https://github.com/cabalism/updo#readme
 .. _stack-proj: https://github.com/commercialhaskell/stack/blob/master/stack.yaml
 .. _cabal-proj: https://github.com/haskell/cabal/blob/master/cabal.project
 .. _cabal-docs: https://cabal.readthedocs.io
 .. _stack-docs: https://docs.haskellstack.org
 .. _haskell-nix-docs: https://input-output-hk.github.io/haskell.nix
 .. _sha256map: https://input-output-hk.github.io/haskell.nix/tutorials/source-repository-hashes.html?highlight=sha256map#avoiding-modifying-cabalproject-and-stackyaml
-.. _up-do: https://github.com/orgs/up-do/repositories
+.. _up-do-repos: https://github.com/orgs/up-do/repositories
 .. _dex: https://github.com/up-do/dex-lang
 .. _stack: https://github.com/up-do/stack
 .. _cabal: https://github.com/up-do/cabal
