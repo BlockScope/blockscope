@@ -1,5 +1,5 @@
 ---
-title: Announcing Updo
+title: Announcing Updo.
 subtitle: Make projects from packages, versions and commits.
 tags: haskell, build
 ---
@@ -274,12 +274,8 @@ and their dependencies into buildable projects over multiple compiler versions
 for both Cabal and Stack. The more I use it, the more I love it as a fast,
 simple and appropriate solution for maintaining Haskell projects.
 
-You can find examples of Updo in use as forked repositories within the
-`github/up-do <up-do-repos_>`_ organization, including:
-
-* `cabal <cabal_>`_
-* `stack <stack_>`_
-* `dex-lang <dex_>`_
+You can find examples of Updo conversions at `github/up-do <up-do-examples_>`_ ,
+including conversions of `cabal <cabal_>`_ and `stack <stack_>`_.
 
 .. _cabalism-updo: https://github.com/cabalism/updo#readme
 .. _stack-proj: https://github.com/commercialhaskell/stack/blob/master/stack.yaml
@@ -288,7 +284,6 @@ You can find examples of Updo in use as forked repositories within the
 .. _stack-docs: https://docs.haskellstack.org
 .. _haskell-nix-docs: https://input-output-hk.github.io/haskell.nix
 .. _sha256map: https://input-output-hk.github.io/haskell.nix/tutorials/source-repository-hashes.html?highlight=sha256map#avoiding-modifying-cabalproject-and-stackyaml
-.. _up-do-repos: https://github.com/orgs/up-do/repositories
-.. _dex: https://github.com/up-do/dex-lang
+.. _up-do-examples: https://github.com/orgs/up-do
 .. _stack: https://github.com/up-do/stack
 .. _cabal: https://github.com/up-do/cabal
