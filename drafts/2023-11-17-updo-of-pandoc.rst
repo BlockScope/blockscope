@@ -1,5 +1,5 @@
 ---
-title: How to Updo Pandoc
+title: Updo Pandoc
 subtitle: Walkthrough of converting Pandoc to use Updo
 tags: haskell, build
 ---

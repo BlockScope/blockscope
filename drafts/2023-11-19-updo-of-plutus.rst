@@ -1,5 +1,5 @@
 ---
-title: How to Updo Plutus
+title: Updo Plutus
 subtitle: Walkthrough of converting Plutus to use Updo
 tags: haskell, build
 ---

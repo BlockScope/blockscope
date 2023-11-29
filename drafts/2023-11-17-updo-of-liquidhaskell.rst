@@ -1,5 +1,5 @@
 ---
-title: How to Updo Liquid Haskell
+title: Updo Liquid Haskell
 subtitle: Walkthrough of converting Liquid Haskell to use Updo
 tags: haskell, build
 ---

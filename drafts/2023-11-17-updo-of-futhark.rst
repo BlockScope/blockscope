@@ -1,5 +1,5 @@
 ---
-title: How to Updo Futhark
+title: Updo Futhark
 subtitle: Walkthrough of converting Futhark to use Updo
 tags: haskell, build
 ---

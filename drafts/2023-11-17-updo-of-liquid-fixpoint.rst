@@ -1,5 +1,5 @@
 ---
-title: How to Updo Liquid FixPoint
+title: Updo Liquid FixPoint
 subtitle: Walkthrough of converting Liquid Fixpoint to use Updo
 tags: haskell, build
 ---

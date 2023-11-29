@@ -1,5 +1,5 @@
 ---
-title: How to Updo Clash
+title: Updo Clash
 subtitle: Walkthrough of converting Clash to use Updo
 tags: haskell, build
 ---

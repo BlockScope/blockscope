@@ -1,5 +1,5 @@
 ---
-title: How to Updo Unison
+title: Updo Unison
 subtitle: Walkthrough of converting Unison to use Updo
 tags: haskell, build
 ---
