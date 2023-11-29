@@ -35,14 +35,13 @@ Before conversion, the Stack project doesn't build[#]_ but Updo conversion will
 fix that by keeping both default projects in sync with an upstream
 configuration.
 
-    .. note::
+.. note::
 
-        A different approach is mirroring, where one project is maintained,
-        parsed and mirrored to the other one. There are two tools that do this:
+    A different approach is mirroring, where one project is maintained,
+    parsed and mirrored to the other one. There are two tools that do this:
 
-        * `cabal2stack <cabal2stack_>`_ converts a Cabal project to Stack.
-        * `stack2cabal <stack2cabal_>`_ converts a Stack project to Cabal.
-
+    * `cabal2stack <cabal2stack_>`_ converts a Cabal project to Stack
+    * `stack2cabal <stack2cabal_>`_ converts a Stack project to Cabal
 
 .. [#] The Stack project fails to construct a build plan[#]_.
 
@@ -50,57 +49,69 @@ configuration.
 
         $ stack build --test --no-run-tests --bench --no-run-benchmarks
 
-        Warning: Ignoring cabal-install's bounds on directory (>=1.3.7.0 && <1.4) and using directory-1.3.6.0.
-                Reason: allow-newer enabled.
+        Warning: Ignoring cabal-install's bounds on
+                 directory (>=1.3.7.0 && <1.4) and using directory-1.3.6.0.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring hackage-security's bounds on Cabal (>=1.14 && <1.26 || >=2.0 && <2.6 || >=3.0 && <3.7) and using Cabal-3.11.0.0.
-                Reason: allow-newer enabled.
+        Warning: Ignoring hackage-security's bounds on
+                 Cabal (>=1.14 && <1.26 || >=2.0 && <2.6 || >=3.0 && <3.7) and
+                 using Cabal-3.11.0.0.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring hackage-security's bounds on Cabal-syntax (<3.7) and using Cabal-syntax-3.11.0.0.
-                Reason: allow-newer enabled.
+        Warning: Ignoring hackage-security's bounds on
+                 Cabal-syntax (<3.7) and using Cabal-syntax-3.11.0.0.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring cabal-install's bounds on process (>=1.6.15.0 && <1.7) and using process-1.6.13.2.
-                Reason: allow-newer enabled.
+        Warning: Ignoring cabal-install's bounds on
+                 process (>=1.6.15.0 && <1.7) and using process-1.6.13.2.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring cabal-testsuite's bounds on Cabal (((>=3.10 && <3.11) && >=3.11.0.0 && <3.12) && >=3.10 && <3.11) and using
-                Cabal-3.11.0.0.
-                Reason: allow-newer enabled.
+        Warning: Ignoring cabal-testsuite's bounds on
+                 Cabal (((>=3.10 && <3.11) && >=3.11.0.0 && <3.12) && >=3.10 && <3.11) and
+                 using Cabal-3.11.0.0.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring cabal-testsuite's bounds on Cabal-syntax (((>=3.10 && <3.11) && >=3.11.0.0 && <3.12) && >=3.10 && <3.11) and using
-                Cabal-syntax-3.11.0.0.
-                Reason: allow-newer enabled.
+        Warning: Ignoring cabal-testsuite's bounds on
+                 Cabal-syntax (((>=3.10 && <3.11) && >=3.11.0.0 && <3.12) && >=3.10 && <3.11) and
+                 using Cabal-syntax-3.11.0.0.
+                 Reason: allow-newer enabled.
 
-        Warning: Ignoring cabal-testsuite's bounds on retry (^>=0.9.1.0) and using retry-0.8.1.2.
-                Reason: allow-newer enabled.
+        Warning: Ignoring cabal-testsuite's bounds on
+                 retry (^>=0.9.1.0) and using retry-0.8.1.2.
+                 Reason: allow-newer enabled.
 
         Error: [S-4804]
             Stack failed to construct a build plan.
             
-            While constructing the build plan, Stack encountered the following errors. The 'Stack configuration' refers to the set of package
-            versions specified by the snapshot (after any dropped packages, or pruned GHC boot packages; if a boot package is replaced, Stack
-            prunes all other such packages that depend on it) and any extra-deps:
+            While constructing the build plan, Stack encountered the following errors. The
+            'Stack configuration' refers to the set of package versions specified by the
+            snapshot (after any dropped packages, or pruned GHC boot packages; if a boot
+            package is replaced, Stack prunes all other such packages that depend on it) and
+            any extra-deps:
             
             In the dependencies for cabal-install-3.11.0.0:
-                * semaphore-compat must match >=1.0.0 && <1.1, but no version is in the Stack configuration (latest matching version is 1.0.0).
+                * semaphore-compat must match >=1.0.0 && <1.1,
+                  but no version is in the Stack configuration (latest matching version is 1.0.0).
             needed since cabal-install is a build target.
             
             In the dependencies for cabal-testsuite-3:
-                * network-wait must match ^>=0.1.2.0 || ^>=0.2.0.0, but no version is in the Stack configuration (latest matching version is
-                0.2.0.0).
+                * network-wait must match ^>=0.1.2.0 || ^>=0.2.0.0,
+                  but no version is in the Stack configuration (latest matching version is 0.2.0.0).
             needed since cabal-testsuite is a build target.
             
             In the dependencies for Cabal-tests-3:
-                * nothunks must match >=0.1.1.0 && <0.2, but no version is in the Stack configuration (latest matching version is 0.1.5).
+                * nothunks must match >=0.1.1.0 && <0.2,
+                  but no version is in the Stack configuration (latest matching version is 0.1.5).
             needed since Cabal-tests is a build target.
             
             Some different approaches to resolving some or all of this:
             
-                * Recommended action: try adding the following to your extra-deps in /home/philderbeast/dev/src/updo/cabal/stack.yaml
-                (project-level configuration):
+                * Recommended action: try adding the following to your extra-deps
+                  in /.../cabal/stack.yaml (project-level configuration):
                 
-                - network-wait-0.2.0.0@sha256:c9fd762f125b46a9fef5ff477b766c7ee38def659cdc05a2add8f4c6830db54a,3031
-                - nothunks-0.1.5@sha256:ebe6c82d2533851f10fc9c7a045cedbfc2add3c61e7a03ef47aa07c8220de09a,2721
-                - semaphore-compat-1.0.0@sha256:8ed6242cab5b0e1a8c654424275ac178035d108dfe4d651053947790fcf83017,1181
+                - network-wait-0.2.0.0@sha256:c9fd76...
+                - nothunks-0.1.5@sha256:ebe6c8...
+                - semaphore-compat-1.0.0@sha256:8ed624...
 
 After conversion we can build Cabal with Cabal itself as before but now we can
 also build it with Stack!
