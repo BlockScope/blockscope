@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Primary Meta Tags -->
+<meta name="title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta name="description" content="Linking moves, deferring to the compilers.">
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blockscope.com/">
+<meta property="og:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="og:description" content="Linking moves, deferring to the compilers.">
+<meta property="og:image" content="https://blockscope.com/mstile-150x150.png">
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="https://blockscope.com/">
+<meta property="twitter:title" content="Block Scope - Fresh coding and untangling knotty codebases.">
+<meta property="twitter:description" content="Linking moves, deferring to the compilers.">
+<meta property="twitter:image" content="https://blockscope.com/mstile-150x150.png">
+<meta property="twitter:image-alt" content="Curly braces enclosing ellipsis">
+
+    <title>Introducing Updo.</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css" integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ" crossorigin="anonymous">
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY" crossorigin="anonymous"></script>
+    <script type="module" defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js" integrity="sha384-+XBljXPPiv+OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+    <link rel="stylesheet" type="text/css" href="../css/app.css" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="manifest" href="../site.webmanifest">
+<link rel="mask-icon" href="../safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+
+<body>
+    <div class="d-lg-none">
+        <div id="nav-top" class="d-print-none">
+            <nav>
+    <ul class="nav">
+        <li class="nav-item"><a class="nav-link" href="../">~/</a></li>
+        <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+    </ul>
+</nav>
+
+        </div>
+        <div id="content" class="d-print-col-12">
+            <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Introducing Updo.</h1>
+                    
+                    <p class="lead">How to introduce Updo to a project using Cabal as an example.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>You can find examples of Updo conversions at <a href="https://github.com/orgs/up-do">github/up-do</a>.
+Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example to see how it’s done.</p>
+<h1 id="projects-before-and-after">Projects, Before and After</h1>
+<p>There are many projects in the <a href="https://github.com/haskell/cabal">haskell/cabal</a> repository:</p>
+<blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree <span class="at">-P</span> <span class="st">'cabal.project*|stack.yaml*'</span> <span class="at">-L</span> 1 <span class="at">--prune</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.buildinfo</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.coverage</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.doctest</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.libonly</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.meta</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.release</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.validate</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.validate.libonly</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.weeder</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> stack.yaml</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">0</span> directories, 11 files</span></code></pre></div>
+</blockquote>
+<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo conversion will
+fix that by keeping both default projects in sync with an upstream
+configuration.</p>
+<blockquote>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>A different approach is mirroring, where one project is maintained,
+parsed and mirrored to the other one. There are two tools that do this:</p>
+<ul>
+<li><a href="https://github.com/iconnect/cabal2stack">cabal2stack</a> converts a Cabal project to Stack.</li>
+<li><a href="https://github.com/hasufell/stack2cabal">stack2cabal</a> converts a Stack project to Cabal.</li>
+</ul>
+</div>
+</blockquote>
+<p>After conversion we can build Cabal with Cabal itself as before but now we can
+also build it with Stack!</p>
+<pre class="pre"><code>$ cabal clean
+$ cabal build all --enable-tests --enable-benchmarks
+Resolving dependencies...
+Build profile: -w ghc-9.4.7 -O1
+...
+$ cabal build all --enable-tests --enable-benchmarks
+Up to date
+
+$ stack purge
+$ stack build --test --no-run-tests --bench --no-run-benchmarks
+...
+Completed 17 action(s).</code></pre>
+<h1 id="conversion-steps">Conversion Steps</h1>
+<p>The steps of converting a project to Updo, using conversion of Cabal for example, are:</p>
+<ol>
+<li><dl>
+<dt>Ignores</dt>
+<dd>
+<p>Ignore the working (<code>.updo</code>) and bootstrap (<code>updo</code>) folders in <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">+.updo</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="va">+updo</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Versions</dt>
+<dd>
+<p>Put stackage resolver and GHC version into <code>project-versions.mk</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, not
+bothering with separate upgrade versions for now. The process for adding an
+upgrade version is the same as for adding an initial current version.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_VERSION </span><span class="ch">?=</span><span class="st"> 9.4.7</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_VERSION </span><span class="ch">?=</span><span class="st"> lts-21.19</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_UPGRADE </span><span class="ch">?=</span><span class="st"> 9.4.7</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_UPGRADE </span><span class="ch">?=</span><span class="st"> lts-21.19</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Stackage Config</dt>
+<dd>
+<p>Download a <a href="https://www.stackage.org/lts-21.19/cabal.config">cabal.config</a> file from stackage
+matching the resolver version and save it to
+<code>project-stackage/${STACKAGE-VERSION}.config</code>. This likely won’t work
+as-is. No worries, we’ll comment out version constraints that clash later.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir <span class="at">-p</span> project-stackage</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Group Packages</dt>
+<dd>
+<p>Add configuration under <code>project-dhall/ghc-${GHC-VERSION}</code>. We’ll break
+the packages up into groups and as we’re not yet upgrading we’ll use an
+empty list for upgrades yet to do.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkg-groups.dhall</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;benchmarks&quot;</span>, <span class="st">&quot;hackage&quot;</span>, <span class="st">&quot;tests&quot;</span> <span class="op">]</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/benchmarks.dhall</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;cabal-benchmarks&quot;</span>, <span class="st">&quot;solver-benchmarks&quot;</span> <span class="op">]</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/hackage.dhall</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal&quot;</span>, <span class="st">&quot;Cabal-syntax&quot;</span>, <span class="st">&quot;cabal-install&quot;</span>, <span class="st">&quot;cabal-install-solver&quot;</span> <span class="op">]</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/tests.dhall</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span>, <span class="st">&quot;Cabal-described&quot;</span>, <span class="st">&quot;Cabal-tests&quot;</span>, <span class="st">&quot;Cabal-tree-diff&quot;</span>, <span class="st">&quot;cabal-testsuite&quot;</span> <span class="op">]</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Source Repositories</dt>
+<dd>
+<p>Cabal doesn’t use any source repository packages so we can leave all of
+these empty<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/deps-external.dhall</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/deps-internal.dhall</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/forks-external.dhall</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/forks-internal.dhall</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="op">{</span> loc : <span class="dt">Text</span>, tag : <span class="dt">Text</span>, sub : <span class="dt">List</span> <span class="dt">Text</span> <span class="op">}</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Text Templates</dt>
+<dd>
+<p>Add text templates for the ways we want to generate projects. Pasted
+verbatim, the following <code>dhall2config</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> template for Cabal and
+<code>dhall2stack</code> template for Stack put the snippet content before the
+default template content.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/dhall2config.dhall</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>ghc-version : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> project-dhall2config = <span class="im">../../../updo/text-templates/dhall2config.dhall</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">      ${./cabal-snippet.dhall}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">      ${project-dhall2config stackage-resolver ghc-version}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">      ''</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/dhall2stack.dhall</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> TYPES = <span class="im">./../../../updo/types.dhall</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> null = <span class="im">https://prelude.dhall-lang.org/List/null</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span>  <span class="fu">\</span><span class="op">(</span>pkgs-done : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> pkgs-todo = <span class="im">../../pkgs-upgrade-todo.dhall</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> pkg-config =</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">{</span> constraints = <span class="im">./../constraints.dhall</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>            , source-pkgs =</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>              <span class="op">{</span> deps-external = <span class="im">./../deps-external.dhall</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              , deps-internal = <span class="im">./../deps-internal.dhall</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>              , forks-external = <span class="im">./../forks-external.dhall</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>              , forks-internal = <span class="im">./../forks-internal.dhall</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>              <span class="op">}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="st">          ${./stack-snippet.dhall (None Text)}</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="st">          ${../../../updo/text-templates/dhall2stack.dhall</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="st">              stackage-resolver</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="st">              ( if    null Text pkgs-todo</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="st">                then  TYPES.PkgSet.AllPkgs pkgs-done</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="st">                else  TYPES.PkgSet.PkgUpgrade</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="st">                        { todo = pkgs-todo, done = pkgs-done }</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="st">              )</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="st">              pkg-config}</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="st">          ''</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>The <code>dhall2stack</code> template is more complicated than the
+<code>dhall2config</code> template because everything generated goes into one
+<code>ghc-x.y.z.dhall2stack.yaml</code> file so it <strong>has to</strong> handle upgrades
+whereas the root <code>ghc-x.y.z-dhall2config.project</code> imports generated
+<code>project-config/pkgs/*.config</code> package groups indirectly through
+<code>project-config/pkgs.config</code>.</p>
+<p>In <code>project-config/pkgs/*.config</code> files, partitioning of packages
+into those included in the upgrade project and those yet to do is done
+by the installed <code>updo-pkg-groups</code> executable or the
+<code>./updo/project-dhall2config/pkg-groups.hs</code> script invoked by a make
+recipe and not by the <code>dhall2config</code> template.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Snippets</dt>
+<dd>
+<p>Snippets are used to add extra configuration to the generated projects,
+configuration unknown to Updo. Compare generated projects with those same
+files before the conversion to see what’s missing.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/cabal-snippet.dhall</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">''</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">tests: True</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">optional-packages: ./vendored/*/*.cabal</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">constraints: rere -rere-cfg</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">program-options</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">  ghc-options: -fno-ignore-asserts</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">''</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/stack-snippet.dhall</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Optional</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> resolver =</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">merge</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>          <span class="op">{</span> None = <span class="st">&quot;&quot;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>          , Some =</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>              <span class="fu">\</span><span class="op">(</span>r : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">''</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="st">                resolver: ${r}''</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>          stackage-resolver</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="st">      user-message: &quot;WARNING: This stack project is generated.&quot;</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="st">      allow-newer: true</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="st">      flags:</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="st">        rere:</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="st">          rere-cfg: false</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="st">      ghc-options:</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="st">        &quot;$locals&quot;: -fhide-source-paths</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="st">      ${resolver}</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="st">      ''</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>We need <code>allow-newer: true</code> because <code>cabal-testsuite</code> has a custom
+setup depending on <code>3.10.*</code> of <code>Cabal</code> and <code>Cabal-syntax</code> while
+the rest of the package depends on <code>3.11.*</code>.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Bootstrap</dt>
+<dd>
+<p>Add the entry and bootstrapping Updo makefile, <code>project-files.mk</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># project-files.mk</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To use installed executables instead of *.hs scripts, set these to true.</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">PKG_GROUPS_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS_SORTED_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS_UPGRADE_DONE_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span> project-versions.mk</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span> updo/Makefile</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="dv">project-nix/ghc-%/sha256map.nix:</span><span class="dt"> ghc-%.sha256map.nix</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>	mkdir -p <span class="ch">$(</span><span class="dt">@D</span><span class="ch">)</span> &amp;&amp; cp <span class="ch">$^</span> <span class="ch">$@</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ot">.PHONY:</span><span class="dt"> all</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="dv">all:</span><span class="dt"> </span><span class="ch">\</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="dt">  projects </span><span class="ch">\</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="dt">  project-nix/ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">/sha256map.nix </span><span class="ch">\</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="dt">  project-versions.nix</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># To make stack.yaml or cabal.project and no other, mark the file we copy from</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"># as intermediate. This is all we want when not doing a GHC upgrade.</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Comment out these .INTERMEDIATE targets to allow these files to be kept.</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">CABAL_VIA</span><span class="ch">)</span><span class="dt">.project</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_UPGRADE</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">CABAL_VIA</span><span class="ch">)</span><span class="dt">.project</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">STACK_VIA</span><span class="ch">)</span><span class="dt">.yaml</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_UPGRADE</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">STACK_VIA</span><span class="ch">)</span><span class="dt">.yaml</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="dt">.DEFAULT_GOAL </span><span class="ch">:=</span><span class="st"> all</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_VERSION </span><span class="ch">?=</span><span class="st"> 1.0.0</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="dt">HACKAGE </span><span class="ch">:=</span><span class="st"> http://hackage.haskell.org/package</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_URL </span><span class="ch">:=</span><span class="st"> </span><span class="ch">${</span><span class="dt">HACKAGE</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">.tar.gz</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="dv">updo/Makefile:</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>	rm -rf updo</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>	curl -sSL <span class="ch">${</span><span class="dt">UPDO_URL</span><span class="ch">}</span> | tar -xz</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>	mv updo-<span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span> updo</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>	chmod +x <span class="ch">$$</span>(grep -RIl <span class="st">'^#!'</span> updo)</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Constrain Versions</dt>
+<dd>
+<p>Try to generate projects with <code>make</code>. If this fails, Stack will complain
+the loudest.</p>
+<pre class="pre"><code>$ make -f project-files.mk
+...
+  * directory must match &gt;=1.2 &amp;&amp; &lt;1.4, but this GHC boot package has been
+    pruned from the Stack configuration.  You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.3.8.1).
+  * process must match &gt;=1.2.1.0 &amp;&amp; &lt;1.7, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.6.17.0).
+  * directory must match &gt;=1.2 &amp;&amp; &lt;1.4, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.3.8.1).
+  * process must match &gt;=1.2.1.0 &amp;&amp; &lt;1.7, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.6.17.0).</code></pre>
+<p>Use the suggestions from Stack to add version equality constraints:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/constraints.dhall</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="op">{</span> dep = <span class="st">&quot;directory&quot;</span>, ver = <span class="st">&quot;1.3.8.1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;filepath&quot;</span>, ver = <span class="st">&quot;1.4.100.4&quot;</span> <span class="op">}</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;process&quot;</span>, ver = <span class="st">&quot;1.6.17.0&quot;</span> <span class="op">}</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;rere&quot;</span>, ver = <span class="st">&quot;0.2&quot;</span> <span class="op">}</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;semaphore-compat&quot;</span>, ver = <span class="st">&quot;1.0.0@rev:1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;unix&quot;</span>, ver = <span class="st">&quot;2.8.2.1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>All the recommendations from Stack match <code>cabal freeze</code> versions before
+the conversion, except for <code>process-1.6.18.0</code> and <code>unix-2.8.3.0</code>.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Fixup Unsatisfiable Version Constraints</dt>
+<dd>
+<p>Where there are unsatisfiable version constraints with the Cabal solver,
+comment out the relevant line from the stackage-sourced <code>cabal.config</code>
+that we saved locally:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-stackage/lts-21.19.config</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- </span><span class="al">NOTE</span><span class="co">: Due to revisions, this file may not work. See:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://github.com/fpco/stackage-server/issues/232</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Stackage snapshot from: http://www.stackage.org/snapshot/lts-21.19</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Please place this file next to your .cabal file as cabal.config</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- To only use tested packages, uncomment the following line:</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- remote-repo: stackage-lts-21.19:http://www.stackage.org/lts-21.19</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>with<span class="op">-</span>compiler<span class="op">:</span> ghc<span class="op">-</span><span class="fl">9.4</span><span class="op">.</span><span class="dv">7</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>constraints<span class="op">:</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Cabal installed,</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- cabal-install ==3.8.1.0,</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- cabal-install-solver ==3.8.1.0,</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Cabal-syntax installed,</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- directory installed,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- filepath installed,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- process installed,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- unix installed,</span></span></code></pre></div>
+</dd>
+</dl></li>
+</ol>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The Stack project fails to construct a build plan.</p>
+<pre class="pre"><code>$ stack build --test --no-run-tests --bench --no-run-benchmarks
+
+Warning: Ignoring cabal-install's bounds on directory (&gt;=1.3.7.0 &amp;&amp; &lt;1.4) and using directory-1.3.6.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring hackage-security's bounds on Cabal (&gt;=1.14 &amp;&amp; &lt;1.26 || &gt;=2.0 &amp;&amp; &lt;2.6 || &gt;=3.0 &amp;&amp; &lt;3.7) and using Cabal-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring hackage-security's bounds on Cabal-syntax (&lt;3.7) and using Cabal-syntax-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-install's bounds on process (&gt;=1.6.15.0 &amp;&amp; &lt;1.7) and using process-1.6.13.2.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on Cabal (((&gt;=3.10 &amp;&amp; &lt;3.11) &amp;&amp; &gt;=3.11.0.0 &amp;&amp; &lt;3.12) &amp;&amp; &gt;=3.10 &amp;&amp; &lt;3.11) and using
+        Cabal-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on Cabal-syntax (((&gt;=3.10 &amp;&amp; &lt;3.11) &amp;&amp; &gt;=3.11.0.0 &amp;&amp; &lt;3.12) &amp;&amp; &gt;=3.10 &amp;&amp; &lt;3.11) and using
+        Cabal-syntax-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on retry (^&gt;=0.9.1.0) and using retry-0.8.1.2.
+        Reason: allow-newer enabled.
+
+Error: [S-4804]
+    Stack failed to construct a build plan.
+
+    While constructing the build plan, Stack encountered the following errors. The 'Stack configuration' refers to the set of package
+    versions specified by the snapshot (after any dropped packages, or pruned GHC boot packages; if a boot package is replaced, Stack
+    prunes all other such packages that depend on it) and any extra-deps:
+
+    In the dependencies for cabal-install-3.11.0.0:
+        * semaphore-compat must match &gt;=1.0.0 &amp;&amp; &lt;1.1, but no version is in the Stack configuration (latest matching version is 1.0.0).
+    needed since cabal-install is a build target.
+
+    In the dependencies for cabal-testsuite-3:
+        * network-wait must match ^&gt;=0.1.2.0 || ^&gt;=0.2.0.0, but no version is in the Stack configuration (latest matching version is
+        0.2.0.0).
+    needed since cabal-testsuite is a build target.
+
+    In the dependencies for Cabal-tests-3:
+        * nothunks must match &gt;=0.1.1.0 &amp;&amp; &lt;0.2, but no version is in the Stack configuration (latest matching version is 0.1.5).
+    needed since Cabal-tests is a build target.
+
+    Some different approaches to resolving some or all of this:
+
+        * Recommended action: try adding the following to your extra-deps in /home/philderbeast/dev/src/updo/cabal/stack.yaml
+        (project-level configuration):
+
+        - network-wait-0.2.0.0@sha256:c9fd762f125b46a9fef5ff477b766c7ee38def659cdc05a2add8f4c6830db54a,3031
+        - nothunks-0.1.5@sha256:ebe6c82d2533851f10fc9c7a045cedbfc2add3c61e7a03ef47aa07c8220de09a,2721
+        - semaphore-compat-1.0.0@sha256:8ed6242cab5b0e1a8c654424275ac178035d108dfe4d651053947790fcf83017,1181</code></pre>
+<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn2"><p>The <code>project-versions.mk</code> filename is a convention we’ve used so far
+but you can use any name for this file.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><code>updo-1.0.0</code> doesn’t use a <a href="https://github.com/cabalism/updo/issues/9">default empty list</a>
+when a configuration file is missing but that feature is in the works,
+implemented but not yet published.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><code>dhall2caball</code> is not shown here as it’s very similar to <code>dhall2stack</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- ${./stack-snippet.dhall (None Text)}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">++ ${./cabal-snippet.dhall}</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">-- ${../../../updo/text-templates/dhall2stack.dhall</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ ${../../../updo/text-templates/dhall2cabal.dhall</span></span></code></pre></div>
+<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+        </div>
+    </div>
+    <div class="d-none d-lg-block">
+        <div class="container">
+            <div class="row">
+                <div id="nav-side" class="col-3 card d-print-none">
+                    <div class="card-body">
+    <h1 class="card-title" title="block scope delimited with curlies">{<a href="../">...</a>}</h1>
+
+    <nav>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="../blog/">blog</a></li>
+        </ul>
+    </nav>
+</div>
+
+                </div>
+                <div id="content" class="d-print-col-12">
+                    <article>
+    <header>
+    <table>
+        <tbody>
+            <tr>
+            <td style="padding-right: 1rem">
+<pre class="sourceCode pre">
+<code>
++
+|
+|
+|
+|
++
+</code>
+</pre>
+            </td>
+            <td>
+                <div>
+                    <h1 class="display-4">Introducing Updo.</h1>
+                    
+                    <p class="lead">How to introduce Updo to a project using Cabal as an example.</p>
+                    
+                </div>
+            </td>
+            </tr>
+        </tbody>
+    </table>
+</header>
+
+    
+        <div class="float-end">
+        <a class="badge bg-light text-dark" href="../tags/haskell.html">haskell</a> <a class="badge bg-light text-dark" href="../tags/build.html">build</a>
+        </div>
+        <div class="clearfix">
+            <br />
+            <br />
+        </div>
+    
+    <p>You can find examples of Updo conversions at <a href="https://github.com/orgs/up-do">github/up-do</a>.
+Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example to see how it’s done.</p>
+<h1 id="projects-before-and-after">Projects, Before and After</h1>
+<p>There are many projects in the <a href="https://github.com/haskell/cabal">haskell/cabal</a> repository:</p>
+<blockquote>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> tree <span class="at">-P</span> <span class="st">'cabal.project*|stack.yaml*'</span> <span class="at">-L</span> 1 <span class="at">--prune</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.buildinfo</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.coverage</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.doctest</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.libonly</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.meta</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.release</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.validate</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.validate.libonly</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> cabal.project.weeder</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> stack.yaml</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">0</span> directories, 11 files</span></code></pre></div>
+</blockquote>
+<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo conversion will
+fix that by keeping both default projects in sync with an upstream
+configuration.</p>
+<blockquote>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>A different approach is mirroring, where one project is maintained,
+parsed and mirrored to the other one. There are two tools that do this:</p>
+<ul>
+<li><a href="https://github.com/iconnect/cabal2stack">cabal2stack</a> converts a Cabal project to Stack.</li>
+<li><a href="https://github.com/hasufell/stack2cabal">stack2cabal</a> converts a Stack project to Cabal.</li>
+</ul>
+</div>
+</blockquote>
+<p>After conversion we can build Cabal with Cabal itself as before but now we can
+also build it with Stack!</p>
+<pre class="pre"><code>$ cabal clean
+$ cabal build all --enable-tests --enable-benchmarks
+Resolving dependencies...
+Build profile: -w ghc-9.4.7 -O1
+...
+$ cabal build all --enable-tests --enable-benchmarks
+Up to date
+
+$ stack purge
+$ stack build --test --no-run-tests --bench --no-run-benchmarks
+...
+Completed 17 action(s).</code></pre>
+<h1 id="conversion-steps">Conversion Steps</h1>
+<p>The steps of converting a project to Updo, using conversion of Cabal for example, are:</p>
+<ol>
+<li><dl>
+<dt>Ignores</dt>
+<dd>
+<p>Ignore the working (<code>.updo</code>) and bootstrap (<code>updo</code>) folders in <code>.gitignore</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">+.updo</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="va">+updo</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Versions</dt>
+<dd>
+<p>Put stackage resolver and GHC version into <code>project-versions.mk</code><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, not
+bothering with separate upgrade versions for now. The process for adding an
+upgrade version is the same as for adding an initial current version.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_VERSION </span><span class="ch">?=</span><span class="st"> 9.4.7</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_VERSION </span><span class="ch">?=</span><span class="st"> lts-21.19</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GHC_UPGRADE </span><span class="ch">?=</span><span class="st"> 9.4.7</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="dt">STACKAGE_UPGRADE </span><span class="ch">?=</span><span class="st"> lts-21.19</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Stackage Config</dt>
+<dd>
+<p>Download a <a href="https://www.stackage.org/lts-21.19/cabal.config">cabal.config</a> file from stackage
+matching the resolver version and save it to
+<code>project-stackage/${STACKAGE-VERSION}.config</code>. This likely won’t work
+as-is. No worries, we’ll comment out version constraints that clash later.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir <span class="at">-p</span> project-stackage</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Group Packages</dt>
+<dd>
+<p>Add configuration under <code>project-dhall/ghc-${GHC-VERSION}</code>. We’ll break
+the packages up into groups and as we’re not yet upgrading we’ll use an
+empty list for upgrades yet to do.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkg-groups.dhall</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;benchmarks&quot;</span>, <span class="st">&quot;hackage&quot;</span>, <span class="st">&quot;tests&quot;</span> <span class="op">]</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/benchmarks.dhall</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;cabal-benchmarks&quot;</span>, <span class="st">&quot;solver-benchmarks&quot;</span> <span class="op">]</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/hackage.dhall</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal&quot;</span>, <span class="st">&quot;Cabal-syntax&quot;</span>, <span class="st">&quot;cabal-install&quot;</span>, <span class="st">&quot;cabal-install-solver&quot;</span> <span class="op">]</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/tests.dhall</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span>, <span class="st">&quot;Cabal-described&quot;</span>, <span class="st">&quot;Cabal-tests&quot;</span>, <span class="st">&quot;Cabal-tree-diff&quot;</span>, <span class="st">&quot;cabal-testsuite&quot;</span> <span class="op">]</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Source Repositories</dt>
+<dd>
+<p>Cabal doesn’t use any source repository packages so we can leave all of
+these empty<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/deps-external.dhall</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/deps-internal.dhall</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/forks-external.dhall</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/forks-internal.dhall</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="op">{</span> loc : <span class="dt">Text</span>, tag : <span class="dt">Text</span>, sub : <span class="dt">List</span> <span class="dt">Text</span> <span class="op">}</span></span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Text Templates</dt>
+<dd>
+<p>Add text templates for the ways we want to generate projects. Pasted
+verbatim, the following <code>dhall2config</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> template for Cabal and
+<code>dhall2stack</code> template for Stack put the snippet content before the
+default template content.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/dhall2config.dhall</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>ghc-version : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> project-dhall2config = <span class="im">../../../updo/text-templates/dhall2config.dhall</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="st">      ${./cabal-snippet.dhall}</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">      ${project-dhall2config stackage-resolver ghc-version}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">      ''</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/dhall2stack.dhall</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> TYPES = <span class="im">./../../../updo/types.dhall</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> null = <span class="im">https://prelude.dhall-lang.org/List/null</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="kw">in</span>  <span class="fu">\</span><span class="op">(</span>pkgs-done : <span class="dt">List</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> pkgs-todo = <span class="im">../../pkgs-upgrade-todo.dhall</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> pkg-config =</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">{</span> constraints = <span class="im">./../constraints.dhall</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>            , source-pkgs =</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>              <span class="op">{</span> deps-external = <span class="im">./../deps-external.dhall</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              , deps-internal = <span class="im">./../deps-internal.dhall</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>              , forks-external = <span class="im">./../forks-external.dhall</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>              , forks-internal = <span class="im">./../forks-internal.dhall</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>              <span class="op">}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="st">          ${./stack-snippet.dhall (None Text)}</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="st">          ${../../../updo/text-templates/dhall2stack.dhall</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="st">              stackage-resolver</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="st">              ( if    null Text pkgs-todo</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="st">                then  TYPES.PkgSet.AllPkgs pkgs-done</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="st">                else  TYPES.PkgSet.PkgUpgrade</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="st">                        { todo = pkgs-todo, done = pkgs-done }</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="st">              )</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="st">              pkg-config}</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="st">          ''</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>The <code>dhall2stack</code> template is more complicated than the
+<code>dhall2config</code> template because everything generated goes into one
+<code>ghc-x.y.z.dhall2stack.yaml</code> file so it <strong>has to</strong> handle upgrades
+whereas the root <code>ghc-x.y.z-dhall2config.project</code> imports generated
+<code>project-config/pkgs/*.config</code> package groups indirectly through
+<code>project-config/pkgs.config</code>.</p>
+<p>In <code>project-config/pkgs/*.config</code> files, partitioning of packages
+into those included in the upgrade project and those yet to do is done
+by the installed <code>updo-pkg-groups</code> executable or the
+<code>./updo/project-dhall2config/pkg-groups.hs</code> script invoked by a make
+recipe and not by the <code>dhall2config</code> template.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Snippets</dt>
+<dd>
+<p>Snippets are used to add extra configuration to the generated projects,
+configuration unknown to Updo. Compare generated projects with those same
+files before the conversion to see what’s missing.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/cabal-snippet.dhall</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">''</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="st">tests: True</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">optional-packages: ./vendored/*/*.cabal</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">constraints: rere -rere-cfg</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">program-options</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">  ghc-options: -fno-ignore-asserts</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">''</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/text-templates/stack-snippet.dhall</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">\</span><span class="op">(</span>stackage-resolver : <span class="dt">Optional</span> <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> resolver =</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">merge</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>          <span class="op">{</span> None = <span class="st">&quot;&quot;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>          , Some =</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>              <span class="fu">\</span><span class="op">(</span>r : <span class="dt">Text</span><span class="op">)</span> <span class="fu">-&gt;</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>                <span class="st">''</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="st">                resolver: ${r}''</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>          <span class="op">}</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>          stackage-resolver</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">in</span>  <span class="st">''</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="st">      user-message: &quot;WARNING: This stack project is generated.&quot;</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="st">      allow-newer: true</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="st">      flags:</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="st">        rere:</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="st">          rere-cfg: false</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="st">      ghc-options:</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="st">        &quot;$locals&quot;: -fhide-source-paths</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="st">      ${resolver}</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="st">      ''</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>We need <code>allow-newer: true</code> because <code>cabal-testsuite</code> has a custom
+setup depending on <code>3.10.*</code> of <code>Cabal</code> and <code>Cabal-syntax</code> while
+the rest of the package depends on <code>3.11.*</code>.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Bootstrap</dt>
+<dd>
+<p>Add the entry and bootstrapping Updo makefile, <code>project-files.mk</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># project-files.mk</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># To use installed executables instead of *.hs scripts, set these to true.</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">PKG_GROUPS_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS_SORTED_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS_UPGRADE_DONE_HS_EXE </span><span class="ch">?=</span><span class="st"> false</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span> project-versions.mk</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">include</span> updo/Makefile</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="dv">project-nix/ghc-%/sha256map.nix:</span><span class="dt"> ghc-%.sha256map.nix</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>	mkdir -p <span class="ch">$(</span><span class="dt">@D</span><span class="ch">)</span> &amp;&amp; cp <span class="ch">$^</span> <span class="ch">$@</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="ot">.PHONY:</span><span class="dt"> all</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="dv">all:</span><span class="dt"> </span><span class="ch">\</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="dt">  projects </span><span class="ch">\</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="dt">  project-nix/ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">/sha256map.nix </span><span class="ch">\</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="dt">  project-versions.nix</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co"># To make stack.yaml or cabal.project and no other, mark the file we copy from</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co"># as intermediate. This is all we want when not doing a GHC upgrade.</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Comment out these .INTERMEDIATE targets to allow these files to be kept.</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">CABAL_VIA</span><span class="ch">)</span><span class="dt">.project</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_UPGRADE</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">CABAL_VIA</span><span class="ch">)</span><span class="dt">.project</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_VERSION</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">STACK_VIA</span><span class="ch">)</span><span class="dt">.yaml</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a><span class="ot">.INTERMEDIATE:</span><span class="dt"> ghc-</span><span class="ch">$(</span><span class="dt">GHC_UPGRADE</span><span class="ch">)</span><span class="dt">.</span><span class="ch">$(</span><span class="dt">STACK_VIA</span><span class="ch">)</span><span class="dt">.yaml</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="dt">.DEFAULT_GOAL </span><span class="ch">:=</span><span class="st"> all</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_VERSION </span><span class="ch">?=</span><span class="st"> 1.0.0</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a><span class="dt">HACKAGE </span><span class="ch">:=</span><span class="st"> http://hackage.haskell.org/package</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a><span class="dt">UPDO_URL </span><span class="ch">:=</span><span class="st"> </span><span class="ch">${</span><span class="dt">HACKAGE</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">/updo-</span><span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span><span class="st">.tar.gz</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="dv">updo/Makefile:</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>	rm -rf updo</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>	curl -sSL <span class="ch">${</span><span class="dt">UPDO_URL</span><span class="ch">}</span> | tar -xz</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>	mv updo-<span class="ch">${</span><span class="dt">UPDO_VERSION</span><span class="ch">}</span> updo</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>	chmod +x <span class="ch">$$</span>(grep -RIl <span class="st">'^#!'</span> updo)</span></code></pre></div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Constrain Versions</dt>
+<dd>
+<p>Try to generate projects with <code>make</code>. If this fails, Stack will complain
+the loudest.</p>
+<pre class="pre"><code>$ make -f project-files.mk
+...
+  * directory must match &gt;=1.2 &amp;&amp; &lt;1.4, but this GHC boot package has been
+    pruned from the Stack configuration.  You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.3.8.1).
+  * process must match &gt;=1.2.1.0 &amp;&amp; &lt;1.7, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.6.17.0).
+  * directory must match &gt;=1.2 &amp;&amp; &lt;1.4, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.3.8.1).
+  * process must match &gt;=1.2.1.0 &amp;&amp; &lt;1.7, but this GHC boot package has
+    been pruned from the Stack configuration. You need to add the package
+    explicitly to extra-deps. (latest matching version is 1.6.17.0).</code></pre>
+<p>Use the suggestions from Stack to add version equality constraints:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode dhall"><code class="sourceCode dhall"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/ghc-9.4.7/constraints.dhall</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="op">{</span> dep = <span class="st">&quot;directory&quot;</span>, ver = <span class="st">&quot;1.3.8.1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;filepath&quot;</span>, ver = <span class="st">&quot;1.4.100.4&quot;</span> <span class="op">}</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;process&quot;</span>, ver = <span class="st">&quot;1.6.17.0&quot;</span> <span class="op">}</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;rere&quot;</span>, ver = <span class="st">&quot;0.2&quot;</span> <span class="op">}</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;semaphore-compat&quot;</span>, ver = <span class="st">&quot;1.0.0@rev:1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>, <span class="op">{</span> dep = <span class="st">&quot;unix&quot;</span>, ver = <span class="st">&quot;2.8.2.1&quot;</span> <span class="op">}</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span></code></pre></div>
+<div class="note">
+<div class="title">
+<p>Note</p>
+</div>
+<p>All the recommendations from Stack match <code>cabal freeze</code> versions before
+the conversion, except for <code>process-1.6.18.0</code> and <code>unix-2.8.3.0</code>.</p>
+</div>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Fixup Unsatisfiable Version Constraints</dt>
+<dd>
+<p>Where there are unsatisfiable version constraints with the Cabal solver,
+comment out the relevant line from the stackage-sourced <code>cabal.config</code>
+that we saved locally:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-stackage/lts-21.19.config</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- </span><span class="al">NOTE</span><span class="co">: Due to revisions, this file may not work. See:</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- https://github.com/fpco/stackage-server/issues/232</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Stackage snapshot from: http://www.stackage.org/snapshot/lts-21.19</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Please place this file next to your .cabal file as cabal.config</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- To only use tested packages, uncomment the following line:</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- remote-repo: stackage-lts-21.19:http://www.stackage.org/lts-21.19</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>with<span class="op">-</span>compiler<span class="op">:</span> ghc<span class="op">-</span><span class="fl">9.4</span><span class="op">.</span><span class="dv">7</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>constraints<span class="op">:</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Cabal installed,</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- cabal-install ==3.8.1.0,</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- cabal-install-solver ==3.8.1.0,</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Cabal-syntax installed,</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- directory installed,</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- filepath installed,</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- process installed,</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- unix installed,</span></span></code></pre></div>
+</dd>
+</dl></li>
+</ol>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The Stack project fails to construct a build plan.</p>
+<pre class="pre"><code>$ stack build --test --no-run-tests --bench --no-run-benchmarks
+
+Warning: Ignoring cabal-install's bounds on directory (&gt;=1.3.7.0 &amp;&amp; &lt;1.4) and using directory-1.3.6.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring hackage-security's bounds on Cabal (&gt;=1.14 &amp;&amp; &lt;1.26 || &gt;=2.0 &amp;&amp; &lt;2.6 || &gt;=3.0 &amp;&amp; &lt;3.7) and using Cabal-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring hackage-security's bounds on Cabal-syntax (&lt;3.7) and using Cabal-syntax-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-install's bounds on process (&gt;=1.6.15.0 &amp;&amp; &lt;1.7) and using process-1.6.13.2.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on Cabal (((&gt;=3.10 &amp;&amp; &lt;3.11) &amp;&amp; &gt;=3.11.0.0 &amp;&amp; &lt;3.12) &amp;&amp; &gt;=3.10 &amp;&amp; &lt;3.11) and using
+        Cabal-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on Cabal-syntax (((&gt;=3.10 &amp;&amp; &lt;3.11) &amp;&amp; &gt;=3.11.0.0 &amp;&amp; &lt;3.12) &amp;&amp; &gt;=3.10 &amp;&amp; &lt;3.11) and using
+        Cabal-syntax-3.11.0.0.
+        Reason: allow-newer enabled.
+
+Warning: Ignoring cabal-testsuite's bounds on retry (^&gt;=0.9.1.0) and using retry-0.8.1.2.
+        Reason: allow-newer enabled.
+
+Error: [S-4804]
+    Stack failed to construct a build plan.
+
+    While constructing the build plan, Stack encountered the following errors. The 'Stack configuration' refers to the set of package
+    versions specified by the snapshot (after any dropped packages, or pruned GHC boot packages; if a boot package is replaced, Stack
+    prunes all other such packages that depend on it) and any extra-deps:
+
+    In the dependencies for cabal-install-3.11.0.0:
+        * semaphore-compat must match &gt;=1.0.0 &amp;&amp; &lt;1.1, but no version is in the Stack configuration (latest matching version is 1.0.0).
+    needed since cabal-install is a build target.
+
+    In the dependencies for cabal-testsuite-3:
+        * network-wait must match ^&gt;=0.1.2.0 || ^&gt;=0.2.0.0, but no version is in the Stack configuration (latest matching version is
+        0.2.0.0).
+    needed since cabal-testsuite is a build target.
+
+    In the dependencies for Cabal-tests-3:
+        * nothunks must match &gt;=0.1.1.0 &amp;&amp; &lt;0.2, but no version is in the Stack configuration (latest matching version is 0.1.5).
+    needed since Cabal-tests is a build target.
+
+    Some different approaches to resolving some or all of this:
+
+        * Recommended action: try adding the following to your extra-deps in /home/philderbeast/dev/src/updo/cabal/stack.yaml
+        (project-level configuration):
+
+        - network-wait-0.2.0.0@sha256:c9fd762f125b46a9fef5ff477b766c7ee38def659cdc05a2add8f4c6830db54a,3031
+        - nothunks-0.1.5@sha256:ebe6c82d2533851f10fc9c7a045cedbfc2add3c61e7a03ef47aa07c8220de09a,2721
+        - semaphore-compat-1.0.0@sha256:8ed6242cab5b0e1a8c654424275ac178035d108dfe4d651053947790fcf83017,1181</code></pre>
+<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></li>
+<li id="fn2"><p>The <code>project-versions.mk</code> filename is a convention we’ve used so far
+but you can use any name for this file.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><code>updo-1.0.0</code> doesn’t use a <a href="https://github.com/cabalism/updo/issues/9">default empty list</a>
+when a configuration file is missing but that feature is in the works,
+implemented but not yet published.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><code>dhall2caball</code> is not shown here as it’s very similar to <code>dhall2stack</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode diff"><code class="sourceCode diff"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="st">-- ${./stack-snippet.dhall (None Text)}</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="va">++ ${./cabal-snippet.dhall}</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">-- ${../../../updo/text-templates/dhall2stack.dhall</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="va">++ ${../../../updo/text-templates/dhall2cabal.dhall</span></span></code></pre></div>
+<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></li>
+</ol>
+</section>
+    <div id="copyright">&copy; 2013-2022 Block Scope</div>
+
+</article>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
