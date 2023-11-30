@@ -52,11 +52,61 @@ upstream configuration.
 
 .. note::
 
-    A different approach is mirroring, where one project is maintained,
-    parsed and mirrored to the other one. There are two tools that do this:
+    A different approach is mirroring, where one project is maintained and then
+    this (or a build product) is parsed and mirrored to the other project type.
+    There are two tools that do this:
 
-    * `cabal2stack <cabal2stack_>`_ converts a Cabal project to Stack
-    * `stack2cabal <stack2cabal_>`_ converts a Stack project to Cabal
+    - `stack2cabal <stack2cabal_>`_
+        This tool converts ``stack.yaml`` to ``cabal.project``.
+
+    - `cabal2stack <cabal2stack_>`_
+        This tool converts ``plan.json`` to ``stack.yaml``.
+
+        A ``plan.json`` can be created with ``cabal build --dry-run`` so be careful
+        to include everything you need with this build. Enabling or disabling tests
+        and benchmarks makes quite a difference in the generated ``stack.yaml``.
+
+          .. code-block:: diff
+
+            > - "Diff-0.5"
+            > - "Glob-0.10.2"
+            > - "Only-0.1"
+            > - "base-compat-batteries-0.13.1"
+            > - "binary-orphans-1.0.4.1"
+            > - "call-stack-0.4.0"
+            > - "cassava-0.5.3.0"
+            > - "code-page-0.2.1"
+            > - "criterion-1.6.3.0"
+            > - "criterion-measurement-0.2.1.0"
+            > - "happy-1.20.1.1"
+            > - "haskell-lexer-1.1.1"
+            > - "js-chart-2.9.4.1"
+            > - "microstache-1.0.2.3"
+            > - "nothunks-0.1.5"
+            > - "pretty-show-1.10"
+            < - "tasty-1.5"
+            < - "tasty-quickcheck-0.10.3"
+            > - "tasty-1.4.3"
+            > - "tasty-expected-failure-0.12.3"
+            > - "tasty-golden-2.3.5"
+            > - "tasty-hunit-0.10.1"
+            > - "tasty-quickcheck-0.10.2"
+            > - "typed-process-0.2.11.1"
+            > - "unbounded-delays-0.1.1.1"
+            >   cassava:
+            >     "bytestring--lt-0_10_4": false
+            >   criterion:
+            >     "embed-data-files": false
+            >     fast: false
+            >   "criterion-measurement":
+            >     fast: false
+            >   nothunks:
+            >     bytestring: true
+            >     text: true
+            >     vector: true
+            >   "tasty-golden":
+            >     "build-example": fa
+
 
 .. [#] The Stack project fails to construct a build plan[#]_.
 
