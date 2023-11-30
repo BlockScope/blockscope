@@ -21501,10 +21501,6 @@ article {
   font-size: 0.9rem;
 }
 
-.sourceCode.diff {
-  font-size: 1.05rem;
-}
-
 .sourceCode.diff span.st {
   color: #DC322F;
 }
@@ -21769,15 +21765,15 @@ dd {
 
 .tip > div.title,
 .hint > div.title {
-  background: #1abc9c;
+  color: #1abc9c;
 }
 
 .note > div.title {
-  background: #6ab0de;
+  color: #6ab0de;
 }
 
 .warning > div.title {
-  background: #f0b37e;
+  color: #f0b37e;
 }
 
 .hint > p,
@@ -21785,6 +21781,13 @@ dd {
 .note > p,
 .warning > p {
   padding-left: 0.5em;
+}
+
+.hint,
+.tip,
+.note,
+.warning {
+  padding: 0em 0.5em;
 }
 
 /*# sourceMappingURL=app.css.map */
