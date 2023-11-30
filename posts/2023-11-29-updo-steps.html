@@ -89,8 +89,32 @@
             <br />
         </div>
     
-    <p>You can find examples of Updo conversions at <a href="https://github.com/orgs/up-do">github/up-do</a>.
-Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example to see how it’s done.</p>
+    <p>An earlier post <a href="../posts/2023-11-15-updo.html">announced Updo</a>. From the <a href="https://github.com/orgs/up-do">Updo
+Examples</a>, let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example
+to see how to introduce Updo.</p>
+<p>A few of benefits of Updo for <a href="https://github.com/haskell/cabal">haskell/cabal</a> are:</p>
+<ul>
+<li><dl>
+<dt>Package Groups</dt>
+<dd>
+<p>Packages go into publish-to-hackage, test and benchmark groups. Helpful to
+keep a project like this, with a lot of local packages, organized.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Dual Projects</dt>
+<dd>
+<p>Contributors get to pick Cabal or Stack as their build tool.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Validated Dependencies</dt>
+<dd>
+<p>With only a few exceptions listed explicitly as constraints, we get all
+dependencies from stackage, a set of packages that build together.</p>
+</dd>
+</dl></li>
+</ul>
 <h1 id="projects-before-and-after">Projects, Before and After</h1>
 <p>There are many projects in the <a href="https://github.com/haskell/cabal">haskell/cabal</a> repository:</p>
 <blockquote>
@@ -110,9 +134,9 @@ Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> exam
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">0</span> directories, 11 files</span></code></pre></div>
 </blockquote>
-<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo conversion will
-fix that by keeping both default projects in sync with an upstream
-configuration.</p>
+<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo
+conversion will fix that by keeping both default projects in sync with an
+upstream configuration.</p>
 <div class="note">
 <div class="title">
 <p>Note</p>
@@ -169,7 +193,8 @@ matching the resolver version and save it to
 <code>project-stackage/${STACKAGE-VERSION}.config</code>. This likely won’t work
 as-is. No worries, we’ll comment out version constraints that clash later.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir <span class="at">-p</span> project-stackage</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
 </dd>
 </dl></li>
 <li><dl>
@@ -188,10 +213,15 @@ empty list for upgrades yet to do.</p>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal&quot;</span>, <span class="st">&quot;Cabal-syntax&quot;</span>, <span class="st">&quot;cabal-install&quot;</span>, <span class="st">&quot;cabal-install-solver&quot;</span> <span class="op">]</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/tests.dhall</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span>, <span class="st">&quot;Cabal-described&quot;</span>, <span class="st">&quot;Cabal-tests&quot;</span>, <span class="st">&quot;Cabal-tree-diff&quot;</span>, <span class="st">&quot;cabal-testsuite&quot;</span> <span class="op">]</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-described&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-tests&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-tree-diff&quot;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;cabal-testsuite&quot;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
 </dd>
 </dl></li>
 <li><dl>
@@ -571,8 +601,32 @@ implemented but not yet published.<a href="#fnref3" class="footnote-back" role="
             <br />
         </div>
     
-    <p>You can find examples of Updo conversions at <a href="https://github.com/orgs/up-do">github/up-do</a>.
-Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example to see how it’s done.</p>
+    <p>An earlier post <a href="../posts/2023-11-15-updo.html">announced Updo</a>. From the <a href="https://github.com/orgs/up-do">Updo
+Examples</a>, let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> example
+to see how to introduce Updo.</p>
+<p>A few of benefits of Updo for <a href="https://github.com/haskell/cabal">haskell/cabal</a> are:</p>
+<ul>
+<li><dl>
+<dt>Package Groups</dt>
+<dd>
+<p>Packages go into publish-to-hackage, test and benchmark groups. Helpful to
+keep a project like this, with a lot of local packages, organized.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Dual Projects</dt>
+<dd>
+<p>Contributors get to pick Cabal or Stack as their build tool.</p>
+</dd>
+</dl></li>
+<li><dl>
+<dt>Validated Dependencies</dt>
+<dd>
+<p>With only a few exceptions listed explicitly as constraints, we get all
+dependencies from stackage, a set of packages that build together.</p>
+</dd>
+</dl></li>
+</ul>
 <h1 id="projects-before-and-after">Projects, Before and After</h1>
 <p>There are many projects in the <a href="https://github.com/haskell/cabal">haskell/cabal</a> repository:</p>
 <blockquote>
@@ -592,9 +646,9 @@ Let’s walk through the <a href="https://github.com/up-do/cabal">Cabal</a> exam
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ex">0</span> directories, 11 files</span></code></pre></div>
 </blockquote>
-<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo conversion will
-fix that by keeping both default projects in sync with an upstream
-configuration.</p>
+<p>Before conversion, the Stack project doesn’t build<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> but Updo
+conversion will fix that by keeping both default projects in sync with an
+upstream configuration.</p>
 <div class="note">
 <div class="title">
 <p>Note</p>
@@ -651,7 +705,8 @@ matching the resolver version and save it to
 <code>project-stackage/${STACKAGE-VERSION}.config</code>. This likely won’t work
 as-is. No worries, we’ll comment out version constraints that clash later.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> mkdir <span class="at">-p</span> project-stackage</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> curl <span class="at">-sSL</span> https://www.stackage.org/lts-21.19/cabal.config <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;</span> project-stackage/lts-21.19.config</span></code></pre></div>
 </dd>
 </dl></li>
 <li><dl>
@@ -670,10 +725,15 @@ empty list for upgrades yet to do.</p>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal&quot;</span>, <span class="st">&quot;Cabal-syntax&quot;</span>, <span class="st">&quot;cabal-install&quot;</span>, <span class="st">&quot;cabal-install-solver&quot;</span> <span class="op">]</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs/tests.dhall</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span>, <span class="st">&quot;Cabal-described&quot;</span>, <span class="st">&quot;Cabal-tests&quot;</span>, <span class="st">&quot;Cabal-tree-diff&quot;</span>, <span class="st">&quot;cabal-testsuite&quot;</span> <span class="op">]</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="st">&quot;Cabal-QuickCheck&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-described&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-tests&quot;</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;Cabal-tree-diff&quot;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>, <span class="st">&quot;cabal-testsuite&quot;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="op">]</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="co">-- project-dhall/pkgs-upgrade-todo.dhall</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="op">[]</span> : <span class="dt">List</span> <span class="dt">Text</span></span></code></pre></div>
 </dd>
 </dl></li>
 <li><dl>
