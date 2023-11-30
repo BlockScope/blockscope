@@ -4,8 +4,23 @@ subtitle: How to introduce Updo to a project using Cabal as an example.
 tags: haskell, build
 ---
 
-You can find examples of Updo conversions at `github/up-do <up-do-examples_>`_.
-Let's walk through the `Cabal <cabal_>`_ example to see how it's done.
+An earlier post `announced Updo </posts/2023-11-15-updo.html>`_. From the `Updo
+Examples <up-do-examples_>`_, let's walk through the `Cabal <cabal_>`_ example
+to see how to introduce Updo.
+
+A few of benefits of Updo for `haskell/cabal <upstream-cabal_>`_ are:
+
+- Package Groups
+    Packages go into publish-to-hackage, test and benchmark groups.  Helpful to
+    keep a project like this, with a lot of local packages, organized.
+    
+- Dual Projects
+    Contributors get to pick Cabal or Stack as their build tool.
+    
+- Validated Dependencies
+    With only a few exceptions listed explicitly as constraints, we get all
+    dependencies from stackage, a set of packages that build together.
+
 
 Projects, Before and After
 ==========================
@@ -31,9 +46,9 @@ There are many projects in the `haskell/cabal <upstream-cabal_>`_ repository:
 
         0 directories, 11 files
 
-Before conversion, the Stack project doesn't build[#]_ but Updo conversion will
-fix that by keeping both default projects in sync with an upstream
-configuration.
+Before conversion, the Stack project doesn't build[#]_ but Updo
+conversion will fix that by keeping both default projects in sync with an
+upstream configuration.
 
 .. note::
 
@@ -165,7 +180,8 @@ The steps of converting a project to Updo, using conversion of Cabal for example
     .. code-block:: bash
 
         $ mkdir -p project-stackage
-        $ curl -sSL https://www.stackage.org/lts-21.19/cabal.config > project-stackage/lts-21.19.config
+        $ curl -sSL https://www.stackage.org/lts-21.19/cabal.config \
+            > project-stackage/lts-21.19.config
 
 #. Group Packages
     Add configuration under ``project-dhall/ghc-${GHC-VERSION}``.  We'll break
@@ -184,7 +200,12 @@ The steps of converting a project to Updo, using conversion of Cabal for example
         [ "Cabal", "Cabal-syntax", "cabal-install", "cabal-install-solver" ]
 
         -- project-dhall/pkgs/tests.dhall
-        [ "Cabal-QuickCheck", "Cabal-described", "Cabal-tests", "Cabal-tree-diff", "cabal-testsuite" ]
+        [ "Cabal-QuickCheck"
+        , "Cabal-described"
+        , "Cabal-tests"
+        , "Cabal-tree-diff"
+        , "cabal-testsuite"
+        ]
 
         -- project-dhall/pkgs-upgrade-todo.dhall
         [] : List Text
