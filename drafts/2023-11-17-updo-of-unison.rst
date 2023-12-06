@@ -13,8 +13,8 @@ Converting Unison
 =================
 
 Before the conversion[#]_, Unison builds Stack but not with
-``contrib/cabal.project``. We won't fix that now as Updo will generate it for
-us.
+``contrib/cabal.project`` using ``ghc-9.2.8`` that matches ``lts-20.26``. We
+won't fix that now as Updo will generate it for us.
 
     .. code-block:: pre
 
@@ -25,14 +25,110 @@ us.
         ├── stack.yaml
         └── stack.yaml.lock
 
+        $ stack build --test --no-run-tests --bench --no-run-benchmarks
+        easytest                 > Test running disabled by --no-run-tests flag.
+        unison-cli               > Test running disabled by --no-run-tests flag.
+        unison-parser-typechecker> Test running disabled by --no-run-tests flag.
+        unison-pretty-printer    > Test running disabled by --no-run-tests flag.
+        unison-core1             > Test running disabled by --no-run-tests flag.
+        unison-sqlite            > Test running disabled by --no-run-tests flag.
+        unison-syntax            > Test running disabled by --no-run-tests flag.
+        unison-util-bytes        > Test running disabled by --no-run-tests flag.
+        unison-util-cache        > Test running disabled by --no-run-tests flag.
+        unison-util-relation     > Test running disabled by --no-run-tests flag.
+        unison-util-relation     > Benchmark running disabled by --no-run-benchmarks flag.
+        Completed 11 action(s).
+        Log files have been written to: /.../.stack-work/logs/
+
         $ cabal build all --enable-tests --enable-benchmarks --project-file=contrib/cabal.project
         ...
-        Error: cabal: Could not resolve dependencies:
+        Resolving dependencies...
+        Error: [Cabal-7107]
+        Could not resolve dependencies:
         [__0] trying: unison-cli-0.0.0 (user goal)
         [__1] unknown package: unison-util-nametree (dependency of unison-cli)
         [__1] fail (backjumping, conflict set: unison-cli, unison-util-nametree)
         After searching the rest of the dependency tree exhaustively, these were the
         goals I've had most trouble fulfilling: unison-cli, unison-util-nametree
+
+Here's the set up:
+
+    .. code-block:: dhall
+
+      -- project-dhall/ghc-9.2.8/text-templates/stack-snippet.dhall
+      \(_stackage-resolver : Optional Text) ->
+        ''
+        user-message: "WARNING: This stack project is generated."
+
+        flags:
+          haskeline:
+            terminfo: false
+
+        allow-different-user: true
+
+        build:
+          interleaved-output: false
+
+        ghc-options:
+          # All packages
+          "$locals": -Wall -Werror -Wno-name-shadowing -Wno-missing-pattern-synonym-signatures -fprint-expanded-synonyms -fwrite-ide-info #-freverse-errors
+
+          # See https://github.com/haskell/haskell-language-server/issues/208
+          "$everything": -haddock
+
+        ''
+
+    .. code-block:: dhall
+
+      -- project-dhall/ghc-9.2.8/text-templates/cabal-snippet.dhall
+      ''
+      program-options
+        ghc-options:
+          -Wall
+          -Werror
+          -Wno-missing-pattern-synonym-signatures
+          -Wno-name-shadowing
+          -fhide-source-paths
+          -fprint-expanded-synonyms
+          -fwrite-ide-info
+          -haddock
+
+      package haskeline
+        flags: -terminfo
+      ''
+
+    .. code-block:: dhall
+
+      -- project-dhall/ghc-9.2.8/constraints.dhall
+      [ { dep = "fuzzyfind", ver = "3.0.1" }
+      , { dep = "lock-file", ver = "0.7.0.0" }
+      , { dep = "lsp", ver = "2.0.0.0" }
+      , { dep = "lsp-types", ver = "2.0.1.1" }
+      , { dep = "monad-validate", ver = "1.3.0.0" }
+      , { dep = "recover-rtti", ver = "0.4.3" }
+      , { dep = "row-types", ver = "1.0.1.2" }
+      ]
+
+    .. code-block:: dhall
+
+      -- project-dhall/ghc-9.2.8/forks-external.dhall
+
+      -- configurator:
+      --   Avoid the broken resolver version.
+      -- haskeline:
+      --   This custom Haskeline alters ANSI rendering on Windows.  If changing the
+      --   haskeline dependency, please ensure color renders properly in a Windows
+      --   terminal.  https://github.com/judah/haskeline/pull/126
+      [ { loc = "https://github.com/unisonweb/configurator"
+        , tag = "e47e9e9fe1f576f8c835183b9def52d73c01327a"
+        , sub = [] : List Text
+        }
+      , { loc = "https://github.com/unisonweb/haskeline"
+        , tag = "9275eea7982dabbf47be2ba078ced669ae7ef3d5"
+        , sub = [] : List Text
+        }
+      ]
+
 
 Converting Unison
 =================
