@@ -1,5 +1,5 @@
 ---
-title: 'Cabal Tooling'
+title: 'Cabal Tooling Contributions'
 ---
 A list of contributions I've made to `haskell`[**/cabal**](https://github.com/haskell/cabal):
 
