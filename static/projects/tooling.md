@@ -1,5 +1,5 @@
 ---
-title: 'Tooling'
+title: 'Tooling Contributions'
 subtitle: A little help can go a long way.
 ---
 What is the use of a programming language if it is a huge pain to resolve
