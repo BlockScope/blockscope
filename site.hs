@@ -208,6 +208,24 @@ main = do
                 >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
                 >>= relativizeUrls
 
+        match "static/projects/cabal.md" $ do
+            route . customRoute $ const "projects/cabal/index.html"
+
+            compile
+                $ pandoc nullSyntaxes
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
+        match "static/projects/stack.md" $ do
+            route . customRoute $ const "projects/stack/index.html"
+
+            compile
+                $ pandoc nullSyntaxes
+                >>= loadAndApplyTemplate "templates/about.html" postCtx
+                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                >>= relativizeUrls
+
         match "static/projects/fly.md" $ do
             route . customRoute $ const "projects/fly/index.html"
 
