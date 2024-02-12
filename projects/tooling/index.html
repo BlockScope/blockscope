@@ -86,141 +86,8 @@ dependencies with or to build. That’s an area where a little help can go a lon
 way to ease the pain.</p>
 <h4 id="build-tools">Build Tools</h4>
 <ul>
-<li><code>haskell</code><a href="https://github.com/haskell/cabal"><strong>/cabal</strong></a>
-<ul>
-<li><strong>Functionality</strong>; feature additions, bug fixes, make, continuous integration
-<ul>
-<li>Render short option with arg,
-<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
-<li>Only move code to <code>Simple/GHC/Build*</code>,
-<a href="https://github.com/haskell/cabal/pull/9409">#9409</a></li>
-<li>Warn early overwrite expanded,
-<a href="https://github.com/haskell/cabal/pull/9506">#9506</a></li>
-<li>Add a format rejections function,
-<a href="https://github.com/haskell/cabal/pull/9560">#9560</a></li>
-<li>Add Cabal-described and cabal-install to doctests,
-<a href="https://github.com/haskell/cabal/pull/9572">#9572</a></li>
-<li>Generate <code>doc/buildinfo-fields-reference.rst</code>,
-<a href="https://github.com/haskell/cabal/pull/9573">#9573</a></li>
-</ul></li>
-<li><strong>Tests</strong>
-<ul>
-<li>Add test cases that reproduce <code>sdist --project-file</code>,
-<a href="https://github.com/haskell/cabal/pull/8226">#8226</a></li>
-<li>Add reinstall test to <code>LinkerOptions/NonignoredConfigs</code>,
-<a href="https://github.com/haskell/cabal/pull/9377">#9377</a></li>
-<li>Double banger test names,
-<a href="https://github.com/haskell/cabal/pull/9526">#9526</a></li>
-<li>Add further tests of cyclical project imports,
-<a href="https://github.com/haskell/cabal/pull/9665">#9665</a></li>
-<li>Add tests for project imports and constraint version conflicts,
-<a href="https://github.com/haskell/cabal/pull/9680">#9680</a></li>
-</ul></li>
-<li><strong>Linting</strong> and fixing warnings
-<ul>
-<li>Add <code>HLint</code> configuraton,
-<a href="https://github.com/haskell/cabal/pull/9041">#9041</a></li>
-<li>Follow hlint suggestion: redundant list comprehension,
-<a href="https://github.com/haskell/cabal/pull/9111">#9111</a></li>
-<li>Follow hlint suggestion: move brackets to avoid <code>$</code>,
-<a href="https://github.com/haskell/cabal/pull/9112">#9112</a></li>
-<li>Follow hlint suggestion: redundant where (dead code),
-<a href="https://github.com/haskell/cabal/pull/9128">#9128</a></li>
-<li>Have hlint ignore <code>CmmSourcesExe Demo</code>,
-<a href="https://github.com/haskell/cabal/pull/9189">#9189</a></li>
-<li>Satisfy <code>-Werror=unused-top-binds</code>,
-<a href="https://github.com/haskell/cabal/pull/9488">#9488</a></li>
-<li>Build <code>cabal-dev-scripts</code> with <code>ghc-9.8.1</code>,
-<a href="https://github.com/haskell/cabal/pull/9600">#9600</a></li>
-</ul></li>
-<li><strong>Documentation</strong>
-<ul>
-<li>Move target forms to its own section, warning about install all,
-<a href="https://github.com/haskell/cabal/pull/7000">#7000</a></li>
-<li>Warn about needing to opt in to <code>overwrite-policy</code> for install,
-<a href="https://github.com/haskell/cabal/pull/7823">#7823</a></li>
-<li>Add a doc section on <code>cabal list-bin</code>,
-<a href="https://github.com/haskell/cabal/pull/7964">#7964</a></li>
-<li>Describe a gitpod workflow for docs,
-<a href="https://github.com/haskell/cabal/pull/7976">#7976</a></li>
-<li>Bring the command help up to date,
-<a href="https://github.com/haskell/cabal/pull/9105">#9105</a></li>
-<li>Add back reference from constraints to flags,
-<a href="https://github.com/haskell/cabal/pull/9264">#9264</a></li>
-<li>Note how to do “not equal” with constraints,
-<a href="https://github.com/haskell/cabal/pull/9380">#9380</a></li>
-<li>Warn about project conditional blocks,
-<a href="https://github.com/haskell/cabal/pull/9515">#9515</a></li>
-<li>Use <code>knownLanguages</code> for describing Language,
-<a href="https://github.com/haskell/cabal/pull/9580">#9580</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Consistent starting capital letter, ending period in help text,
-<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
-<li>Get clones the source repository,
-<a href="https://github.com/haskell/cabal/pull/8088">#8088</a></li>
-<li>Typo missing closing parenthesis on license,
-<a href="https://github.com/haskell/cabal/pull/8146">#8146</a></li>
-<li>Simplify to avoid a typo,
-<a href="https://github.com/haskell/cabal/pull/9315">#9315</a></li>
-<li>Avoid double space in “Executing install plan …”,
-<a href="https://github.com/haskell/cabal/pull/9376">#9376</a></li>
-<li>Use the newer haskell-actions organisation,
-<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
-<li>Change the test expectation md5 hash,
-<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
-<li>Delete <code>cabal.project.coverage</code>,
-<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
-<li>Ignore generated <code>cabal.out</code> and <code>cabal.out''</code>,
-<a href="https://github.com/haskell/cabal/pull/9594">#9594</a></li>
-<li>Add <code>cabal-testsuite</code> git ignores for validate dangling files,
-<a href="https://github.com/haskell/cabal/pull/9633">#9633</a></li>
-<li>Ignore <code>IntegrationTests2/config/default-config</code>,
-<a href="https://github.com/haskell/cabal/pull/9644">#9644</a></li>
-<li>Ignore test <code>T7339</code> output, <code>libhello.so</code>,
-<a href="https://github.com/haskell/cabal/pull/9699">#9699</a></li>
-</ul></li>
-</ul></li>
-<li><code>commercialhaskell</code><a href="https://docs.haskellstack.org"><strong>/stack</strong></a>
-<ul>
-<li><strong>Functionality</strong>; feature additions, bug fixes, continuous integration
-<ul>
-<li>Help text allows multiple use for <code>--package</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/5775">#5775</a></li>
-<li>Use original <code>YAML</code> to preserve top-level order,
-<a href="https://github.com/commercialhaskell/stack/pull/5813">#5813</a></li>
-<li>Add stan gh-action and ignored triggered checks,
-<a href="https://github.com/commercialhaskell/stack/pull/5811">#5811</a></li>
-<li>Adds a <code>cabal.project</code> file,
-<a href="https://github.com/commercialhaskell/stack/pull/5860">#5860</a></li>
-<li>Check if target might be a project-level configuration file, not a
-missing directory,
-<a href="https://github.com/commercialhaskell/stack/pull/6033">#6033</a></li>
-<li>Add ide target component types,
-<a href="https://github.com/commercialhaskell/stack/pull/6126">#6126</a></li>
-<li>Build _ with <code>ghc-x.y.z</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/6344">#6344</a></li>
-</ul></li>
-<li><strong>Documentation</strong>
-<ul>
-<li>Document how to suppress the <code>-nopie</code> warnings on macOS,
-<a href="https://github.com/commercialhaskell/stack/pull/4392/files">#4392</a></li>
-<li>Link to unit tests and integration tests,
-<a href="https://github.com/commercialhaskell/stack/pull/5809">#5809</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Ignore <code>dist-newstyle</code> folder,
-<a href="https://github.com/commercialhaskell/stack/pull/5776">#5776</a></li>
-<li>Lint <code>YAML</code> especially <code>.hlint.yaml</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/5797">#5797</a></li>
-<li>Typo close parenthesis for work directory default,
-<a href="https://github.com/commercialhaskell/stack/pull/5812">#5812</a></li>
-<li>Bump the cabal project to match <code>lts-20.0</code> in <code>stack.yaml</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/6031">#6031</a></li>
-</ul></li>
-</ul></li>
+<li><code>haskell</code><a href="https://github.com/haskell/cabal"><strong>/cabal</strong></a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li><code>commercialhaskell</code><a href="https://docs.haskellstack.org"><strong>/stack</strong></a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
 <li><code>cabalism</code><a href="http://hackage.haskell.org/package/hpack-dhall"><strong>/hpack-dhall</strong></a><br />
 I started contributing and ended up
 <a href="https://github.com/cabalism/hpack-dhall/issues/3">owner and maintainer</a> of
@@ -254,6 +121,13 @@ stale links to <code>all-cabal-hashes</code> and <code>lts-haskell</code>.</li>
 <a href="https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55">Parse</a>
 the mac operating system as <code>osx</code> or <code>darwin</code>.</li>
 </ul>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I have a separate page for <a href="../../projects/cabal/">cabal contributions</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Same goes for <a href="../../projects/stack/">stack contributions</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </article>
 
         </div>
@@ -272,6 +146,8 @@ the mac operating system as <code>osx</code> or <code>darwin</code>.</li>
             <li class="nav-item"><a class="nav-link" href="../../projects/geodetics/">&nbsp;geodetics</a></li>
             <li class="nav-item"><a class="nav-link" href="../../projects/fly/">&nbsp;flight</a></li>
             <li class="nav-item"><a class="nav-link" href="../../projects/tooling/">&nbsp;tooling</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/cabal/">&nbsp;&nbsp;cabal</a></li>
+            <li class="nav-item"><a class="nav-link" href="../../projects/stack/">&nbsp;&nbsp;stack</a></li>
         </ul>
     </nav>
 </div>
@@ -314,141 +190,8 @@ dependencies with or to build. That’s an area where a little help can go a lon
 way to ease the pain.</p>
 <h4 id="build-tools">Build Tools</h4>
 <ul>
-<li><code>haskell</code><a href="https://github.com/haskell/cabal"><strong>/cabal</strong></a>
-<ul>
-<li><strong>Functionality</strong>; feature additions, bug fixes, make, continuous integration
-<ul>
-<li>Render short option with arg,
-<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
-<li>Only move code to <code>Simple/GHC/Build*</code>,
-<a href="https://github.com/haskell/cabal/pull/9409">#9409</a></li>
-<li>Warn early overwrite expanded,
-<a href="https://github.com/haskell/cabal/pull/9506">#9506</a></li>
-<li>Add a format rejections function,
-<a href="https://github.com/haskell/cabal/pull/9560">#9560</a></li>
-<li>Add Cabal-described and cabal-install to doctests,
-<a href="https://github.com/haskell/cabal/pull/9572">#9572</a></li>
-<li>Generate <code>doc/buildinfo-fields-reference.rst</code>,
-<a href="https://github.com/haskell/cabal/pull/9573">#9573</a></li>
-</ul></li>
-<li><strong>Tests</strong>
-<ul>
-<li>Add test cases that reproduce <code>sdist --project-file</code>,
-<a href="https://github.com/haskell/cabal/pull/8226">#8226</a></li>
-<li>Add reinstall test to <code>LinkerOptions/NonignoredConfigs</code>,
-<a href="https://github.com/haskell/cabal/pull/9377">#9377</a></li>
-<li>Double banger test names,
-<a href="https://github.com/haskell/cabal/pull/9526">#9526</a></li>
-<li>Add further tests of cyclical project imports,
-<a href="https://github.com/haskell/cabal/pull/9665">#9665</a></li>
-<li>Add tests for project imports and constraint version conflicts,
-<a href="https://github.com/haskell/cabal/pull/9680">#9680</a></li>
-</ul></li>
-<li><strong>Linting</strong> and fixing warnings
-<ul>
-<li>Add <code>HLint</code> configuraton,
-<a href="https://github.com/haskell/cabal/pull/9041">#9041</a></li>
-<li>Follow hlint suggestion: redundant list comprehension,
-<a href="https://github.com/haskell/cabal/pull/9111">#9111</a></li>
-<li>Follow hlint suggestion: move brackets to avoid <code>$</code>,
-<a href="https://github.com/haskell/cabal/pull/9112">#9112</a></li>
-<li>Follow hlint suggestion: redundant where (dead code),
-<a href="https://github.com/haskell/cabal/pull/9128">#9128</a></li>
-<li>Have hlint ignore <code>CmmSourcesExe Demo</code>,
-<a href="https://github.com/haskell/cabal/pull/9189">#9189</a></li>
-<li>Satisfy <code>-Werror=unused-top-binds</code>,
-<a href="https://github.com/haskell/cabal/pull/9488">#9488</a></li>
-<li>Build <code>cabal-dev-scripts</code> with <code>ghc-9.8.1</code>,
-<a href="https://github.com/haskell/cabal/pull/9600">#9600</a></li>
-</ul></li>
-<li><strong>Documentation</strong>
-<ul>
-<li>Move target forms to its own section, warning about install all,
-<a href="https://github.com/haskell/cabal/pull/7000">#7000</a></li>
-<li>Warn about needing to opt in to <code>overwrite-policy</code> for install,
-<a href="https://github.com/haskell/cabal/pull/7823">#7823</a></li>
-<li>Add a doc section on <code>cabal list-bin</code>,
-<a href="https://github.com/haskell/cabal/pull/7964">#7964</a></li>
-<li>Describe a gitpod workflow for docs,
-<a href="https://github.com/haskell/cabal/pull/7976">#7976</a></li>
-<li>Bring the command help up to date,
-<a href="https://github.com/haskell/cabal/pull/9105">#9105</a></li>
-<li>Add back reference from constraints to flags,
-<a href="https://github.com/haskell/cabal/pull/9264">#9264</a></li>
-<li>Note how to do “not equal” with constraints,
-<a href="https://github.com/haskell/cabal/pull/9380">#9380</a></li>
-<li>Warn about project conditional blocks,
-<a href="https://github.com/haskell/cabal/pull/9515">#9515</a></li>
-<li>Use <code>knownLanguages</code> for describing Language,
-<a href="https://github.com/haskell/cabal/pull/9580">#9580</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Consistent starting capital letter, ending period in help text,
-<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
-<li>Get clones the source repository,
-<a href="https://github.com/haskell/cabal/pull/8088">#8088</a></li>
-<li>Typo missing closing parenthesis on license,
-<a href="https://github.com/haskell/cabal/pull/8146">#8146</a></li>
-<li>Simplify to avoid a typo,
-<a href="https://github.com/haskell/cabal/pull/9315">#9315</a></li>
-<li>Avoid double space in “Executing install plan …”,
-<a href="https://github.com/haskell/cabal/pull/9376">#9376</a></li>
-<li>Use the newer haskell-actions organisation,
-<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
-<li>Change the test expectation md5 hash,
-<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
-<li>Delete <code>cabal.project.coverage</code>,
-<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
-<li>Ignore generated <code>cabal.out</code> and <code>cabal.out''</code>,
-<a href="https://github.com/haskell/cabal/pull/9594">#9594</a></li>
-<li>Add <code>cabal-testsuite</code> git ignores for validate dangling files,
-<a href="https://github.com/haskell/cabal/pull/9633">#9633</a></li>
-<li>Ignore <code>IntegrationTests2/config/default-config</code>,
-<a href="https://github.com/haskell/cabal/pull/9644">#9644</a></li>
-<li>Ignore test <code>T7339</code> output, <code>libhello.so</code>,
-<a href="https://github.com/haskell/cabal/pull/9699">#9699</a></li>
-</ul></li>
-</ul></li>
-<li><code>commercialhaskell</code><a href="https://docs.haskellstack.org"><strong>/stack</strong></a>
-<ul>
-<li><strong>Functionality</strong>; feature additions, bug fixes, continuous integration
-<ul>
-<li>Help text allows multiple use for <code>--package</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/5775">#5775</a></li>
-<li>Use original <code>YAML</code> to preserve top-level order,
-<a href="https://github.com/commercialhaskell/stack/pull/5813">#5813</a></li>
-<li>Add stan gh-action and ignored triggered checks,
-<a href="https://github.com/commercialhaskell/stack/pull/5811">#5811</a></li>
-<li>Adds a <code>cabal.project</code> file,
-<a href="https://github.com/commercialhaskell/stack/pull/5860">#5860</a></li>
-<li>Check if target might be a project-level configuration file, not a
-missing directory,
-<a href="https://github.com/commercialhaskell/stack/pull/6033">#6033</a></li>
-<li>Add ide target component types,
-<a href="https://github.com/commercialhaskell/stack/pull/6126">#6126</a></li>
-<li>Build _ with <code>ghc-x.y.z</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/6344">#6344</a></li>
-</ul></li>
-<li><strong>Documentation</strong>
-<ul>
-<li>Document how to suppress the <code>-nopie</code> warnings on macOS,
-<a href="https://github.com/commercialhaskell/stack/pull/4392/files">#4392</a></li>
-<li>Link to unit tests and integration tests,
-<a href="https://github.com/commercialhaskell/stack/pull/5809">#5809</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Ignore <code>dist-newstyle</code> folder,
-<a href="https://github.com/commercialhaskell/stack/pull/5776">#5776</a></li>
-<li>Lint <code>YAML</code> especially <code>.hlint.yaml</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/5797">#5797</a></li>
-<li>Typo close parenthesis for work directory default,
-<a href="https://github.com/commercialhaskell/stack/pull/5812">#5812</a></li>
-<li>Bump the cabal project to match <code>lts-20.0</code> in <code>stack.yaml</code>,
-<a href="https://github.com/commercialhaskell/stack/pull/6031">#6031</a></li>
-</ul></li>
-</ul></li>
+<li><code>haskell</code><a href="https://github.com/haskell/cabal"><strong>/cabal</strong></a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li><code>commercialhaskell</code><a href="https://docs.haskellstack.org"><strong>/stack</strong></a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></li>
 <li><code>cabalism</code><a href="http://hackage.haskell.org/package/hpack-dhall"><strong>/hpack-dhall</strong></a><br />
 I started contributing and ended up
 <a href="https://github.com/cabalism/hpack-dhall/issues/3">owner and maintainer</a> of
@@ -482,6 +225,13 @@ stale links to <code>all-cabal-hashes</code> and <code>lts-haskell</code>.</li>
 <a href="https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55">Parse</a>
 the mac operating system as <code>osx</code> or <code>darwin</code>.</li>
 </ul>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I have a separate page for <a href="../../projects/cabal/">cabal contributions</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Same goes for <a href="../../projects/stack/">stack contributions</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 </article>
 
                 </div>
