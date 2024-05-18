@@ -4,10 +4,28 @@ subtitle: Converting hledger to use Updo for project generation.
 tags: haskell, updo
 ---
 
-I've had `hledger` on the list of projects [proposed for
-conversion](https://github.com/up-do#proposed) to Updo for some time. I've now
-converted it as [up-do/hledger](https://github.com/up-do/hledger). I've added
-configuration for GHC versions `9.0.2`, `9.2.8`, `9.4.8` and `9.8.2`.
+I've had `hledger` on a [short list of projects
+](https://github.com/up-do#proposed) to convert to Updo for some time because it
+is well-known project and because it uses a GHC version naming scheme with its
+Stack projects. It also has a project asymmetry, having many Stack projects but
+only one Cabal project, the `cabal.project`.
+
+```pre
+$ tree -P '*.project|stack*.yaml' --prune -L 1
+.
+├── cabal.project
+├── stack8.10.yaml   ▨ ghc-8.10.7
+├── stack9.0.yaml    ▨ ghc-9.0.2
+├── stack9.2.yaml    ▨ ghc-9.2.8
+├── stack9.4.yaml    ▨ ghc-9.4.8
+├── stack9.6.yaml    ▨ ghc-9.6.4
+└── stack.yaml       ▨ ghc-9.8.2
+```
+
+I've now
+converted it as [up-do/hledger](https://github.com/up-do/hledger), adding
+configuration for GHC versions `9.0.2`, `9.2.8`, `9.4.8` and `9.8.2` but leaving
+out `8.10.7` as it didn't build as-is.
 
 I developed Updo for a large project that had one current GHC version and one
 (or two) prospective GHC upgrade versions. In that situation we worked with a
@@ -36,23 +54,11 @@ The above files are actually generated in Updo by way of intermediates:
 .INTERMEDIATE: ghc-$(GHC_UPGRADE).$(STACK_VIA).yaml
 ```
 
-I noticed that hledger used a GHC version naming scheme with its Stack projects.
-
-```
-$ tree -P 'stack*.yaml' --prune -L 1
-.
-├── stack8.10.yaml
-├── stack9.0.yaml
-├── stack9.2.yaml
-├── stack9.4.yaml
-├── stack9.6.yaml
-└── stack.yaml
-```
 
 What I've done then when converting hledger to use Updo is keep the intermediate
 files:
 
-```
+```pre
 tree -P 'ghc-*.dhall2stack.yaml|ghc-*.dhall2cabal.project' --prune -L 1
 .
 ├── ghc-9.0.2.dhall2cabal.project
@@ -72,8 +78,10 @@ match the versions used in the matching `.yaml` file.
 
 These can be compared with:
 
-```
-$ stack --stack-yaml=ghc-9.8.2.dhall2stack.yaml ls dependencies cabal > ghc-9.8.2.dhall2stack.yaml.freeze
+```pre
+$ stack --stack-yaml=ghc-9.8.2.dhall2stack.yaml \
+    ls dependencies cabal \
+    > ghc-9.8.2.dhall2stack.yaml.freeze
 $ cabal freeze --project-file=ghc-9.8.2.dhall2cabal.project
 ```
 
@@ -135,7 +143,7 @@ version and `ghc-9.8.2` as the upgrade version, just because that was the order
 I tackled them in. As for using Updo, here are some commands I used during the
 conversion:
 
-```
+```pre
 $ make -f project-files.mk
 $ make -f project-files.mk upgrade-projects
 $ GHC_UPGRADE=9.6.5 STACKAGE_UPGRADE=lts-22.22 make -f project-files.mk upgrade-projects
@@ -148,7 +156,7 @@ without needing to have
 
 The configuration can be found in `project-stackage` and `project-dhall`:
 
-```
+```pre
 $ tree project-stackage
 project-stackage
 ├── lts-19.33.config
@@ -156,7 +164,9 @@ project-stackage
 ├── lts-21.25.config
 ├── lts-22.22.config
 └── nightly-2024-05-18.config
+```
 
+```pre
 $ tree project-dhall
 project-dhall
 ├── ghc-9.0.2
