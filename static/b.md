@@ -3,16 +3,18 @@ title: <pre>@blockscope</pre>
 subtitle: <pre>module Consulting.Services where</pre>
 ---
 
-I help managers, technicians, scientists and developers build quality software.
+From doing first commits to untangling knotty codebases, I can help you build
+quality software working with managers, technicians, scientists, developers and
+customers.
 
-## Services
-* Writing up and posing problems, investigating and proposing solutions.
-* Assessing, prototyping and recommending tech stacks.
-* Setting up development environments, automating builds and deployments.
-* Contributing fixes, raising, commenting on and triaging issues.
-* Testing what works now and discovering new failures.
-* Mentoring, coaching and training.
+## 🧾 Services
 
-I'm happy doing first commits and untangling knotty codebases.
+* **Writing** up problems, investigating and proposing solutions.
+* **Prototyping** with, assessing and recommending tech stacks.
+* **Setting up** development environments.
+* **Automating** builds and deployments.
+* **Contributing** fixes, raising, commenting on and triaging issues.
+* **Testing** what works now and discovering new failures.
+* **Mentoring**, coaching and training.
 
 Have questions? Please get in touch using the coordinates below.
