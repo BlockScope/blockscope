@@ -21790,4 +21790,8 @@ dd {
   padding: 0em 0.5em;
 }
 
+div#services-list ul {
+  list-style-type: none;
+}
+
 /*# sourceMappingURL=app.css.map */
