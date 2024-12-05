@@ -1,76 +1,81 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Control.Applicative (empty)
-import qualified Data.Map as Map
 import Data.List (intersperse, stripPrefix)
-import Hakyll
-    ( Context(..), Item(..), Configuration(..)
-    , Rules, Pattern, Compiler, Identifier
-    , defaultContext
-    , dateField
-    , tagsFieldWith
-    , constField
-    , listField
-    , loadAll
-    , loadAndApplyTemplate
-    , templateCompiler
-    , copyFileCompiler
-    , match
-    , compile
-    , relativizeUrls
-    , route
-    , idRoute
-    , customRoute
-    , recentFirst
-    , create
-    , makeItem
-    , setExtension
-    , fromFilePath
-    , toFilePath
-    , fromGlob
-    , fromCapture
-    , pandocCompilerWith
-    , hakyllWith
-    , defaultHakyllReaderOptions
-    , defaultHakyllWriterOptions
-    , defaultConfiguration
-    , toUrl
-    , gsubRoute
-    , composeRoutes
-    )
-import Hakyll.Web.Tags (Tags, buildTags, tagsRules, getTags)
-import Text.Pandoc.Options (ReaderOptions(..), WriterOptions(..), HTMLMathMethod(..))
+import qualified Data.Map as Map
+import Hakyll (
+    Compiler,
+    Configuration (..),
+    Context (..),
+    Identifier,
+    Item (..),
+    Pattern,
+    Rules,
+    compile,
+    composeRoutes,
+    constField,
+    copyFileCompiler,
+    create,
+    customRoute,
+    dateField,
+    defaultConfiguration,
+    defaultContext,
+    defaultHakyllReaderOptions,
+    defaultHakyllWriterOptions,
+    fromCapture,
+    fromFilePath,
+    fromGlob,
+    gsubRoute,
+    hakyllWith,
+    idRoute,
+    listField,
+    loadAll,
+    loadAndApplyTemplate,
+    makeItem,
+    match,
+    pandocCompilerWith,
+    recentFirst,
+    relativizeUrls,
+    route,
+    setExtension,
+    tagsFieldWith,
+    templateCompiler,
+    toFilePath,
+    toUrl,
+ )
+import Hakyll.Web.Tags (Tags, buildTags, getTags, tagsRules)
 import Skylighting (Syntax, parseSyntaxDefinition)
-import Text.Blaze.Html ((!), toHtml, toValue)
+import System.Environment (getArgs)
+import System.FilePath
+import Text.Blaze.Html (toHtml, toValue, (!))
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
-import System.FilePath
-import System.Environment (getArgs)
+import Text.Pandoc.Options (HTMLMathMethod (..), ReaderOptions (..), WriterOptions (..))
 
-data Syntaxes =
-    Syntaxes
-        { syntaxSMT2 :: Maybe Syntax
-        , syntaxDhall :: Maybe Syntax
-        }
+data Syntaxes
+    = Syntaxes
+    { syntaxSMT2 :: Maybe Syntax
+    , syntaxDhall :: Maybe Syntax
+    }
 
 nullSyntaxes :: Syntaxes
 nullSyntaxes = Syntaxes Nothing Nothing
 
 pandocReaderOptions :: Syntaxes -> ReaderOptions
 pandocReaderOptions Syntaxes{syntaxSMT2 = Nothing, syntaxDhall = Nothing} = defaultHakyllReaderOptions
-pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Just _} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2", "dhall"] }
-pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Nothing} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["smt2"] }
-pandocReaderOptions Syntaxes{syntaxSMT2 = Nothing, syntaxDhall = Just _} = defaultHakyllReaderOptions { readerIndentedCodeClasses = ["dhall"] }
+pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Just _} = defaultHakyllReaderOptions{readerIndentedCodeClasses = ["smt2", "dhall"]}
+pandocReaderOptions Syntaxes{syntaxSMT2 = Just _, syntaxDhall = Nothing} = defaultHakyllReaderOptions{readerIndentedCodeClasses = ["smt2"]}
+pandocReaderOptions Syntaxes{syntaxSMT2 = Nothing, syntaxDhall = Just _} = defaultHakyllReaderOptions{readerIndentedCodeClasses = ["dhall"]}
 
 pandocWriterOptions :: Syntaxes -> WriterOptions
 pandocWriterOptions Syntaxes{syntaxSMT2 = smt2, syntaxDhall = dhall} =
-        defaultHakyllWriterOptions
-            { writerHTMLMathMethod = MathJax ""
-            , writerSyntaxMap =
-                maybe id (Map.insert "smt2") smt2
+    defaultHakyllWriterOptions
+        { writerHTMLMathMethod = MathJax ""
+        , writerSyntaxMap =
+            maybe id (Map.insert "smt2") smt2
                 . maybe id (Map.insert "dhall") dhall
                 $ writerSyntaxMap defaultHakyllWriterOptions
-            }
+        }
 
 pandoc :: Syntaxes -> Compiler (Item String)
 pandoc syntaxes =
@@ -85,15 +90,14 @@ directory :: (Pattern -> Rules a) -> String -> Rules a
 directory act f = act $ fromGlob $ f ++ "/**"
 
 config :: Configuration
-config = defaultConfiguration { providerDirectory = "." }
+config = defaultConfiguration{providerDirectory = "."}
 
 mkStatic :: FilePath -> Rules ()
 mkStatic template = do
     -- SEE: https://aherrmann.github.io/programming/2016/01/31/jekyll-style-urls-with-hakyll/
-    route
-        $ gsubRoute "static/" (const "")
-        `composeRoutes`
-        customRoute ((</> "index.html") . fst . splitExtension . toFilePath)
+    route $
+        gsubRoute "static/" (const "")
+            `composeRoutes` customRoute ((</> "index.html") . fst . splitExtension . toFilePath)
 
     compile $ do
         pandoc nullSyntaxes
@@ -120,9 +124,9 @@ mkDraft = mkArticle "templates/drafts/default.html"
 mkPostsCtx :: String -> String -> [Item String] -> Context String
 mkPostsCtx title subtitle posts =
     listField "posts" postCtx (return posts)
-    <> constField "title" title
-    <> constField "subtitle" subtitle
-    <> defaultContext
+        <> constField "title" title
+        <> constField "subtitle" subtitle
+        <> defaultContext
 
 mkArticleItem :: Identifier -> Context String -> Compiler (Item String)
 mkArticleItem articleTemplate ctx =
@@ -141,8 +145,9 @@ mkDraftItem :: Context String -> Compiler (Item String)
 mkDraftItem = mkArticleItem "templates/drafts/default.html"
 
 mkArticles :: Pattern -> (Context String -> Compiler (Item String)) -> String -> String -> Rules ()
-mkArticles articlePattern mkArticle' title subtitle = compile $
-    loadAll articlePattern >>= recentFirst >>= mkArticle' . mkPostsCtx title subtitle
+mkArticles articlePattern mkArticle' title subtitle =
+    compile $
+        loadAll articlePattern >>= recentFirst >>= mkArticle' . mkPostsCtx title subtitle
 
 main :: IO ()
 main = do
@@ -154,7 +159,6 @@ main = do
     let syntaxes = Syntaxes (Just syntaxSMT2) (Just syntaxDhall)
 
     hakyllWith config $ do
-
         let postsPattern = fromGlob "posts/*"
         let reviewsPattern = fromGlob "reviews/*"
 
@@ -184,74 +188,74 @@ main = do
         match "static/projects/uom.md" $ do
             route . customRoute $ const "projects/uom/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/geodetics.md" $ do
             route . customRoute $ const "projects/geodetics/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath $ "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/tooling.md" $ do
             route . customRoute $ const "projects/tooling/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/cabal.md" $ do
             route . customRoute $ const "projects/cabal/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/stack.md" $ do
             route . customRoute $ const "projects/stack/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/fly.md" $ do
             route . customRoute $ const "projects/fly/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/contrib.md" $ do
             route . customRoute $ const "projects/contrib/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         match "static/projects/index.md" $ do
             route . customRoute $ const "projects/index.html"
 
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/about.html" postCtx
-                >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/about.html" postCtx
+                    >>= loadAndApplyTemplate (fromFilePath "templates/projects/project.html") postCtx
+                    >>= relativizeUrls
 
         -- SEE: http://javran.github.io/posts/2014-03-01-add-tags-to-your-hakyll-blog.html
         tags <- buildTags postsPattern (fromCapture "tags/*.html")
@@ -278,8 +282,8 @@ main = do
 
                 let ctx =
                         constField "tag" tag
-                        <> listField "posts" postCtx (return posts)
-                        <> defaultContext
+                            <> listField "posts" postCtx (return posts)
+                            <> defaultContext
 
                 makeItem ""
                     >>= loadAndApplyTemplate "templates/tag.html" ctx
@@ -288,7 +292,7 @@ main = do
 
         create ["draft/index.html"] $ do
             route idRoute
-            mkArticles draftsPattern mkDraftItem  "Sneak Peek" "Shine a light on these draft posts (not for publication)."
+            mkArticles draftsPattern mkDraftItem "Sneak Peek" "Shine a light on these draft posts (not for publication)."
 
         create ["review/index.html"] $ do
             route idRoute
@@ -300,11 +304,11 @@ main = do
 
         match "static/index.md" $ do
             route . customRoute $ const "index.html"
-            compile
-                $ pandoc nullSyntaxes
-                >>= loadAndApplyTemplate "templates/index.html" postCtx
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
-                >>= relativizeUrls
+            compile $
+                pandoc nullSyntaxes
+                    >>= loadAndApplyTemplate "templates/index.html" postCtx
+                    >>= loadAndApplyTemplate "templates/default.html" postCtx
+                    >>= relativizeUrls
 
         match "templates/*" $ compile templateCompiler
         match "templates/posts/*" $ compile templateCompiler
@@ -318,16 +322,16 @@ postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
 tagsFieldNonEmpty :: String -> Tags -> Context a
 tagsFieldNonEmpty =
     tagsFieldWith getTagsNonEmpty simpleRenderLink (mconcat . intersperse " ")
-    where
-        getTagsNonEmpty :: Identifier -> Compiler [String]
-        getTagsNonEmpty identifier = do
-            tags <- getTags identifier
-            if null tags then empty else return tags
+  where
+    getTagsNonEmpty :: Identifier -> Compiler [String]
+    getTagsNonEmpty identifier = do
+        tags <- getTags identifier
+        if null tags then empty else return tags
 
-        simpleRenderLink :: String -> Maybe FilePath -> Maybe H.Html
-        simpleRenderLink _ Nothing = Nothing
-        simpleRenderLink tag (Just filePath) =
-            Just
+    simpleRenderLink :: String -> Maybe FilePath -> Maybe H.Html
+    simpleRenderLink _ Nothing = Nothing
+    simpleRenderLink tag (Just filePath) =
+        Just
             $ H.a
                 ! A.class_ "badge bg-light text-dark"
                 ! A.href (toValue $ toUrl filePath)
@@ -335,12 +339,12 @@ tagsFieldNonEmpty =
 
 etBookFontRoute :: FilePath -> FilePath
 etBookFontRoute x
-    | Just y <- stripPrefix "node_modules/typeface-et-book/et-book/" x
-    = "css" </> y
+    | Just y <- stripPrefix "node_modules/typeface-et-book/et-book/" x =
+        "css" </> y
     | otherwise = error $ "Unexpected et-book font of " ++ x
 
 faFontRoute :: FilePath -> FilePath
 faFontRoute x
-    | Just y <- stripPrefix "node_modules/@fortawesome/fontawesome-free/webfonts/" x
-    = "css" </> "fonts" </> y
+    | Just y <- stripPrefix "node_modules/@fortawesome/fontawesome-free/webfonts/" x =
+        "css" </> "fonts" </> y
     | otherwise = error $ "Unexpected fontawesome font of " ++ x
