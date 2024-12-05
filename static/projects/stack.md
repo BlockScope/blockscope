@@ -19,11 +19,15 @@ A list of contributions I've made to `commercialhaskell`[**/stack**](https://doc
       [#6126](https://github.com/commercialhaskell/stack/pull/6126)
     - Build _ with `ghc-x.y.z`,
       [#6344](https://github.com/commercialhaskell/stack/pull/6344)
+
 - **Documentation**
     - Document how to suppress the ``-nopie`` warnings on macOS,
       [#4392](https://github.com/commercialhaskell/stack/pull/4392/files)
     - Link to unit tests and integration tests,
       [#5809](https://github.com/commercialhaskell/stack/pull/5809)
+    - Add docs preview and build
+      [#6604](https://github.com/commercialhaskell/stack/pull/6604)
+
 - **Trivial**
     - Ignore `dist-newstyle` folder,
       [#5776](https://github.com/commercialhaskell/stack/pull/5776)
@@ -33,3 +37,5 @@ A list of contributions I've made to `commercialhaskell`[**/stack**](https://doc
       [#5812](https://github.com/commercialhaskell/stack/pull/5812)
     - Bump the cabal project to match `lts-20.0` in `stack.yaml`,
       [#6031](https://github.com/commercialhaskell/stack/pull/6031)
+    - Remove trailing ',' from generated-other-modules
+      [#4388](https://github.com/commercialhaskell/stack/pull/4388)
