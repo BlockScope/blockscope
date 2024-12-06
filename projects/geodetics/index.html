@@ -81,10 +81,13 @@
 </header>
 
     
-    <p>I’ve coded up solutions to the direct and indirect problems of geodetics in
-Haskell, F#, Unison and Koka and in so doing have been able to find problems
-with some of these compilers.</p>
-<h2 id="the-direct-or-forward-geodetics-problem">The Direct or Forward Geodetics Problem</h2>
+    <p>I’m a lifelong learner and like to try out interesting or novel programming
+languages. I’ve coded up solutions to the direct and indirect problems of
+geodetics in <code>Haskell</code>, <code>F#</code>, <code>Unison</code>, <code>Koka</code>, and <code>Rust</code>. Occasionally I
+find problems with newer compilers but this is to be expected.</p>
+<dl>
+<dt>The Direct or Forward Geodetics Problem</dt>
+<dd>
 <ul>
 <li>{x} The departure point on the ellipsoid.</li>
 <li>{α₁} The azimuth from the departure point.</li>
@@ -95,7 +98,9 @@ with some of these compilers.</p>
 <li>{y} The arrival point.</li>
 <li>{α₂} The azimuth at the arrival point.</li>
 </ul>
-<h2 id="the-inverse-or-reverse-geodetics-problem">The Inverse or Reverse Geodetics Problem</h2>
+</dd>
+<dt>The Inverse or Reverse Geodetics Problem</dt>
+<dd>
 <ul>
 <li>{x} The departure point.</li>
 <li>{y} The arrival point.</li>
@@ -106,16 +111,43 @@ with some of these compilers.</p>
 <li>{α₁} The azimuth at the departure point.</li>
 <li>{α₂} The azimuth at the arrival point.</li>
 </ul>
+</dd>
+</dl>
 <h2 id="geodetics-solutions">Geodetics Solutions</h2>
 <p>At the <code>github</code>/<a href="https://github.com/flight-earth">flight-earth</a> organisation
 you’ll find a set of solutions to geodesy problems in various programming
-languages.</p>
-<ul>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/meridian-arc">meridian-arc</a> for F#. Also published on nuget as <a href="https://www.nuget.org/packages/meridian-arc/">meridian-arc</a>. Interestingly, the math doesn’t work quite the same on all platforms (Windows, Mac and Ubuntu) I tested with.</li>
-<li><code>glide-angle</code>/<a href="https://github.com/GlideAngle/flare-timing/tree/main/lang-haskell/earth">flight-earth</a> for Haskell. I’m waiting on a fix for the <code>uom-plugin</code> dependency to land before I move the package between organisations, from <code>glide-angle</code> to <code>flight-earth</code>.</li>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/flat-earth">flat-earth</a> for Unison. Also published on unison share but I’m not finding it.</li>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/coriolis-effect">coriolis-effect</a> for Koka.</li>
-</ul>
+languages (listed chronologically).</p>
+<dl>
+<dt><a href="https://github.com/GlideAngle/flare-timing/tree/main/lang-haskell/earth">flight-earth</a> for Haskell</dt>
+<dd>
+Uses the <code>uom-plugin</code> for units of measure.
+</dd>
+<dt><a href="https://github.com/flight-earth/meridian-arc">meridian-arc</a> for F#</dt>
+<dd>
+Also published on nuget as
+<a href="https://www.nuget.org/packages/meridian-arc/">meridian-arc</a>. Interestingly, the
+math doesn’t work quite the same on all platforms (Windows, Mac and Ubuntu) I
+tested with.
+</dd>
+<dt><a href="https://github.com/flight-earth/flat-earth">flat-earth</a> for Unison</dt>
+<dd>
+Also published on unison share.
+</dd>
+<dt><a href="https://github.com/flight-earth/coriolis-effect">coriolis-effect</a> for Koka</dt>
+<dd>
+The docs for this language are nice, succinct and helpful.
+</dd>
+<dt><a href="https://github.com/flight-earth/oblate-spheroid">oblate-spheroid</a> for Lean</dt>
+<dd>
+<p>Doing inline doctest-like testing is nice in this language:</p>
+<pre class="lean4"><code>/-- info: 359° -/
+#guard_msgs in #eval normalizeDeg $ Deg.mk (-1.0)</code></pre>
+</dd>
+<dt><a href="https://github.com/flight-earth/coriolis-effect">auxillary-sphere</a> for Rust</dt>
+<dd>
+Half converted by hand and half with the help of GitHub Copilot from the Lean4 solution.
+</dd>
+</dl>
 <h2 id="issues-found-incidentally">Issues Found Incidentally</h2>
 <ul>
 <li><code>koka-lang</code><a href="http://koka-lang.org/"><strong>/koka</strong></a><br />
@@ -186,10 +218,13 @@ compiling
 </header>
 
     
-    <p>I’ve coded up solutions to the direct and indirect problems of geodetics in
-Haskell, F#, Unison and Koka and in so doing have been able to find problems
-with some of these compilers.</p>
-<h2 id="the-direct-or-forward-geodetics-problem">The Direct or Forward Geodetics Problem</h2>
+    <p>I’m a lifelong learner and like to try out interesting or novel programming
+languages. I’ve coded up solutions to the direct and indirect problems of
+geodetics in <code>Haskell</code>, <code>F#</code>, <code>Unison</code>, <code>Koka</code>, and <code>Rust</code>. Occasionally I
+find problems with newer compilers but this is to be expected.</p>
+<dl>
+<dt>The Direct or Forward Geodetics Problem</dt>
+<dd>
 <ul>
 <li>{x} The departure point on the ellipsoid.</li>
 <li>{α₁} The azimuth from the departure point.</li>
@@ -200,7 +235,9 @@ with some of these compilers.</p>
 <li>{y} The arrival point.</li>
 <li>{α₂} The azimuth at the arrival point.</li>
 </ul>
-<h2 id="the-inverse-or-reverse-geodetics-problem">The Inverse or Reverse Geodetics Problem</h2>
+</dd>
+<dt>The Inverse or Reverse Geodetics Problem</dt>
+<dd>
 <ul>
 <li>{x} The departure point.</li>
 <li>{y} The arrival point.</li>
@@ -211,16 +248,43 @@ with some of these compilers.</p>
 <li>{α₁} The azimuth at the departure point.</li>
 <li>{α₂} The azimuth at the arrival point.</li>
 </ul>
+</dd>
+</dl>
 <h2 id="geodetics-solutions">Geodetics Solutions</h2>
 <p>At the <code>github</code>/<a href="https://github.com/flight-earth">flight-earth</a> organisation
 you’ll find a set of solutions to geodesy problems in various programming
-languages.</p>
-<ul>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/meridian-arc">meridian-arc</a> for F#. Also published on nuget as <a href="https://www.nuget.org/packages/meridian-arc/">meridian-arc</a>. Interestingly, the math doesn’t work quite the same on all platforms (Windows, Mac and Ubuntu) I tested with.</li>
-<li><code>glide-angle</code>/<a href="https://github.com/GlideAngle/flare-timing/tree/main/lang-haskell/earth">flight-earth</a> for Haskell. I’m waiting on a fix for the <code>uom-plugin</code> dependency to land before I move the package between organisations, from <code>glide-angle</code> to <code>flight-earth</code>.</li>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/flat-earth">flat-earth</a> for Unison. Also published on unison share but I’m not finding it.</li>
-<li><code>flight-earth</code>/<a href="https://github.com/flight-earth/coriolis-effect">coriolis-effect</a> for Koka.</li>
-</ul>
+languages (listed chronologically).</p>
+<dl>
+<dt><a href="https://github.com/GlideAngle/flare-timing/tree/main/lang-haskell/earth">flight-earth</a> for Haskell</dt>
+<dd>
+Uses the <code>uom-plugin</code> for units of measure.
+</dd>
+<dt><a href="https://github.com/flight-earth/meridian-arc">meridian-arc</a> for F#</dt>
+<dd>
+Also published on nuget as
+<a href="https://www.nuget.org/packages/meridian-arc/">meridian-arc</a>. Interestingly, the
+math doesn’t work quite the same on all platforms (Windows, Mac and Ubuntu) I
+tested with.
+</dd>
+<dt><a href="https://github.com/flight-earth/flat-earth">flat-earth</a> for Unison</dt>
+<dd>
+Also published on unison share.
+</dd>
+<dt><a href="https://github.com/flight-earth/coriolis-effect">coriolis-effect</a> for Koka</dt>
+<dd>
+The docs for this language are nice, succinct and helpful.
+</dd>
+<dt><a href="https://github.com/flight-earth/oblate-spheroid">oblate-spheroid</a> for Lean</dt>
+<dd>
+<p>Doing inline doctest-like testing is nice in this language:</p>
+<pre class="lean4"><code>/-- info: 359° -/
+#guard_msgs in #eval normalizeDeg $ Deg.mk (-1.0)</code></pre>
+</dd>
+<dt><a href="https://github.com/flight-earth/coriolis-effect">auxillary-sphere</a> for Rust</dt>
+<dd>
+Half converted by hand and half with the help of GitHub Copilot from the Lean4 solution.
+</dd>
+</dl>
 <h2 id="issues-found-incidentally">Issues Found Incidentally</h2>
 <ul>
 <li><code>koka-lang</code><a href="http://koka-lang.org/"><strong>/koka</strong></a><br />

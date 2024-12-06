@@ -83,8 +83,6 @@
 <ul>
 <li><strong>Functionality</strong>; feature additions, bug fixes, make, continuous integration
 <ul>
-<li>Render short option with arg,
-<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
 <li>Only move code to <code>Simple/GHC/Build*</code>,
 <a href="https://github.com/haskell/cabal/pull/9409">#9409</a></li>
 <li>Warn early overwrite expanded,
@@ -93,10 +91,39 @@
 <a href="https://github.com/haskell/cabal/pull/9560">#9560</a></li>
 <li>Add Cabal-described and cabal-install to doctests,
 <a href="https://github.com/haskell/cabal/pull/9572">#9572</a></li>
+<li>Show import tree provenance
+<a href="https://github.com/haskell/cabal/pull/9578">#9578</a></li>
+<li>Show abbreviated mixed versions with suffix
+<a href="https://github.com/haskell/cabal/pull/9824">#9824</a></li>
+<li>Render project configs as clean list in provenance message
+<a href="https://github.com/haskell/cabal/pull/9985">#9985</a></li>
+</ul></li>
+<li><strong>Projects</strong>
+<ul>
+<li>Delete <code>cabal.project.coverage</code>,
+<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
+<li>Rename projects to have <code>.project</code> extension
+<a href="https://github.com/haskell/cabal/pull/9958">#9958</a></li>
+<li>Use package groups
+<a href="https://github.com/haskell/cabal/pull/9565">#9565</a></li>
+</ul></li>
+<li><strong>Makefile</strong>
+<ul>
 <li>Generate <code>doc/buildinfo-fields-reference.rst</code>,
 <a href="https://github.com/haskell/cabal/pull/9573">#9573</a></li>
+<li>Add PHONY rules for lint and lint-json
+<a href="https://github.com/haskell/cabal/pull/10584">#10584</a></li>
+<li>Add help target to the makefile
+<a href="https://github.com/haskell/cabal/pull/10608">#10608</a></li>
 </ul></li>
-<li><strong>Tests</strong>
+<li><strong>CLI</strong>
+<ul>
+<li>Render short option with arg,
+<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
+<li>Consistent starting capital letter, ending period in help text,
+<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
+</ul></li>
+<li><strong>Tests and CI</strong>
 <ul>
 <li>Add test cases that reproduce <code>sdist --project-file</code>,
 <a href="https://github.com/haskell/cabal/pull/8226">#8226</a></li>
@@ -108,8 +135,24 @@
 <a href="https://github.com/haskell/cabal/pull/9665">#9665</a></li>
 <li>Add tests for project imports and constraint version conflicts,
 <a href="https://github.com/haskell/cabal/pull/9680">#9680</a></li>
+<li>Download stackage.org/…/cabal.config locally
+<a href="https://github.com/haskell/cabal/pull/9739">#9739</a></li>
+<li>Remove skipIfGhcVersion “== 9.6.3”
+<a href="https://github.com/haskell/cabal/pull/9749">#9749</a></li>
+<li>Remove stale see ‘withSourceCopyDir’
+<a href="https://github.com/haskell/cabal/pull/9750">#9750</a></li>
+<li>Add Y-forking import project
+<a href="https://github.com/haskell/cabal/pull/10508">#10508</a></li>
+<li>Add a –dry-run build check of cabal.project.release
+<a href="https://github.com/haskell/cabal/pull/9610">#9610</a></li>
+<li>Text file, newlines at end of files
+<a href="https://github.com/haskell/cabal/pull/9804">#9804</a></li>
+<li>Use the newer haskell-actions organisation,
+<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
+<li>Change the test expectation md5 hash,
+<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
 </ul></li>
-<li><strong>Linting</strong> and fixing warnings
+<li><strong>Linting and Fixing Warnings</strong>
 <ul>
 <li>Add <code>HLint</code> configuraton,
 <a href="https://github.com/haskell/cabal/pull/9041">#9041</a></li>
@@ -125,8 +168,23 @@
 <a href="https://github.com/haskell/cabal/pull/9488">#9488</a></li>
 <li>Build <code>cabal-dev-scripts</code> with <code>ghc-9.8.1</code>,
 <a href="https://github.com/haskell/cabal/pull/9600">#9600</a></li>
+<li>Don’t use redundant alias Prelude as Prelude
+<a href="https://github.com/haskell/cabal/pull/10582">#10582</a></li>
+<li>Bump to hlint-3.8
+<a href="https://github.com/haskell/cabal/pull/9959">#9959</a></li>
+<li>Remove unused packages
+<a href="https://github.com/haskell/cabal/pull/9855">#9855</a></li>
 </ul></li>
-<li><strong>Documentation</strong>
+<li><strong>Documentation: Contributing</strong>
+<ul>
+<li>Recommend using latest cabal-install
+<a href="https://github.com/haskell/cabal/pull/10013">#10013</a></li>
+<li>Add a note for contributors installing fourmolu
+<a href="https://github.com/haskell/cabal/pull/10473">#10473</a></li>
+<li>Define a user-visible change
+<a href="https://github.com/haskell/cabal/pull/9946">#9946</a></li>
+</ul></li>
+<li><strong>Documentation: Users Guide</strong>
 <ul>
 <li>Move target forms to its own section, warning about install all,
 <a href="https://github.com/haskell/cabal/pull/7000">#7000</a></li>
@@ -146,25 +204,50 @@
 <a href="https://github.com/haskell/cabal/pull/9515">#9515</a></li>
 <li>Use <code>knownLanguages</code> for describing Language,
 <a href="https://github.com/haskell/cabal/pull/9580">#9580</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Consistent starting capital letter, ending period in help text,
-<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
+<li>Regen cabal help after #9583
+<a href="https://github.com/haskell/cabal/pull/10545">#10545</a></li>
+<li>Duplicate VCS content
+<a href="https://github.com/haskell/cabal/pull/10553">#10553</a></li>
+<li>Use alice as username in cabal path examples
+<a href="https://github.com/haskell/cabal/pull/9931">#9931</a></li>
+<li>Hackage as a proper noun, capitalized in docs
+<a href="https://github.com/haskell/cabal/pull/9970">#9970</a></li>
+<li>Add “no command line variant” for <code>source-repository-package</code>.
+<a href="https://github.com/haskell/cabal/pull/9975">#9975</a></li>
+<li>Add warning and note to cabal test [TARGETS]
+<a href="https://github.com/haskell/cabal/pull/9945">#9945</a></li>
+<li>Change packages default to empty
+<a href="https://github.com/haskell/cabal/pull/10099">#10099</a></li>
+<li>Add warning and note about cabal init and script
+<a href="https://github.com/haskell/cabal/pull/10327">#10327</a></li>
+<li>source-repository versus source-repository-package
+<a href="https://github.com/haskell/cabal/pull/9701">#9701</a></li>
+<li>Warn that scripts cannot be package executables
+<a href="https://github.com/haskell/cabal/pull/10326">#10326</a></li>
 <li>Get clones the source repository,
 <a href="https://github.com/haskell/cabal/pull/8088">#8088</a></li>
+</ul></li>
+<li><strong>Typos</strong>
+<ul>
 <li>Typo missing closing parenthesis on license,
 <a href="https://github.com/haskell/cabal/pull/8146">#8146</a></li>
 <li>Simplify to avoid a typo,
 <a href="https://github.com/haskell/cabal/pull/9315">#9315</a></li>
 <li>Avoid double space in “Executing install plan …”,
 <a href="https://github.com/haskell/cabal/pull/9376">#9376</a></li>
-<li>Use the newer haskell-actions organisation,
-<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
-<li>Change the test expectation md5 hash,
-<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
-<li>Delete <code>cabal.project.coverage</code>,
-<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
+<li>Typo, Warning not Waring
+<a href="https://github.com/haskell/cabal/pull/10513">#10513</a></li>
+<li>Typo respositories
+<a href="https://github.com/haskell/cabal/pull/10592">#10592</a></li>
+<li>Typo prexif, reseved and unmatched (
+<a href="https://github.com/haskell/cabal/pull/10593">#10593</a></li>
+<li>Typo depency
+<a href="https://github.com/haskell/cabal/pull/10599">#10599</a></li>
+<li>Add typo checking for <em>.rst and </em>.md files
+<a href="https://github.com/haskell/cabal/pull/10603">#10603</a></li>
+</ul></li>
+<li><strong>Ignores</strong>
+<ul>
 <li>Ignore generated <code>cabal.out</code> and <code>cabal.out''</code>,
 <a href="https://github.com/haskell/cabal/pull/9594">#9594</a></li>
 <li>Add <code>cabal-testsuite</code> git ignores for validate dangling files,
@@ -173,6 +256,8 @@
 <a href="https://github.com/haskell/cabal/pull/9644">#9644</a></li>
 <li>Ignore test <code>T7339</code> output, <code>libhello.so</code>,
 <a href="https://github.com/haskell/cabal/pull/9699">#9699</a></li>
+<li>Ignore testdb/intree generated files
+<a href="https://github.com/haskell/cabal/pull/9847">#9847</a></li>
 </ul></li>
 </ul>
 </article>
@@ -234,8 +319,6 @@
 <ul>
 <li><strong>Functionality</strong>; feature additions, bug fixes, make, continuous integration
 <ul>
-<li>Render short option with arg,
-<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
 <li>Only move code to <code>Simple/GHC/Build*</code>,
 <a href="https://github.com/haskell/cabal/pull/9409">#9409</a></li>
 <li>Warn early overwrite expanded,
@@ -244,10 +327,39 @@
 <a href="https://github.com/haskell/cabal/pull/9560">#9560</a></li>
 <li>Add Cabal-described and cabal-install to doctests,
 <a href="https://github.com/haskell/cabal/pull/9572">#9572</a></li>
+<li>Show import tree provenance
+<a href="https://github.com/haskell/cabal/pull/9578">#9578</a></li>
+<li>Show abbreviated mixed versions with suffix
+<a href="https://github.com/haskell/cabal/pull/9824">#9824</a></li>
+<li>Render project configs as clean list in provenance message
+<a href="https://github.com/haskell/cabal/pull/9985">#9985</a></li>
+</ul></li>
+<li><strong>Projects</strong>
+<ul>
+<li>Delete <code>cabal.project.coverage</code>,
+<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
+<li>Rename projects to have <code>.project</code> extension
+<a href="https://github.com/haskell/cabal/pull/9958">#9958</a></li>
+<li>Use package groups
+<a href="https://github.com/haskell/cabal/pull/9565">#9565</a></li>
+</ul></li>
+<li><strong>Makefile</strong>
+<ul>
 <li>Generate <code>doc/buildinfo-fields-reference.rst</code>,
 <a href="https://github.com/haskell/cabal/pull/9573">#9573</a></li>
+<li>Add PHONY rules for lint and lint-json
+<a href="https://github.com/haskell/cabal/pull/10584">#10584</a></li>
+<li>Add help target to the makefile
+<a href="https://github.com/haskell/cabal/pull/10608">#10608</a></li>
 </ul></li>
-<li><strong>Tests</strong>
+<li><strong>CLI</strong>
+<ul>
+<li>Render short option with arg,
+<a href="https://github.com/haskell/cabal/pull/9043">#9043</a></li>
+<li>Consistent starting capital letter, ending period in help text,
+<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
+</ul></li>
+<li><strong>Tests and CI</strong>
 <ul>
 <li>Add test cases that reproduce <code>sdist --project-file</code>,
 <a href="https://github.com/haskell/cabal/pull/8226">#8226</a></li>
@@ -259,8 +371,24 @@
 <a href="https://github.com/haskell/cabal/pull/9665">#9665</a></li>
 <li>Add tests for project imports and constraint version conflicts,
 <a href="https://github.com/haskell/cabal/pull/9680">#9680</a></li>
+<li>Download stackage.org/…/cabal.config locally
+<a href="https://github.com/haskell/cabal/pull/9739">#9739</a></li>
+<li>Remove skipIfGhcVersion “== 9.6.3”
+<a href="https://github.com/haskell/cabal/pull/9749">#9749</a></li>
+<li>Remove stale see ‘withSourceCopyDir’
+<a href="https://github.com/haskell/cabal/pull/9750">#9750</a></li>
+<li>Add Y-forking import project
+<a href="https://github.com/haskell/cabal/pull/10508">#10508</a></li>
+<li>Add a –dry-run build check of cabal.project.release
+<a href="https://github.com/haskell/cabal/pull/9610">#9610</a></li>
+<li>Text file, newlines at end of files
+<a href="https://github.com/haskell/cabal/pull/9804">#9804</a></li>
+<li>Use the newer haskell-actions organisation,
+<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
+<li>Change the test expectation md5 hash,
+<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
 </ul></li>
-<li><strong>Linting</strong> and fixing warnings
+<li><strong>Linting and Fixing Warnings</strong>
 <ul>
 <li>Add <code>HLint</code> configuraton,
 <a href="https://github.com/haskell/cabal/pull/9041">#9041</a></li>
@@ -276,8 +404,23 @@
 <a href="https://github.com/haskell/cabal/pull/9488">#9488</a></li>
 <li>Build <code>cabal-dev-scripts</code> with <code>ghc-9.8.1</code>,
 <a href="https://github.com/haskell/cabal/pull/9600">#9600</a></li>
+<li>Don’t use redundant alias Prelude as Prelude
+<a href="https://github.com/haskell/cabal/pull/10582">#10582</a></li>
+<li>Bump to hlint-3.8
+<a href="https://github.com/haskell/cabal/pull/9959">#9959</a></li>
+<li>Remove unused packages
+<a href="https://github.com/haskell/cabal/pull/9855">#9855</a></li>
 </ul></li>
-<li><strong>Documentation</strong>
+<li><strong>Documentation: Contributing</strong>
+<ul>
+<li>Recommend using latest cabal-install
+<a href="https://github.com/haskell/cabal/pull/10013">#10013</a></li>
+<li>Add a note for contributors installing fourmolu
+<a href="https://github.com/haskell/cabal/pull/10473">#10473</a></li>
+<li>Define a user-visible change
+<a href="https://github.com/haskell/cabal/pull/9946">#9946</a></li>
+</ul></li>
+<li><strong>Documentation: Users Guide</strong>
 <ul>
 <li>Move target forms to its own section, warning about install all,
 <a href="https://github.com/haskell/cabal/pull/7000">#7000</a></li>
@@ -297,25 +440,50 @@
 <a href="https://github.com/haskell/cabal/pull/9515">#9515</a></li>
 <li>Use <code>knownLanguages</code> for describing Language,
 <a href="https://github.com/haskell/cabal/pull/9580">#9580</a></li>
-</ul></li>
-<li><strong>Trivial</strong>
-<ul>
-<li>Consistent starting capital letter, ending period in help text,
-<a href="https://github.com/haskell/cabal/pull/7980">#7980</a></li>
+<li>Regen cabal help after #9583
+<a href="https://github.com/haskell/cabal/pull/10545">#10545</a></li>
+<li>Duplicate VCS content
+<a href="https://github.com/haskell/cabal/pull/10553">#10553</a></li>
+<li>Use alice as username in cabal path examples
+<a href="https://github.com/haskell/cabal/pull/9931">#9931</a></li>
+<li>Hackage as a proper noun, capitalized in docs
+<a href="https://github.com/haskell/cabal/pull/9970">#9970</a></li>
+<li>Add “no command line variant” for <code>source-repository-package</code>.
+<a href="https://github.com/haskell/cabal/pull/9975">#9975</a></li>
+<li>Add warning and note to cabal test [TARGETS]
+<a href="https://github.com/haskell/cabal/pull/9945">#9945</a></li>
+<li>Change packages default to empty
+<a href="https://github.com/haskell/cabal/pull/10099">#10099</a></li>
+<li>Add warning and note about cabal init and script
+<a href="https://github.com/haskell/cabal/pull/10327">#10327</a></li>
+<li>source-repository versus source-repository-package
+<a href="https://github.com/haskell/cabal/pull/9701">#9701</a></li>
+<li>Warn that scripts cannot be package executables
+<a href="https://github.com/haskell/cabal/pull/10326">#10326</a></li>
 <li>Get clones the source repository,
 <a href="https://github.com/haskell/cabal/pull/8088">#8088</a></li>
+</ul></li>
+<li><strong>Typos</strong>
+<ul>
 <li>Typo missing closing parenthesis on license,
 <a href="https://github.com/haskell/cabal/pull/8146">#8146</a></li>
 <li>Simplify to avoid a typo,
 <a href="https://github.com/haskell/cabal/pull/9315">#9315</a></li>
 <li>Avoid double space in “Executing install plan …”,
 <a href="https://github.com/haskell/cabal/pull/9376">#9376</a></li>
-<li>Use the newer haskell-actions organisation,
-<a href="https://github.com/haskell/cabal/pull/9381">#9381</a></li>
-<li>Change the test expectation md5 hash,
-<a href="https://github.com/haskell/cabal/pull/9487">#9487</a></li>
-<li>Delete <code>cabal.project.coverage</code>,
-<a href="https://github.com/haskell/cabal/pull/9574">#9574</a></li>
+<li>Typo, Warning not Waring
+<a href="https://github.com/haskell/cabal/pull/10513">#10513</a></li>
+<li>Typo respositories
+<a href="https://github.com/haskell/cabal/pull/10592">#10592</a></li>
+<li>Typo prexif, reseved and unmatched (
+<a href="https://github.com/haskell/cabal/pull/10593">#10593</a></li>
+<li>Typo depency
+<a href="https://github.com/haskell/cabal/pull/10599">#10599</a></li>
+<li>Add typo checking for <em>.rst and </em>.md files
+<a href="https://github.com/haskell/cabal/pull/10603">#10603</a></li>
+</ul></li>
+<li><strong>Ignores</strong>
+<ul>
 <li>Ignore generated <code>cabal.out</code> and <code>cabal.out''</code>,
 <a href="https://github.com/haskell/cabal/pull/9594">#9594</a></li>
 <li>Add <code>cabal-testsuite</code> git ignores for validate dangling files,
@@ -324,6 +492,8 @@
 <a href="https://github.com/haskell/cabal/pull/9644">#9644</a></li>
 <li>Ignore test <code>T7339</code> output, <code>libhello.so</code>,
 <a href="https://github.com/haskell/cabal/pull/9699">#9699</a></li>
+<li>Ignore testdb/intree generated files
+<a href="https://github.com/haskell/cabal/pull/9847">#9847</a></li>
 </ul></li>
 </ul>
 </article>
