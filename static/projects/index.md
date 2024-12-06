@@ -3,30 +3,17 @@ title: 'Supporting Acts'
 subtitle: Contributions to projects that I use or want to succeed.
 ---
 I donate time to open source and am setup to [receive
-donations](https://github.com/sponsors/philderbeast) (not that anybody has).
+donations](https://github.com/sponsors/philderbeast) (not that anybody has - yet).
 
-I'm pushing for units of measure and functional programming. F# has units built
-in. I have contributed to adding units to Haskell via type checker plugins.
+I'm pushing for [units of measure](/projects/uom) and functional programming.
+F# has units built in. We can have units in Haskell with type checker plugins.
 
-To try out new and interesting programming languages, I've been adding geodetic
-library packages for F#, Haskell, Unison and Koka, and incidentally uncovering
-problems with newer compilers.
+I've solved [geodetics](/projects/geodetics) problems in a variety of programming
+languages.
 
-I'll take the time to report issues and contribute patches to compilers and
-tools I use. I've reported issues with
-[ghc](https://gitlab.haskell.org/ghc/ghc/-/issues?scope=all&state=all&author_username=philderbeast),
-[unison](https://github.com/unisonweb/unison/issues/created_by/philderbeast) and
-[koka](https://github.com/koka-lang/koka/issues/created_by/philderbeast). I
-first contributed to GHC when they were using phrabricator. It was quite the
-process to get started. Much easier now. Here's my first contribution to GHC:
+Here's my first contribution to `GHC`, the Glasgow Haskell Compiler:
 
 * For the newcomer labelled bug
 [12441](https://gitlab.haskell.org/ghc/ghc/issues/12441), fix pretty printing
 for [explicit
 quantifiers](https://github.com/ghc/ghc/commit/33140f41b931fb81bf2e5aa28603fe757bb3779d).
-
-I'll use front end frameworks (especially those that change the paradigm or
-bring more type checking) to redo a portion of nose cone and get a feel for how
-they work in practice. At the `github`/[nose-cone](https://github.com/NoseCone)
-organisation you'll find rescript, svelte, feliz and sutil redos of the original
-reflex-frp single page app user interface. Each has an accompanying demo.
