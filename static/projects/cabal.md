@@ -4,8 +4,6 @@ title: 'Cabal Tooling Contributions'
 A list of contributions I've made to `haskell`[**/cabal**](https://github.com/haskell/cabal):
 
 - **Functionality**; feature additions, bug fixes, make, continuous integration
-    - Render short option with arg,
-      [#9043](https://github.com/haskell/cabal/pull/9043)
     - Only move code to `Simple/GHC/Build*`,
       [#9409](https://github.com/haskell/cabal/pull/9409)
     - Warn early overwrite expanded,
@@ -14,8 +12,6 @@ A list of contributions I've made to `haskell`[**/cabal**](https://github.com/ha
       [#9560](https://github.com/haskell/cabal/pull/9560)
     - Add Cabal-described and cabal-install to doctests,
       [#9572](https://github.com/haskell/cabal/pull/9572)
-    - Generate `doc/buildinfo-fields-reference.rst`,
-      [#9573](https://github.com/haskell/cabal/pull/9573)
     - Show import tree provenance
       [#9578](https://github.com/haskell/cabal/pull/9578)
     - Show abbreviated mixed versions with suffix
@@ -24,10 +20,26 @@ A list of contributions I've made to `haskell`[**/cabal**](https://github.com/ha
       [#9985](https://github.com/haskell/cabal/pull/9985)
 
 - **Projects**
+    - Delete `cabal.project.coverage`,
+      [#9574](https://github.com/haskell/cabal/pull/9574)
     - Rename projects to have `.project` extension
       [#9958](https://github.com/haskell/cabal/pull/9958)
     - Use package groups
       [#9565](https://github.com/haskell/cabal/pull/9565)
+
+- **Makefile**
+    - Generate `doc/buildinfo-fields-reference.rst`,
+      [#9573](https://github.com/haskell/cabal/pull/9573)
+    - Add PHONY rules for lint and lint-json
+      [#10584](https://github.com/haskell/cabal/pull/10584)
+    - Add help target to the makefile
+      [#10608](https://github.com/haskell/cabal/pull/10608)
+
+- **CLI**
+    - Render short option with arg,
+      [#9043](https://github.com/haskell/cabal/pull/9043)
+    - Consistent starting capital letter, ending period in help text,
+      [#7980](https://github.com/haskell/cabal/pull/7980)
 
 - **Tests and CI**
     - Add test cases that reproduce `sdist --project-file`,
@@ -52,6 +64,10 @@ A list of contributions I've made to `haskell`[**/cabal**](https://github.com/ha
       [#9610](https://github.com/haskell/cabal/pull/9610)
     - Text file, newlines at end of files
       [#9804](https://github.com/haskell/cabal/pull/9804)
+    - Use the newer haskell-actions organisation,
+      [#9381](https://github.com/haskell/cabal/pull/9381)
+    - Change the test expectation md5 hash,
+      [#9487](https://github.com/haskell/cabal/pull/9487)
 
 - **Linting and Fixing Warnings**
     - Add `HLint` configuraton,
@@ -122,6 +138,26 @@ A list of contributions I've made to `haskell`[**/cabal**](https://github.com/ha
       [#9701](https://github.com/haskell/cabal/pull/9701)
     - Warn that scripts cannot be package executables
       [#10326](https://github.com/haskell/cabal/pull/10326)
+    - Get clones the source repository,
+      [#8088](https://github.com/haskell/cabal/pull/8088)
+
+- **Typos**
+    - Typo missing closing parenthesis on license,
+      [#8146](https://github.com/haskell/cabal/pull/8146)
+    - Simplify to avoid a typo,
+      [#9315](https://github.com/haskell/cabal/pull/9315)
+    - Avoid double space in "Executing install plan ...",
+      [#9376](https://github.com/haskell/cabal/pull/9376)
+    - Typo, Warning not Waring
+      [#10513](https://github.com/haskell/cabal/pull/10513)
+    - Typo respositories
+      [#10592](https://github.com/haskell/cabal/pull/10592)
+    - Typo prexif, reseved and unmatched (
+      [#10593](https://github.com/haskell/cabal/pull/10593)
+    - Typo depency
+      [#10599](https://github.com/haskell/cabal/pull/10599)
+    - Add typo checking for *.rst and *.md files
+      [#10603](https://github.com/haskell/cabal/pull/10603)
 
 - **Ignores**
     - Ignore generated `cabal.out` and `cabal.out''`,
@@ -134,39 +170,3 @@ A list of contributions I've made to `haskell`[**/cabal**](https://github.com/ha
       [#9699](https://github.com/haskell/cabal/pull/9699)
     - Ignore testdb/intree generated files
       [#9847](https://github.com/haskell/cabal/pull/9847)
-
-- **Trivial**
-    - Consistent starting capital letter, ending period in help text,
-      [#7980](https://github.com/haskell/cabal/pull/7980)
-    - Get clones the source repository,
-      [#8088](https://github.com/haskell/cabal/pull/8088)
-    - Typo missing closing parenthesis on license,
-      [#8146](https://github.com/haskell/cabal/pull/8146)
-    - Simplify to avoid a typo,
-      [#9315](https://github.com/haskell/cabal/pull/9315)
-    - Avoid double space in "Executing install plan ...",
-      [#9376](https://github.com/haskell/cabal/pull/9376)
-    - Use the newer haskell-actions organisation,
-      [#9381](https://github.com/haskell/cabal/pull/9381)
-    - Change the test expectation md5 hash,
-      [#9487](https://github.com/haskell/cabal/pull/9487)
-    - Delete `cabal.project.coverage`,
-      [#9574](https://github.com/haskell/cabal/pull/9574)
-
-- **Typos**
-    - Typo, Warning not Waring
-      [#10513](https://github.com/haskell/cabal/pull/10513)
-    - Typo respositories
-      [#10592](https://github.com/haskell/cabal/pull/10592)
-    - Typo prexif, reseved and unmatched (
-      [#10593](https://github.com/haskell/cabal/pull/10593)
-    - Typo depency
-      [#10599](https://github.com/haskell/cabal/pull/10599)
-    - Add typo checking for *.rst and *.md files
-      [#10603](https://github.com/haskell/cabal/pull/10603)
-
-- **Makefile**
-    - Add PHONY rules for lint and lint-json
-      [#10584](https://github.com/haskell/cabal/pull/10584)
-    - Add help target to the makefile
-      [#10608](https://github.com/haskell/cabal/pull/10608)
