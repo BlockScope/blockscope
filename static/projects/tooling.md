@@ -7,8 +7,11 @@ dependencies with or to build. That's an area where a little help can go a long
 way to ease the pain.
 
 #### Build Tools
-* `haskell`[**/cabal**](https://github.com/haskell/cabal)[^1]
-* `commercialhaskell`[**/stack**](https://docs.haskellstack.org)[^2]
+
+* `haskell`[**/cabal**](https://github.com/haskell/cabal)  
+I've made many [cabal contributions](/projects/cabal/).
+* `commercialhaskell`[**/stack**](https://docs.haskellstack.org)  
+I've collected a list of [stack contributions](/projects/stack/).
 * `cabalism`[**/hpack-dhall**](http://hackage.haskell.org/package/hpack-dhall)  
 I started contributing and ended up
 [owner and maintainer](https://github.com/cabalism/hpack-dhall/issues/3) of
@@ -24,6 +27,7 @@ how to build Haskell fast with Google Bazel and rules_haskell.
 An incremental build tool for Haskell projects.
 
 #### Packages and Dependencies
+
 * `fsprojects`[**/paket**](https://fsprojects.github.io/Paket/)  
 I helped document how to convert an existing solution to use paket,
 [explaining](https://github.com/fsprojects/Paket/commit/3db8c5b8701adf345c8cf4c1b3cfcb8d4bc11fca)
@@ -40,6 +44,3 @@ stale links to `all-cabal-hashes` and `lts-haskell`.
 * `input-output-hk`[**/stack2nix**](https://github.com/input-output-hk/stack2nix)  
 [Parse](https://github.com/input-output-hk/stack2nix/commit/e01483c14ec288eeeef586c9aa31c737042bda55)
 the mac operating system as `osx` or `darwin`.
-
-[^1]: I have a separate page for [cabal contributions](/projects/cabal/)
-[^2]: Same goes for [stack contributions](/projects/stack/)
