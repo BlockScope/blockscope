@@ -15,7 +15,7 @@ homepage:       https://github.com/blockscope/blockscope/tree/develop#readme
 bug-reports:    https://github.com/blockscope/blockscope/issues
 author:         Phil de Joux
 maintainer:     phil.dejoux@blockscope.com
-copyright:      © 2017-2022 Phil de Joux, © 2017-2022 Block Scope Limited
+copyright:      © 2017-2024 Phil de Joux, © 2017-2024 Block Scope Limited
 license:        MPL-2.0
 license-file:   LICENSE.md
 tested-with:
