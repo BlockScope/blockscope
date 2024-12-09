@@ -1,6 +1,11 @@
 ---
 title: 'Cabal Tooling Contributions'
 ---
+As I'm posting this, on `2024-12-09`, I'm the most active Cabal contributor over the
+past 12 months behind the mergify bot:
+
+![**Figure 1:** Cabal contributors over the past 12 months with more than 20 commits](/images/top-cabal-contribs.png){#fig-1 style="padding-left:2em;width:50%"}
+
 A list of contributions I've made to `haskell`[**/cabal**](https://github.com/haskell/cabal):
 
 - **Functionality**; feature additions, bug fixes, make, continuous integration
