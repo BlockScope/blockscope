@@ -10,7 +10,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <h2 class="work-section">&lt;Haskell&gt;</h2>
 <ul>
 <li>
-  <span class="updo">`Y` `$` ▩ </span><span class="date">`2022/07—2023/08`</span>
+  <span class="updo">`Y` `$` ▩ </span><span class="date">`2025/01—2025/**`</span>
   [**FPComplete**](https://www.fpcomplete.com/).
   ☞ Develop a new subsite for an existing Yesod web site.
 </li>
