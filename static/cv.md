@@ -10,6 +10,11 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
 <h2 class="work-section">&lt;Haskell&gt;</h2>
 <ul>
 <li>
+  <span class="updo">`Y` `$` ▩ </span><span class="date">`2022/07—2023/08`</span>
+  [**FPComplete**](https://www.fpcomplete.com/).
+  ☞ Develop a new subsite for an existing Yesod web site.
+</li>
+<li>
   <span class="updo">`U` `$` ▩ </span><span class="date">`2022/07—2023/08`</span>
   [**FPComplete**](https://www.fpcomplete.com/).
   ☞ Maintain a large Haskell codebase with
@@ -132,7 +137,7 @@ subtitle: Educated in Computer Graphics 1996, Mathematical Modeling BSc Hons 199
                                                       <span class="cactus">CC</span>
                                         <span class="waimak">DDDDDDDDDDD</span>   <span class="apress">PPPPPPPPPP</span>
                            <span class="niwa">WWWWWWWWWWWW</span> <span class="croplogic">LLLLLLLLLLLL</span><span class="travieo">VVVVVVVVVVV</span>
- <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span><span class="updo">UUU</span>
+ <span class="trimble">TTTTTTTTTTTTT</span> <span class="sml">S</span><span class="obvious">OOOOO</span><span class="aspelle">EEEE</span>  <span class="nutricentre">NNNNNNNNNNNNNNN</span>            <span class="tagly">GG</span>   <span class="aqualinc">AAAAAAAAAA</span><span class="flaretiming">FFFFFFFFFFF</span><span class="bracco">B</span><span class="cit">C</span><span class="blobs">BB</span><span class="updo">UUU</span>    <span class="updo">Y</span>
 <span class="date">-|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|--+--+--+--+--|-</span>
 <span class="date"> 1995           2000           2005           2010           2015           2020           2025</span>
 </code>
